@@ -2,8 +2,8 @@
 <html lang="vi" class="h-full antialiased">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZALO: 0352803379 - STUDIO V35.80 (MOBILE OPTIMIZED)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>ZALO: 0352803379 - STUDIO V35.80 (DUAL STORAGE SAFE)</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;700&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -134,11 +134,14 @@
         /* THEME STYLES - PRO MASTER */
         :root { --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         
+        /* FIX MOBILE HEIGHT: use 100dvh instead of 100vh or h-screen to avoid browser bar cutoff */
         body { 
             background-color: #050505; 
             background-image: radial-gradient(circle at top right, #0f172a, #050505);
             color: #e2e8f0;
             -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
+            height: 100dvh; /* Dynamic Viewport Height */
+            min-height: 100dvh;
         }
         input, textarea { -webkit-user-select: text; -moz-user-select: text; -ms-user-select: text; user-select: text; }
 
@@ -217,9 +220,9 @@
     </style>
 </head>
 
-<body class="text-slate-300 font-sans h-screen flex overflow-hidden select-none relative" oncontextmenu="return false;">
+<body class="text-slate-300 font-sans flex overflow-hidden select-none relative" oncontextmenu="return false;">
     
-    <!-- SECURITY GATE (REDESIGNED: RESPONSIVE WIDTH) -->
+    <!-- SECURITY GATE (REDESIGNED: SOFTER & PROFESSIONAL) -->
     <div id="security-gate" class="fixed inset-0 z-[9999] flex items-center justify-center bg-[#050505]/90 backdrop-blur-3xl transition-opacity duration-500">
         <!-- Ambient Background Glow (Subtle) -->
         <div class="absolute inset-0 overflow-hidden pointer-events-none">
@@ -227,8 +230,8 @@
             <div class="absolute bottom-0 right-0 w-[400px] h-[400px] bg-blue-600/10 rounded-full blur-[100px]"></div>
         </div>
         
-        <!-- Main Card Container - UPDATED: w-full max-w-[400px] for mobile -->
-        <div class="relative z-10 w-[90%] max-w-[400px] bg-white/[0.02] border border-white/5 rounded-3xl p-8 shadow-2xl animate-enter-up flex flex-col items-center">
+        <!-- Main Card Container -->
+        <div class="relative z-10 w-full max-w-[400px] bg-white/[0.02] border border-white/5 rounded-3xl p-8 shadow-2xl animate-enter-up flex flex-col items-center">
             
             <!-- ADMIN KEY BUTTON (Discrete Top Right) -->
             <button id="gate-admin-key" class="absolute top-4 right-4 text-slate-600 hover:text-white transition-colors p-2 z-50 rounded-full hover:bg-white/5" title="Đăng nhập Admin">
@@ -291,9 +294,9 @@
     <div id="toast-container" class="fixed top-6 right-6 z-[100] flex flex-col gap-3 pointer-events-none"></div>
     
     <div class="flex w-full h-full relative z-10 backdrop-blur-[1px]" id="fullscreen-target">
-        <!-- Sidebar and Main Content - UPDATED Sidebar Width -->
+        <!-- Sidebar and Main Content (Same as before) -->
 
-<aside id="sidebar" class="w-[85vw] sm:w-[360px] max-w-[360px] flex-shrink-0 glass-panel mobile-sidebar-bg flex flex-col transition-transform duration-500 ease-[cubic-bezier(0.33,1,0.68,1)] absolute z-50 h-full lg:relative lg:translate-x-0 -translate-x-full shadow-2xl">
+<aside id="sidebar" class="w-[360px] flex-shrink-0 glass-panel mobile-sidebar-bg flex flex-col transition-transform duration-500 ease-[cubic-bezier(0.33,1,0.68,1)] absolute z-50 h-[100dvh] lg:relative lg:h-auto lg:translate-x-0 -translate-x-full">
             <div class="h-14 px-4 flex items-center justify-between border-b border-white/5 bg-white/[0.02]">
                 <div class="flex flex-col">
                     <!-- EDITED: SIDEBAR TITLE -->
@@ -316,7 +319,7 @@
                 </div>
             </div>
 
-            <div class="flex-1 overflow-y-auto p-4 scroll-smooth custom-scrollbar space-y-2">
+            <div class="flex-1 overflow-y-auto p-4 scroll-smooth custom-scrollbar space-y-2 pb-24">
                 <!-- 1. MAIN UPLOAD -->
                 <div class="relative group">
                     <input type="file" id="image-upload" accept="image/*" style="position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); border:0;">
@@ -791,7 +794,7 @@
             </div>
 
             <!-- Footer Actions -->
-            <div class="p-4 glass-panel border-t-0 space-y-2 z-20">
+            <div class="p-4 glass-panel border-t-0 space-y-2 z-20 absolute bottom-0 w-full lg:relative lg:bottom-auto">
                 <button id="process-image" class="w-full py-3 btn-flux-modern text-white font-bold text-xs tracking-widest flex justify-center items-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                     TẠO ẢNH (FLUX KONTEXT)
@@ -845,31 +848,30 @@
                 </div>
             </div>
 
-            <!-- ZOOM BAR: UPDATED - VISIBLE ON MOBILE AT TOP-16 -->
-            <div class="absolute top-16 left-2 right-2 sm:top-6 sm:left-6 sm:right-6 h-10 sm:h-12 glass-panel rounded-lg flex items-center justify-between px-3 sm:px-4 z-20 shadow-lg border border-white/5">
-                <div class="flex items-center gap-2 sm:gap-3">
-                     <div class="text-[9px] sm:text-[10px] text-slate-400 font-mono flex items-center gap-1 sm:gap-2"><span class="w-1.5 h-1.5 rounded-full bg-violet-500"></span><span class="hidden sm:inline">ZOOM:</span> <span id="zoom-level" class="text-white font-bold">100%</span></div>
+            <div class="absolute top-6 left-6 right-6 h-12 glass-panel rounded-lg flex items-center justify-between px-4 z-20 shadow-lg hidden sm:flex border border-white/5">
+                <div class="flex items-center gap-3">
+                     <div class="text-[10px] text-slate-400 font-mono flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-violet-500"></span>ZOOM: <span id="zoom-level" class="text-white font-bold">100%</span></div>
                      <button id="rotate-btn" class="p-1.5 hover:bg-white/10 rounded text-slate-400 hover:text-white transition"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg></button>
                 </div>
-                <div class="flex items-center gap-2 sm:gap-3">
+                <div class="flex items-center gap-3">
                      <div class="hidden lg:flex items-center gap-1.5 mr-2 px-2 py-1 rounded border border-white/5 bg-white/5">
                         <span class="text-[9px] font-bold text-slate-400">TIP:</span>
                         <span class="text-[9px] text-slate-300">Giữ phím SPACE để xem ảnh gốc</span>
                     </div>
-                    <button id="toggle-magnifier" class="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 rounded bg-white/5 border border-white/10 hover:bg-white/10 text-slate-300 text-[9px] sm:text-[10px] font-bold transition-colors">
+                    <button id="toggle-magnifier" class="flex items-center gap-2 px-3 py-1.5 rounded bg-white/5 border border-white/10 hover:bg-white/10 text-slate-300 text-[10px] font-bold transition-colors">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path></svg>
-                        <span class="hidden sm:inline">SOI DA</span>
+                        <span>SOI DA</span>
                     </button>
                     <div class="flex bg-black/20 rounded p-0.5 gap-0.5 border border-white/5">
                         <button id="zoom-out" class="p-1.5 hover:bg-white/10 rounded text-slate-400"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path></svg></button>
-                        <button id="zoom-reset" class="px-2 hover:bg-white/10 rounded text-slate-400 text-[10px] font-bold hidden sm:block">FIT</button>
+                        <button id="zoom-reset" class="px-2 hover:bg-white/10 rounded text-slate-400 text-[10px] font-bold">FIT</button>
                         <button id="zoom-in" class="p-1.5 hover:bg-white/10 rounded text-slate-400"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg></button>
                     </div>
-                    <button id="download-trigger" class="hidden sm:flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-5 py-2 rounded text-xs font-bold transition-all opacity-50 cursor-not-allowed shadow-lg" disabled><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg><span>LƯU ẢNH</span></button>
+                    <button id="download-trigger" class="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-5 py-2 rounded text-xs font-bold transition-all opacity-50 cursor-not-allowed shadow-lg" disabled><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg><span>LƯU ẢNH</span></button>
                 </div>
             </div>
             
-            <div class="flex-1 relative flex items-center justify-center overflow-hidden perspective-1000">
+            <div class="flex-1 relative flex items-center justify-center overflow-hidden perspective-1000 pb-32 lg:pb-0">
                 <div id="canvas-scale-container" class="relative transition-transform duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] origin-center will-change-transform" style="transform: scale(1);">
                     <div id="scan-beam" class="scan-beam"></div>
                     
@@ -914,9 +916,9 @@
         </main>
     </div>
 
-    <!-- NEW: RECHARGE MODAL - RESPONSIVE WIDTH -->
+    <!-- NEW: RECHARGE MODAL -->
     <div id="recharge-modal" class="fixed inset-0 z-[110] bg-black/90 backdrop-blur-md hidden flex items-center justify-center modal-fade-in">
-        <div class="w-[90%] max-w-[350px] bg-[#0a0a0f] border border-red-500/30 rounded-2xl shadow-[0_0_50px_rgba(239,68,68,0.2)] p-6 text-center relative overflow-hidden">
+        <div class="w-[350px] bg-[#0a0a0f] border border-red-500/30 rounded-2xl shadow-[0_0_50px_rgba(239,68,68,0.2)] p-6 text-center relative overflow-hidden">
             <div class="absolute top-0 left-0 w-full h-1 bg-red-500"></div>
             <div class="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-red-500/20">
                 <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
@@ -979,9 +981,9 @@
         </div>
     </div>
 
-    <!-- NEW: ADMIN MODAL WITH API CONFIG & LICENSE GENERATOR - RESPONSIVE WIDTH -->
+    <!-- NEW: ADMIN MODAL WITH API CONFIG & LICENSE GENERATOR -->
     <div id="admin-modal" class="fixed inset-0 z-[10002] bg-black/90 backdrop-blur-md hidden flex items-center justify-center modal-fade-in overflow-y-auto">
-        <div class="w-[95%] max-w-[450px] glass-panel rounded-xl border border-white/10 shadow-2xl p-6 relative my-10">
+        <div class="w-[450px] glass-panel rounded-xl border border-white/10 shadow-2xl p-6 relative my-10">
             <button id="close-admin" class="absolute top-4 right-4 text-slate-400 hover:text-white"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
             
             <!-- ADMIN LOGIN STATE -->
@@ -1115,7 +1117,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // ⚠️ QUAN TRỌNG: KHI CHẠY TRÊN GITHUB, HÃY ĐIỀN API KEY CỦA BẠN VÀO ĐÂY HOẶC ĐỂ TRỐNG VÀ NHẬP TRONG CÀI ĐẶT
             const apiKey = ""; 
 
             // === HỆ THỐNG MÃ HÓA BẢO MẬT ===
@@ -3033,28 +3034,6 @@
             if(grainSlider && grainVal) grainSlider.addEventListener('input', (e) => { grainVal.textContent = e.target.value + '% (Kontext)'; });
             if(exposureSlider && exposureVal) exposureSlider.addEventListener('input', (e) => { exposureVal.textContent = parseFloat(e.target.value).toFixed(1); });
             if(structureSlider && structureVal) structureSlider.addEventListener('input', (e) => { structureVal.textContent = "Mạnh (" + (e.target.value/100).toFixed(1) + ")"; });
-            
-            // === GITHUB AUTO-SETUP CHECK ===
-            // Tự động mở bảng cài đặt nếu chạy trên GitHub mà chưa có Key
-            setTimeout(() => {
-                const { key } = getApiConfig();
-                // Check if host is github or localhost, and no key is present
-                if (!key && (window.location.hostname.includes('github.io') || window.location.hostname === 'localhost' || window.location.protocol === 'file:' || !apiKey)) {
-                    showToast("⚠️ CẦN CẤU HÌNH API KEY CHO WEB GITHUB!", "warning");
-                    const adminModal = document.getElementById('admin-modal');
-                    const adminLoginView = document.getElementById('admin-login-view');
-                    const adminDashView = document.getElementById('admin-dashboard-view');
-                    const passInput = document.getElementById('admin-password');
-                    
-                    if (adminModal && adminLoginView) {
-                        adminModal.classList.remove('hidden');
-                        adminLoginView.classList.remove('hidden');
-                        if (adminDashView) adminDashView.classList.add('hidden');
-                        // Auto focus password for quick setup
-                        if (passInput) passInput.focus();
-                    }
-                }
-            }, 2000);
         });
     </script>
 </body>
