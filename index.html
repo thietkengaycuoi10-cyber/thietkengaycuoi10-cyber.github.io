@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZALO: 0352803379 - STUDIO V35.80 (SECURE TOKEN SYSTEM)</title>
+    <title>ZALO: 0352803379 - STUDIO V35.80 (AUTO-SAVE TOKEN)</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;700&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -324,15 +324,21 @@
                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path></svg>
                         TOKEN / API KEY
                     </div>
-                    <div class="mt-1 flex items-center gap-2">
+                    <div class="mt-1 flex items-center gap-1">
                         <input type="password" id="user-api-key" placeholder="Dán mã Token/Key vào đây..." class="w-full bg-[#050508] border border-white/10 rounded-lg px-3 py-2 text-[10px] font-mono text-violet-300 focus:border-violet-500 focus:outline-none transition-all placeholder-slate-600 save-input" data-key="userApiKey">
-                        <button id="toggle-key-visibility" class="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors border border-white/5" title="Hiện/Ẩn">
+                        
+                        <!-- ADDED: SAVE BUTTON FOR MANUAL SAVE -->
+                        <button id="btn-quick-save-key" class="p-2 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 border border-emerald-500/30 transition-colors flex-shrink-0 shadow-lg active:scale-95" title="Lưu Token">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        </button>
+
+                        <button id="toggle-key-visibility" class="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors border border-white/5 flex-shrink-0" title="Hiện/Ẩn">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                         </button>
                     </div>
                     <p class="text-[8px] text-slate-500 mt-1 italic pl-1 flex items-center gap-1">
                         <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
-                        Nhập mã để mở khóa tính năng AI Studio
+                        Bấm nút xanh bên cạnh để Lưu Token
                     </p>
                 </div>
 
@@ -772,7 +778,7 @@
                     </div>
                 </div>
 
-                <!-- MODULE 4: PROMPT (API Key Removed) -->
+                <!-- MODULE 4: PROMPT & SYSTEM -->
                 <div class="module-group" id="module-prompt">
                     <button id="toggle-prompt" class="w-full flex justify-between items-center module-header">
                         <span class="text-[10px] font-bold text-slate-200 tracking-wide uppercase flex items-center gap-2">📝 PROMPT & SYSTEM</span>
@@ -1866,12 +1872,57 @@
             const structureVal = document.getElementById('structure-val');
             const structureContainer = document.getElementById('structure-container');
             
-            // === NEW: TOGGLE KEY VISIBILITY (FOR NEW INPUT) ===
+            // === NEW: TOGGLE KEY VISIBILITY & AUTO-SAVE LOGIC ===
             const toggleKeyBtn = document.getElementById('toggle-key-visibility');
             const userApiKeyInput = document.getElementById('user-api-key');
+            const btnQuickSave = document.getElementById('btn-quick-save-key');
+            
+            // 1. Load saved key on startup
+            if(userApiKeyInput && state.userSettings.apiKey) {
+                userApiKeyInput.value = state.userSettings.apiKey;
+            }
+
             if(toggleKeyBtn && userApiKeyInput) {
                 toggleKeyBtn.addEventListener('click', () => {
                     userApiKeyInput.type = userApiKeyInput.type === 'password' ? 'text' : 'password';
+                });
+                
+                // 2. Auto-save on input
+                userApiKeyInput.addEventListener('input', (e) => {
+                    const val = e.target.value.trim();
+                    state.userSettings.apiKey = val;
+                    // Auto-save logic remains for backup
+                    try { 
+                        const dataStr = JSON.stringify(state.userSettings);
+                        const encrypted = SimpleSec.encrypt(dataStr);
+                        localStorage.setItem('v35_user_settings', encrypted); 
+                    } catch(err) {}
+                });
+            }
+
+            // 3. Manual Save Button Logic
+            if(btnQuickSave && userApiKeyInput) {
+                btnQuickSave.addEventListener('click', () => {
+                    const val = userApiKeyInput.value.trim();
+                    if(!val) return showToast("Chưa nhập API Key!", "error");
+                    
+                    state.userSettings.apiKey = val;
+                    try { 
+                        const dataStr = JSON.stringify(state.userSettings);
+                        const encrypted = SimpleSec.encrypt(dataStr);
+                        localStorage.setItem('v35_user_settings', encrypted); 
+                        
+                        // Sync with admin modal input if exists
+                        const modalKey = document.getElementById('modal-api-key');
+                        if(modalKey) modalKey.value = val;
+                        
+                        showToast("✅ Đã lưu API Key thành công!", "success");
+                        btnQuickSave.classList.add('bg-green-500', 'text-white');
+                        setTimeout(() => btnQuickSave.classList.remove('bg-green-500', 'text-white'), 1000);
+                    } catch(err) {
+                        console.error("Save error", err);
+                        showToast("Lỗi lưu trữ!", "error");
+                    }
                 });
             }
 
@@ -3203,8 +3254,6 @@
             if(mobBtnReset) mobBtnReset.onclick = () => window.location.reload();
 
             // 3. Hook into Load Image to switch buttons
-            const originalLoadImg = loadImg; // Save ref
-            // Note: We can't overwrite const, but we defined loadImg as const. 
             // In the fileInput listener, we can inject logic.
             if(fileInput) fileInput.addEventListener('change', (e) => {
                  if (e.target.files.length > 0) {
