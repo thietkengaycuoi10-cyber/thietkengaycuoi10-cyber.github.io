@@ -326,7 +326,7 @@
                 
                 <div class="flex items-center gap-3">
                     <div class="flex flex-col items-end mr-1" id="credit-display">
-                        <span class="text-[8px] text-slate-400 font-bold uppercase tracking-wider">CREDITS</span>
+                        <span class="text-[8px] text-slate-400 font-bold uppercase tracking-wider">RH COINS</span>
                         <span class="text-xs font-mono font-bold text-yellow-400 shadow-[0_0_10px_rgba(250,204,21,0.3)]" id="credit-count">---</span>
                     </div>
                     <!-- REMOVED ADMIN BUTTON AS REQUESTED -->
@@ -939,23 +939,23 @@
             <div class="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-red-500/20">
                 <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
             </div>
-            <h3 class="text-xl font-bold text-white mb-2 uppercase">HẾT CREDIT SỬ DỤNG!</h3>
-            <p class="text-xs text-slate-400 mb-6">Bạn đã dùng hết lượt tạo ảnh miễn phí. Mỗi lần tạo ảnh tốn <span class="text-red-400 font-bold">20 Credit</span>.</p>
+            <h3 class="text-xl font-bold text-white mb-2 uppercase">HẾT RH COINS SỬ DỤNG!</h3>
+            <p class="text-xs text-slate-400 mb-6">Bạn đã dùng hết lượt tạo ảnh miễn phí. Mỗi lần tạo ảnh tốn <span class="text-red-400 font-bold">20 RH Coins</span>.</p>
             
             <!-- BẢNG GIÁ QUY ĐỔI (MỚI THÊM VÀO ĐÂY) -->
             <div class="grid grid-cols-3 gap-2 mb-4">
                 <div class="flex flex-col items-center justify-center p-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors cursor-default">
                     <span class="text-xs font-bold text-slate-300">100K</span>
-                    <span class="text-[10px] font-mono font-bold text-yellow-500">= 80 CR</span>
+                    <span class="text-[10px] font-mono font-bold text-yellow-500">= 80 RH</span>
                 </div>
                 <div class="flex flex-col items-center justify-center p-2 rounded-lg bg-violet-600/20 border border-violet-500/50 relative overflow-hidden cursor-default shadow-[0_0_10px_rgba(139,92,246,0.2)]">
                     <div class="absolute top-0 right-0 bg-red-500 text-[6px] font-bold px-1.5 text-white rounded-bl">HOT</div>
                     <span class="text-xs font-bold text-violet-300">200K</span>
-                    <span class="text-[10px] font-mono font-bold text-yellow-400">= 200 CR</span>
+                    <span class="text-[10px] font-mono font-bold text-yellow-400">= 200 RH</span>
                 </div>
                 <div class="flex flex-col items-center justify-center p-2 rounded-lg bg-blue-600/20 border border-blue-500/50 cursor-default hover:bg-blue-600/30 transition-colors">
                     <span class="text-xs font-bold text-blue-300">500K</span>
-                    <span class="text-[10px] font-mono font-bold text-yellow-400">= 500 CR</span>
+                    <span class="text-[10px] font-mono font-bold text-yellow-400">= 500 RH</span>
                 </div>
             </div>
 
@@ -1026,13 +1026,13 @@
                     <!-- Credits Management -->
                     <div class="bg-white/5 p-3 rounded border border-white/10 flex justify-between items-center">
                         <div>
-                            <label class="text-[9px] font-bold text-slate-500 uppercase block mb-1">SỐ DƯ HIỆN TẠI</label>
+                            <label class="text-[9px] font-bold text-slate-500 uppercase block mb-1">SỐ DƯ RH COINS HIỆN TẠI</label>
                             <div class="text-xl font-mono font-bold text-yellow-400" id="admin-current-credits">0</div>
                         </div>
                         <div class="flex flex-col gap-1">
-                             <button class="add-credit-btn px-3 py-1.5 bg-green-600 hover:bg-green-500 text-white text-[9px] font-bold rounded" data-amount="100">+100 CR</button>
-                             <button class="add-credit-btn px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-[9px] font-bold rounded" data-amount="500">+500 CR</button>
-                             <button class="add-credit-btn px-3 py-1.5 bg-red-600 hover:bg-red-500 text-white text-[9px] font-bold rounded" data-amount="-20">-20 CR (Test)</button>
+                             <button class="add-credit-btn px-3 py-1.5 bg-green-600 hover:bg-green-500 text-white text-[9px] font-bold rounded" data-amount="100">+100 RH</button>
+                             <button class="add-credit-btn px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-[9px] font-bold rounded" data-amount="500">+500 RH</button>
+                             <button class="add-credit-btn px-3 py-1.5 bg-red-600 hover:bg-red-500 text-white text-[9px] font-bold rounded" data-amount="-20">-20 RH</button>
                         </div>
                     </div>
                     
@@ -1058,11 +1058,11 @@
                             </div>
 
                             <div>
-                                <label class="text-[9px] font-bold text-slate-400 uppercase mb-1 block">Gói Credits</label>
+                                <label class="text-[9px] font-bold text-slate-400 uppercase mb-1 block">Gói RH Coins</label>
                                 <div class="grid grid-cols-3 gap-2">
-                                    <button class="gen-pkg-btn py-1.5 rounded border border-white/10 bg-white/5 hover:bg-violet-500 hover:text-white text-[9px] font-bold transition-all text-slate-300" data-val="100">100 CR</button>
-                                    <button class="gen-pkg-btn py-1.5 rounded border border-white/10 bg-white/5 hover:bg-violet-500 hover:text-white text-[9px] font-bold transition-all text-slate-300" data-val="200">200 CR</button>
-                                    <button class="gen-pkg-btn py-1.5 rounded border border-white/10 bg-white/5 hover:bg-violet-500 hover:text-white text-[9px] font-bold transition-all text-slate-300" data-val="500">500 CR</button>
+                                    <button class="gen-pkg-btn py-1.5 rounded border border-white/10 bg-white/5 hover:bg-violet-500 hover:text-white text-[9px] font-bold transition-all text-slate-300" data-val="100">100 RH</button>
+                                    <button class="gen-pkg-btn py-1.5 rounded border border-white/10 bg-white/5 hover:bg-violet-500 hover:text-white text-[9px] font-bold transition-all text-slate-300" data-val="200">200 RH</button>
+                                    <button class="gen-pkg-btn py-1.5 rounded border border-white/10 bg-white/5 hover:bg-violet-500 hover:text-white text-[9px] font-bold transition-all text-slate-300" data-val="500">500 RH</button>
                                 </div>
                                 <input type="hidden" id="gen-selected-credit" value="">
                             </div>
@@ -1276,7 +1276,16 @@
                             gateIpDisplay.innerHTML = `<span class="text-slate-400 text-xs">${data.ip}</span> <span class="text-white mx-1">|</span> <span class="text-yellow-400 font-bold">${this.deviceId}</span>`; 
                             gateIpDisplay.classList.remove('shimmer-text');
                             if(gateLoader) gateLoader.style.display = 'none';
-                            if(gateBtn) {
+                            
+                            // Nếu đã có cấu hình, mở luôn
+                            if (state.userSettings.apiKey) {
+                                gateStatus.textContent = "Đã tìm thấy cấu hình đã lưu (RH Coins Mode). Sẵn sàng!";
+                                gateStatus.classList.add('text-green-500');
+                                if(gateBtn) {
+                                    gateBtn.disabled = false;
+                                    gateBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                                }
+                            } else if(gateBtn) {
                                 gateBtn.disabled = false;
                                 gateBtn.classList.remove('opacity-50', 'cursor-not-allowed');
                                 gateStatus.textContent = `Đã nhận diện thiết bị: ${this.deviceId}`;
@@ -1458,9 +1467,20 @@
             } catch(e) {}
 
             async function loginByIP() {
-                // Bỏ qua check IP nếu đã có hardcoded key, cho vào luôn
-                if(apiKey && apiKey.length > 10) {
-                     console.log("System Key found, skipping IP check for UX");
+                // Bỏ qua check IP nếu đã có hardcoded key HOẶC key đã lưu trong máy
+                const hasSavedKey = state.userSettings && state.userSettings.apiKey && state.userSettings.apiKey.length > 5;
+                if ((apiKey && apiKey.length > 10) || hasSavedKey) {
+                     console.log("Valid Key found, bypassing strict IP check.");
+                     // Cho vào luôn không cần đợi
+                     gateStatus.textContent = "Đã xác thực cấu hình. Đang vào...";
+                     gateStatus.className = "mt-6 text-[10px] text-green-400 font-bold";
+                     
+                     setTimeout(() => {
+                        gateScreen.classList.add('animate-fade-out');
+                        setTimeout(() => { gateScreen.style.display = 'none'; }, 500);
+                        if(hasSavedKey) showToast("Đã tải cấu hình lưu trên máy (RH Coins Mode)", "smart");
+                     }, 500);
+                     return;
                 }
                 
                 gateStatus.textContent = `Đang xác thực IP: ${UserSystem.ipAddress || 'Checking'}...`;
@@ -1790,7 +1810,7 @@
                     
                     resultKey.value = key;
                     resultContainer.classList.remove('hidden');
-                    showToast(`Đã tạo mã ${credits} Credits thành công!`, "success");
+                    showToast(`Đã tạo mã ${credits} RH Coins thành công!`, "success");
                 });
             }
 
@@ -1894,7 +1914,7 @@
                 btn.onclick = (e) => {
                     const amount = parseInt(e.target.dataset.amount);
                     UserSystem.addCredits(amount);
-                    showToast(`Đã thay đổi số dư: ${amount > 0 ? '+' : ''}${amount} CR`, "success");
+                    showToast(`Đã thay đổi số dư: ${amount > 0 ? '+' : ''}${amount} RH`, "success");
                 };
             });
 
@@ -1922,7 +1942,7 @@
                      usedCodes.push(code);
                      localStorage.setItem('v35_used_codes', JSON.stringify(usedCodes));
                      
-                     showToast(`Nạp thành công +${credits} Credits!`, "success");
+                     showToast(`Nạp thành công +${credits} RH Coins!`, "success");
                      rechargeModal.classList.add('hidden');
                      redeemInput.value = '';
                 });
