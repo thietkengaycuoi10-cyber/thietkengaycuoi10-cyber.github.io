@@ -913,75 +913,113 @@
         </main>
     </div>
 
-    <!-- NEW: RECHARGE MODAL -->
-    <div id="recharge-modal" class="fixed inset-0 z-[110] bg-black/90 backdrop-blur-md hidden flex items-center justify-center modal-fade-in">
-        <div class="w-[350px] bg-[#0a0a0f] border border-red-500/30 rounded-2xl shadow-[0_0_50px_rgba(239,68,68,0.2)] p-6 text-center relative overflow-hidden">
-            <div class="absolute top-0 left-0 w-full h-1 bg-red-500"></div>
-            <div class="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-red-500/20">
-                <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-            </div>
-            <h3 class="text-xl font-bold text-white mb-2 uppercase">HẾT CREDIT SỬ DỤNG!</h3>
-            <p class="text-xs text-slate-400 mb-6">Bạn đã dùng hết lượt tạo ảnh miễn phí. Mỗi lần tạo ảnh tốn <span class="text-red-400 font-bold">20 Credit</span>.</p>
+    <!-- NEW: RECHARGE MODAL (REDESIGNED V2 MOBILE) -->
+    <div id="recharge-modal" class="fixed inset-0 z-[110] bg-black/90 backdrop-blur-md hidden flex items-center justify-center modal-fade-in p-4">
+        <!-- Main Card: Kích thước tối ưu cho mobile (khoảng 340-360px width, chiều cao tự động nhưng max màn hình) -->
+        <div class="w-full max-w-[350px] bg-[#0e0e12] border border-violet-500/20 rounded-3xl shadow-2xl flex flex-col overflow-hidden max-h-[90vh]">
             
-            <!-- BẢNG GIÁ QUY ĐỔI (MỚI THÊM VÀO ĐÂY) -->
-            <div class="grid grid-cols-3 gap-2 mb-4">
-                <div class="flex flex-col items-center justify-center p-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors cursor-default">
-                    <span class="text-xs font-bold text-slate-300">100K</span>
-                    <span class="text-[10px] font-mono font-bold text-yellow-500">= 80 CR</span>
+            <!-- Header Gọn -->
+            <div class="p-4 bg-gradient-to-r from-violet-900/40 to-slate-900/40 border-b border-white/5 flex-shrink-0 flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-red-500/10 flex items-center justify-center border border-red-500/20 flex-shrink-0">
+                    <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                 </div>
-                <div class="flex flex-col items-center justify-center p-2 rounded-lg bg-violet-600/20 border border-violet-500/50 relative overflow-hidden cursor-default shadow-[0_0_10px_rgba(139,92,246,0.2)]">
-                    <div class="absolute top-0 right-0 bg-red-500 text-[6px] font-bold px-1.5 text-white rounded-bl">HOT</div>
-                    <span class="text-xs font-bold text-violet-300">200K</span>
-                    <span class="text-[10px] font-mono font-bold text-yellow-400">= 200 CR</span>
-                </div>
-                <div class="flex flex-col items-center justify-center p-2 rounded-lg bg-blue-600/20 border border-blue-500/50 cursor-default hover:bg-blue-600/30 transition-colors">
-                    <span class="text-xs font-bold text-blue-300">500K</span>
-                    <span class="text-[10px] font-mono font-bold text-yellow-400">= 500 CR</span>
+                <div>
+                    <h3 class="text-sm font-bold text-white uppercase tracking-wider">HẾT CREDIT SỬ DỤNG</h3>
+                    <p class="text-[9px] text-slate-400">Chọn gói nạp để tiếp tục sử dụng AI</p>
                 </div>
             </div>
 
-            <div class="bg-white/5 rounded-lg p-4 mb-4 border border-white/10">
-                <p class="text-[10px] font-bold text-slate-500 uppercase mb-2">THÔNG TIN CHUYỂN KHOẢN</p>
+            <!-- Scrollable Body -->
+            <div class="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar">
                 
-                <!-- NEW: DYNAMIC QR CODE CONTAINER -->
-                <div class="mb-4 flex flex-col items-center justify-center bg-white p-2 rounded-xl shadow-lg border-4 border-white">
-                    <img id="banking-qr" src="https://img.vietqr.io/image/MB-85543556868-compact2.jpg?amount=100000&addInfo=NAP%20V35&accountName=HOANG%20QUANG%20CUONG" class="w-40 h-40 object-contain" alt="QR Code">
-                    <p class="text-[9px] text-slate-800 font-bold mt-1 uppercase tracking-wider">QUÉT QR ĐỂ THANH TOÁN</p>
-                </div>
-
-                <p class="text-sm font-mono font-bold text-yellow-400 tracking-wider mb-2 break-all">MB BANK - HOANG QUANG CUONG - 85543556868</p>
-                
-                <div class="mt-3 pt-3 border-t border-white/10 text-left">
-                    <label class="text-[9px] font-bold text-slate-400 uppercase mb-1 block">CHỌN GÓI ĐÃ CHUYỂN KHOẢN</label>
-                    <div class="flex gap-2 mb-2">
-                        <button class="pkg-select-btn flex-1 py-1.5 rounded border border-white/10 bg-white/5 hover:bg-blue-600 hover:text-white text-[9px] font-bold transition-all text-slate-300" data-amount="100k">100K</button>
-                        <button class="pkg-select-btn flex-1 py-1.5 rounded border border-white/10 bg-white/5 hover:bg-blue-600 hover:text-white text-[9px] font-bold transition-all text-slate-300" data-amount="200k">200K</button>
-                        <button class="pkg-select-btn flex-1 py-1.5 rounded border border-white/10 bg-white/5 hover:bg-blue-600 hover:text-white text-[9px] font-bold transition-all text-slate-300" data-amount="500k">500K</button>
+                <!-- 1. Danh sách gói (Thay thế cho các nút bấm rối mắt cũ) -->
+                <div class="space-y-2">
+                    <label class="text-[9px] font-bold text-slate-500 uppercase block ml-1">CHỌN GÓI NẠP</label>
+                    
+                    <!-- Gói 100K -->
+                    <div class="pkg-card group relative p-3 rounded-xl border border-white/10 bg-white/5 hover:border-blue-500/50 cursor-pointer transition-all active:scale-95 flex items-center justify-between" onclick="selectPackage('100k', this)">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-400 font-bold text-xs border border-blue-500/20">100K</div>
+                            <div class="flex flex-col">
+                                <span class="text-xs font-bold text-slate-200">Gói Trải Nghiệm</span>
+                                <span class="text-[9px] text-slate-400">Nhận <b class="text-white">80 Credits</b></span>
+                            </div>
+                        </div>
+                        <div class="radio-circle w-4 h-4 rounded-full border border-slate-600 group-hover:border-blue-400 flex items-center justify-center">
+                            <div class="w-2 h-2 rounded-full bg-blue-400 opacity-0 transition-opacity"></div>
+                        </div>
                     </div>
 
-                    <label class="text-[9px] font-bold text-slate-400 uppercase mb-1 block">NỘI DUNG NHẮN ZALO (TỰ ĐỘNG)</label>
-                    <div class="relative group">
-                        <textarea id="zalo-msg-content" class="pro-input w-full p-2 h-16 resize-none text-[10px] bg-black/20 border-blue-500/30 text-blue-200" placeholder="Chọn gói để tạo nội dung tự động..." readonly></textarea>
-                        <a id="btn-send-zalo" href="https://zalo.me/0352803379" target="_blank" class="absolute bottom-2 right-2 px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white text-[9px] font-bold rounded flex items-center gap-1 transition-all shadow-lg hover:shadow-blue-500/50">
+                    <!-- Gói 200K (Mặc định) -->
+                    <div id="pkg-200k" class="pkg-card active group relative p-3 rounded-xl border border-yellow-500 bg-yellow-500/10 cursor-pointer transition-all active:scale-95 flex items-center justify-between" onclick="selectPackage('200k', this)">
+                        <div class="absolute -top-2 -right-1 bg-gradient-to-r from-red-500 to-orange-500 text-white text-[8px] font-bold px-2 py-0.5 rounded-full shadow-lg animate-pulse">KHUYÊN DÙNG</div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-yellow-500/20 flex items-center justify-center text-yellow-400 font-bold text-xs border border-yellow-500/30">200K</div>
+                            <div class="flex flex-col">
+                                <span class="text-xs font-bold text-white">Gói Phổ Biến</span>
+                                <span class="text-[9px] text-yellow-200/80">Nhận <b class="text-white">200 Credits</b></span>
+                            </div>
+                        </div>
+                        <div class="radio-circle w-4 h-4 rounded-full border border-yellow-500 flex items-center justify-center bg-yellow-500">
+                            <div class="w-2 h-2 rounded-full bg-black opacity-100"></div>
+                        </div>
+                    </div>
+
+                    <!-- Gói 500K -->
+                    <div class="pkg-card group relative p-3 rounded-xl border border-white/10 bg-white/5 hover:border-purple-500/50 cursor-pointer transition-all active:scale-95 flex items-center justify-between" onclick="selectPackage('500k', this)">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-purple-500/10 flex items-center justify-center text-purple-400 font-bold text-xs border border-purple-500/20">500K</div>
+                            <div class="flex flex-col">
+                                <span class="text-xs font-bold text-slate-200">Gói Studio VIP</span>
+                                <span class="text-[9px] text-slate-400">Nhận <b class="text-white">500 Credits</b></span>
+                            </div>
+                        </div>
+                        <div class="radio-circle w-4 h-4 rounded-full border border-slate-600 group-hover:border-purple-400 flex items-center justify-center">
+                            <div class="w-2 h-2 rounded-full bg-purple-400 opacity-0 transition-opacity"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Khu vực QR Code (Thiết kế lại gọn gàng) -->
+                <div class="bg-white p-3 rounded-2xl shadow-lg border border-white/10 relative overflow-hidden group text-center">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-yellow-500 to-purple-500"></div>
+                    
+                    <p class="text-[10px] text-slate-800 font-bold uppercase tracking-widest mb-2 mt-1">QUÉT QR THANH TOÁN</p>
+                    
+                    <div class="flex justify-center bg-white">
+                        <img id="banking-qr" src="https://img.vietqr.io/image/MB-85543556868-compact2.jpg?amount=200000&addInfo=NAP%20V35&accountName=HOANG%20QUANG%20CUONG" class="w-32 h-32 object-contain mix-blend-multiply" alt="QR Code">
+                    </div>
+                    
+                    <div class="mt-2 pt-2 border-t border-slate-100">
+                        <p class="text-[10px] font-bold text-slate-600">MB BANK: <span class="font-mono text-base text-blue-600 select-all">85543556868</span></p>
+                        <p class="text-[9px] text-slate-400 uppercase">HOANG QUANG CUONG</p>
+                    </div>
+                </div>
+
+                <!-- 3. Zalo Action (Đơn giản hóa) -->
+                <div>
+                    <label class="text-[9px] font-bold text-slate-500 uppercase block ml-1 mb-1">XÁC NHẬN NẠP</label>
+                    <div class="relative">
+                        <textarea id="zalo-msg-content" class="w-full p-3 h-12 bg-white/5 border border-white/10 text-slate-300 rounded-xl text-[10px] resize-none focus:outline-none" readonly>Đã CK 200k. IP: ... Xin mã kích hoạt V35.</textarea>
+                        <a id="btn-send-zalo" href="https://zalo.me/0352803379" target="_blank" class="absolute top-1/2 -translate-y-1/2 right-2 px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-[9px] font-bold rounded-lg flex items-center gap-1 transition-all shadow-lg active:scale-95">
                             GỬI ZALO <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
                         </a>
                     </div>
-                    <p class="text-[8px] text-slate-500 mt-1 italic text-center">*Click gửi để mở Zalo chat với Admin</p>
+                    <p class="text-[8px] text-slate-600 mt-1.5 italic text-center">*Bấm gửi Zalo để Admin cấp mã ngay lập tức.</p>
                 </div>
+
+                <!-- 4. Nhập Mã (Giữ nguyên) -->
+                <div class="pt-2 border-t border-white/5">
+                    <div class="flex gap-2">
+                        <input type="text" id="recharge-input" class="w-full bg-[#15161c] border border-violet-500/20 text-violet-300 rounded-xl px-3 py-2.5 text-[10px] font-mono uppercase focus:border-violet-500 focus:outline-none placeholder-slate-600 text-center tracking-wider" placeholder="NHẬP MÃ KÍCH HOẠT">
+                        <button id="btn-submit-recharge" class="bg-violet-600 hover:bg-violet-500 text-white px-4 rounded-xl text-xs font-bold shadow-lg transition-all active:scale-95 whitespace-nowrap">KÍCH HOẠT</button>
+                    </div>
+                </div>
+
             </div>
 
-            <!-- NEW: REDEEM CODE INPUT -->
-            <div class="mb-4">
-                <div class="flex gap-2">
-                    <input type="text" id="recharge-input" class="pro-input w-full py-2.5 text-center font-mono uppercase text-violet-300 border-violet-500/30 bg-violet-500/10" placeholder="NHẬP MÃ NẠP (V35-...)">
-                </div>
-                <button id="btn-submit-recharge" class="w-full mt-2 py-2.5 bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-500 hover:to-blue-500 text-white rounded-lg text-xs font-bold transition-all shadow-lg flex items-center justify-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                    NẠP NGAY
-                </button>
-            </div>
-            
-            <button id="close-recharge" class="w-full py-2.5 bg-white/10 hover:bg-white/20 text-white rounded-lg text-xs font-bold transition-colors">ĐÓNG LẠI</button>
+            <!-- Footer Close -->
+            <button id="close-recharge" class="w-full py-3 bg-[#15161c] hover:bg-[#1a1b21] text-slate-400 hover:text-white text-[10px] font-bold tracking-widest border-t border-white/5 transition-colors uppercase">Đóng cửa sổ</button>
         </div>
     </div>
 
@@ -1747,17 +1785,77 @@
             
             const rechargeModal = document.getElementById('recharge-modal');
             const closeRechargeBtn = document.getElementById('close-recharge');
-            const addCreditBtns = document.querySelectorAll('.add-credit-btn');
+            // Removed old addCreditBtns logic as we now use a unified selectPackage function
 
             if(closeRechargeBtn) closeRechargeBtn.onclick = () => rechargeModal.classList.add('hidden');
             
-            addCreditBtns.forEach(btn => {
-                btn.onclick = (e) => {
-                    const amount = parseInt(e.target.dataset.amount);
-                    UserSystem.addCredits(amount);
-                    showToast(`Đã thay đổi số dư: ${amount > 0 ? '+' : ''}${amount} CR`, "success");
-                };
-            });
+            // === NEW: UNIFIED PACKAGE SELECTION LOGIC ===
+            window.selectPackage = function(amountKey, element) {
+                // 1. Reset all cards visual state
+                document.querySelectorAll('.pkg-card').forEach(card => {
+                    card.classList.remove('border-yellow-500', 'bg-yellow-500/10', 'active');
+                    card.classList.add('border-white/10', 'bg-white/5');
+                    
+                    // Reset radio circle
+                    const radio = card.querySelector('.radio-circle');
+                    if(radio) {
+                        radio.className = 'radio-circle w-4 h-4 rounded-full border border-slate-600 group-hover:border-blue-400 flex items-center justify-center';
+                        radio.innerHTML = '<div class="w-2 h-2 rounded-full bg-blue-400 opacity-0 transition-opacity"></div>';
+                    }
+                });
+
+                // 2. Set active state for clicked card
+                element.classList.remove('border-white/10', 'bg-white/5');
+                element.classList.add('active');
+                
+                // Color logic based on package
+                if(amountKey === '200k') {
+                    element.classList.add('border-yellow-500', 'bg-yellow-500/10');
+                    const radio = element.querySelector('.radio-circle');
+                    if(radio) {
+                        radio.className = 'radio-circle w-4 h-4 rounded-full border border-yellow-500 flex items-center justify-center bg-yellow-500';
+                        radio.innerHTML = '<div class="w-2 h-2 rounded-full bg-black opacity-100"></div>';
+                    }
+                } else if (amountKey === '500k') {
+                    element.classList.add('border-purple-500', 'bg-purple-500/10');
+                    const radio = element.querySelector('.radio-circle');
+                    if(radio) {
+                        radio.className = 'radio-circle w-4 h-4 rounded-full border border-purple-500 flex items-center justify-center bg-purple-500';
+                        radio.innerHTML = '<div class="w-2 h-2 rounded-full bg-white opacity-100"></div>';
+                    }
+                } else {
+                    element.classList.add('border-blue-500', 'bg-blue-500/10');
+                    const radio = element.querySelector('.radio-circle');
+                    if(radio) {
+                        radio.className = 'radio-circle w-4 h-4 rounded-full border border-blue-500 flex items-center justify-center bg-blue-500';
+                        radio.innerHTML = '<div class="w-2 h-2 rounded-full bg-white opacity-100"></div>';
+                    }
+                }
+
+                // 3. Update Data (QR & Text)
+                const amountMap = { '100k': 100000, '200k': 200000, '500k': 500000 };
+                const amountVal = amountMap[amountKey];
+                
+                // Update QR
+                const qrImg = document.getElementById('banking-qr');
+                if(qrImg && amountVal) {
+                     const memo = `NAP V35 ${UserSystem.deviceId || 'USER'}`; 
+                     qrImg.src = `https://img.vietqr.io/image/MB-85543556868-compact2.jpg?amount=${amountVal}&addInfo=${encodeURIComponent(memo)}&accountName=HOANG%20QUANG%20CUONG`;
+                }
+
+                // Update Zalo Text
+                const zaloMsgContent = document.getElementById('zalo-msg-content');
+                if(zaloMsgContent) {
+                    const ipInfo = `IP: ${UserSystem.ipAddress || '...'} - ID: ${UserSystem.deviceId}`;
+                    zaloMsgContent.value = `Đã CK ${amountKey.toUpperCase()}. ${ipInfo}. Xin mã kích hoạt Studio V35.`;
+                }
+            };
+
+            // Initialize default state (update zalo text on load)
+            setTimeout(() => {
+                const defaultPkg = document.getElementById('pkg-200k');
+                if(defaultPkg) selectPackage('200k', defaultPkg);
+            }, 1000);
 
             // === REDEEM CODE LOGIC ===
             const redeemBtn = document.getElementById('btn-submit-recharge');
