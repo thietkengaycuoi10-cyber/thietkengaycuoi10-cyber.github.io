@@ -1127,7 +1127,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const apiKey = ""; 
+            const apiKey = "AIzaSyCXIWbWNX77UaTV1dt0RNZR4PREQh_oZ6w"; 
 
             // === HỆ THỐNG MÃ HÓA BẢO MẬT (NEW) ===
             const SimpleSec = {
@@ -2502,7 +2502,7 @@
                         return;
                     }
 
-                    if(!state.base64) return showToast("Vui lòng tải ảnh!", "error");
+                    if(!state.base64) return showToast("Vui lòng tải ảnh trước!", "error");
                     if (!UserSystem.deductCredits(20)) {
                         rechargeModal.classList.remove('hidden');
                         return; 
@@ -2987,8 +2987,7 @@
                 const performReset = (e) => {
                     if(e.cancelable) e.preventDefault();
                     showToast("Đang làm mới hệ thống...", "info");
-                    // Update: Robust reload for Github Pages compatibility
-                    setTimeout(() => { window.location.reload(); }, 300);
+                    setTimeout(() => { window.location.href = window.location.pathname + '?t=' + new Date().getTime(); }, 300);
                 };
                 btnReset.addEventListener('click', performReset);
                 btnReset.addEventListener('touchend', performReset);
