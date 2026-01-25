@@ -1098,6 +1098,21 @@
                                 <p class="text-[9px] text-slate-500 mt-1 italic" id="url-hint">Mặc định: https://generativelanguage.googleapis.com</p>
                             </div>
 
+                            <!-- NEW: MODEL CONFIGURATION -->
+                            <div class="pt-2 mt-2 border-t border-white/5">
+                                <label class="text-[10px] font-bold text-slate-400 uppercase mb-1 block">Cấu hình Model ID (Nâng cao)</label>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div>
+                                        <span class="text-[8px] text-slate-500 block mb-0.5">Auto Scan Model</span>
+                                        <input type="text" id="modal-model-scan" class="pro-input w-full py-2 font-mono text-[9px]" placeholder="gemini-1.5-flash">
+                                    </div>
+                                    <div>
+                                        <span class="text-[8px] text-slate-500 block mb-0.5">Generation Model</span>
+                                        <input type="text" id="modal-model-gen" class="pro-input w-full py-2 font-mono text-[9px]" placeholder="gemini-2.0-flash-exp">
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="pt-2 flex flex-col gap-2">
                                 <button id="btn-save-login" class="w-full py-2 bg-violet-600 hover:bg-violet-500 text-white rounded text-xs font-bold transition-colors shadow-lg">LƯU CẤU HÌNH</button>
                                 <button id="btn-logout" class="w-full py-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 rounded text-xs font-bold transition-colors hidden">ĐĂNG XUẤT / RESET</button>
@@ -1285,7 +1300,9 @@
                     username: '',
                     apiKey: '',
                     provider: 'google', // 'google' | 'comet' | 'custom'
-                    baseUrl: 'https://generativelanguage.googleapis.com'
+                    baseUrl: 'https://generativelanguage.googleapis.com',
+                    modelScan: 'gemini-1.5-flash',
+                    modelGen: 'gemini-2.0-flash-exp'
                 }
             };
 
@@ -1381,6 +1398,10 @@
             const modalUser = document.getElementById('modal-username');
             const modalKey = document.getElementById('modal-api-key');
             const modalBaseUrl = document.getElementById('modal-base-url');
+            // NEW MODAL INPUTS
+            const modalModelScan = document.getElementById('modal-model-scan');
+            const modalModelGen = document.getElementById('modal-model-gen');
+
             const btnProvGoogle = document.getElementById('btn-provider-google');
             const btnProvComet = document.getElementById('btn-provider-comet');
             const baseUrlSection = document.getElementById('base-url-section');
@@ -1430,6 +1451,9 @@
                     modalUser.value = state.userSettings.username || '';
                     modalKey.value = state.userSettings.apiKey || '';
                     modalBaseUrl.value = state.userSettings.baseUrl || 'https://generativelanguage.googleapis.com';
+                    // Load saved models or defaults
+                    modalModelScan.value = state.userSettings.modelScan || 'gemini-1.5-flash';
+                    modalModelGen.value = state.userSettings.modelGen || 'gemini-2.0-flash-exp';
                     
                     if(UserSystem.ipAddress) {
                         displayIp.value = UserSystem.ipAddress;
@@ -1471,6 +1495,9 @@
                 state.userSettings.username = modalUser.value.trim();
                 state.userSettings.apiKey = modalKey.value.trim();
                 state.userSettings.baseUrl = modalBaseUrl.value.trim().replace(/\/$/, '');
+                // Save Models
+                state.userSettings.modelScan = modalModelScan.value.trim() || 'gemini-1.5-flash';
+                state.userSettings.modelGen = modalModelGen.value.trim() || 'gemini-2.0-flash-exp';
                 
                 // LƯU CÓ MÃ HÓA
                 try { 
@@ -1601,7 +1628,10 @@
                 const key = manualKey || state.userSettings.apiKey || apiKey;
                 const base = state.userSettings.baseUrl || "https://generativelanguage.googleapis.com";
                 const isComet = state.userSettings.provider === 'comet';
-                return { key, base, isComet };
+                // Get configured models
+                const modelScan = state.userSettings.modelScan || 'gemini-1.5-flash';
+                const modelGen = state.userSettings.modelGen || 'gemini-2.0-flash-exp';
+                return { key, base, isComet, modelScan, modelGen };
             };
             
             const resizeImage = (base64Str, maxWidth = 1536) => {
@@ -2058,14 +2088,15 @@
                     btnAutoPilot.disabled = true;
                     btnAutoPilot.innerHTML = `<span class="animate-pulse">AUTO-SCAN V35.60 (AUTO-SIZE)...</span>`;
                     
+                    const { key: keyToUse, base: apiBase, isComet, modelScan } = getApiConfig();
+
                     try {
-                        const { key: keyToUse, base: apiBase, isComet } = config; // Use safe config
-                        
                         const resizedBase64 = await resizeImage(state.base64);
                         const headers = { 'Content-Type': 'application/json' };
                         if (isComet) headers['Authorization'] = `Bearer ${keyToUse}`;
-
-                        const response = await fetch(`${apiBase}/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${keyToUse}`, {
+                        
+                        // USE DYNAMIC MODEL SCAN
+                        const response = await fetch(`${apiBase}/v1beta/models/${modelScan}:generateContent?key=${keyToUse}`, {
                             method: 'POST',
                             headers: headers,
                             body: JSON.stringify({
@@ -2753,7 +2784,7 @@
                         }
                     }, 800);
 
-                    const { key: keyToUse, base: apiBase, isComet } = config; // Safe config usage
+                    const { key: keyToUse, base: apiBase, isComet, modelGen } = getApiConfig();
 
                     try {
                         const resizedBase64 = await resizeImage(state.base64);
@@ -2765,20 +2796,31 @@
 
                         const headers = { 'Content-Type': 'application/json' };
                         if (isComet) headers['Authorization'] = `Bearer ${keyToUse}`;
-
-                        const response = await fetch(`${apiBase}/v1beta/models/gemini-2.5-flash-image-preview:generateContent?key=${keyToUse}`, {
+                        
+                        // USE DYNAMIC MODEL GEN
+                        // NOTE: If using gemini-2.0-flash-exp, responseModalities might differ or just be omitted.
+                        // Standard generateContent returns text unless it's a specific image model.
+                        // We remove generationConfig: { responseModalities: ["TEXT", "IMAGE"] } as it often causes errors on standard models
+                        const response = await fetch(`${apiBase}/v1beta/models/${modelGen}:generateContent?key=${keyToUse}`, {
                             method: 'POST',
                             headers: headers,
-                            body: JSON.stringify({ contents: [{ parts: parts }], generationConfig: { responseModalities: ["TEXT", "IMAGE"] } })
+                            body: JSON.stringify({ contents: [{ parts: parts }] }) 
                         });
 
                         const data = await response.json();
-                        if (data.error) throw new Error(data.error.message || "Lỗi kết nối đến server AI.");
+                        if (data.error) {
+                            if (data.error.code === 404) {
+                                throw new Error(`Model '${modelGen}' không tồn tại. Vào Admin > Cấu hình để đổi Model.`);
+                            }
+                            throw new Error(data.error.message || "Lỗi kết nối đến server AI.");
+                        }
                         
                         let base64Img = null;
                         if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts) {
                             for (const part of data.candidates[0].content.parts) {
-                                if (part.inlineData && part.inlineData.data) { base64Img = part.inlineData.data; break; }
+                                if (part.inlineData && part.inlineData.data) { 
+                                    base64Img = part.inlineData.data; break; 
+                                }
                             }
                         }
 
@@ -2797,7 +2839,16 @@
                                 showToast("Phục chế thành công (V35.65)!", "flux");
                             };
                             restoredImg.src = finalImgSrc;
-                        } else { throw new Error("Không tạo được ảnh."); }
+                        } else { 
+                            // FALLBACK IF MODEL RETURNS TEXT (COMMON ON PUBLIC API)
+                            const textResp = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                            if (textResp) {
+                                console.log("Model returned text:", textResp);
+                                showToast("⚠️ Model chỉ trả về Text (Chưa hỗ trợ tạo ảnh qua API công khai).", "warning");
+                            } else {
+                                throw new Error("Không nhận được ảnh từ AI.");
+                            }
+                        }
                     } catch(e) { console.error(e); showToast("Lỗi: " + e.message, "error"); } 
                     finally {
                         clearInterval(termInterval);
