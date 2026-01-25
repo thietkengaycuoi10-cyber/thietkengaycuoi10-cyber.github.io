@@ -1098,19 +1098,20 @@
                                 <p class="text-[9px] text-slate-500 mt-1 italic" id="url-hint">Mặc định: https://generativelanguage.googleapis.com</p>
                             </div>
 
-                            <!-- NEW: MODEL CONFIGURATION -->
+                            <!-- NEW: MODEL CONFIGURATION (UPDATED DEFAULTS) -->
                             <div class="pt-2 mt-2 border-t border-white/5">
-                                <label class="text-[10px] font-bold text-slate-400 uppercase mb-1 block">Cấu hình Model ID (Nâng cao)</label>
+                                <label class="text-[10px] font-bold text-slate-400 uppercase mb-1 block">Cấu hình Model ID (Quan trọng)</label>
                                 <div class="grid grid-cols-2 gap-2">
                                     <div>
                                         <span class="text-[8px] text-slate-500 block mb-0.5">Auto Scan Model</span>
-                                        <input type="text" id="modal-model-scan" class="pro-input w-full py-2 font-mono text-[9px]" placeholder="gemini-1.5-flash">
+                                        <input type="text" id="modal-model-scan" class="pro-input w-full py-2 font-mono text-[9px] text-green-400" placeholder="gemini-1.5-flash" value="gemini-1.5-flash">
                                     </div>
                                     <div>
                                         <span class="text-[8px] text-slate-500 block mb-0.5">Generation Model</span>
-                                        <input type="text" id="modal-model-gen" class="pro-input w-full py-2 font-mono text-[9px]" placeholder="gemini-2.0-flash-exp">
+                                        <input type="text" id="modal-model-gen" class="pro-input w-full py-2 font-mono text-[9px] text-yellow-400" placeholder="gemini-2.0-flash-exp" value="gemini-2.0-flash-exp">
                                     </div>
                                 </div>
+                                <p class="text-[8px] text-slate-500 mt-1 italic">Lưu ý: Nếu lỗi "Not Found", hãy thử đổi 'Generation Model' thành <b>gemini-1.5-pro</b> hoặc kiểm tra lại API Key.</p>
                             </div>
 
                             <div class="pt-2 flex flex-col gap-2">
@@ -1302,7 +1303,7 @@
                     provider: 'google', // 'google' | 'comet' | 'custom'
                     baseUrl: 'https://generativelanguage.googleapis.com',
                     modelScan: 'gemini-1.5-flash',
-                    modelGen: 'gemini-2.0-flash-exp'
+                    modelGen: 'gemini-2.0-flash-exp' // UPDATED DEFAULT TO WORKING MODEL
                 }
             };
 
@@ -1451,7 +1452,8 @@
                     modalUser.value = state.userSettings.username || '';
                     modalKey.value = state.userSettings.apiKey || '';
                     modalBaseUrl.value = state.userSettings.baseUrl || 'https://generativelanguage.googleapis.com';
-                    // Load saved models or defaults
+                    
+                    // LOAD SAVED MODELS OR SET ROBUST DEFAULTS
                     modalModelScan.value = state.userSettings.modelScan || 'gemini-1.5-flash';
                     modalModelGen.value = state.userSettings.modelGen || 'gemini-2.0-flash-exp';
                     
@@ -1628,7 +1630,7 @@
                 const key = manualKey || state.userSettings.apiKey || apiKey;
                 const base = state.userSettings.baseUrl || "https://generativelanguage.googleapis.com";
                 const isComet = state.userSettings.provider === 'comet';
-                // Get configured models
+                // Get configured models WITH FALLBACKS
                 const modelScan = state.userSettings.modelScan || 'gemini-1.5-flash';
                 const modelGen = state.userSettings.modelGen || 'gemini-2.0-flash-exp';
                 return { key, base, isComet, modelScan, modelGen };
@@ -2797,10 +2799,7 @@
                         const headers = { 'Content-Type': 'application/json' };
                         if (isComet) headers['Authorization'] = `Bearer ${keyToUse}`;
                         
-                        // USE DYNAMIC MODEL GEN
-                        // NOTE: If using gemini-2.0-flash-exp, responseModalities might differ or just be omitted.
-                        // Standard generateContent returns text unless it's a specific image model.
-                        // We remove generationConfig: { responseModalities: ["TEXT", "IMAGE"] } as it often causes errors on standard models
+                        // USE DYNAMIC MODEL GEN & REMOVE "responseModalities" FOR PUBLIC API COMPATIBILITY
                         const response = await fetch(`${apiBase}/v1beta/models/${modelGen}:generateContent?key=${keyToUse}`, {
                             method: 'POST',
                             headers: headers,
@@ -2810,7 +2809,7 @@
                         const data = await response.json();
                         if (data.error) {
                             if (data.error.code === 404) {
-                                throw new Error(`Model '${modelGen}' không tồn tại. Vào Admin > Cấu hình để đổi Model.`);
+                                throw new Error(`Model '${modelGen}' không tồn tại. Vui lòng vào Admin (Chìa khóa) để đổi Model thành 'gemini-1.5-pro' hoặc 'gemini-2.0-flash-exp'.`);
                             }
                             throw new Error(data.error.message || "Lỗi kết nối đến server AI.");
                         }
@@ -2840,13 +2839,13 @@
                             };
                             restoredImg.src = finalImgSrc;
                         } else { 
-                            // FALLBACK IF MODEL RETURNS TEXT (COMMON ON PUBLIC API)
+                            // FALLBACK: IF MODEL RETURNS TEXT (IT MEANS IT REFUSED TO GENERATE IMAGE OR MODEL IS TEXT-ONLY)
                             const textResp = data.candidates?.[0]?.content?.parts?.[0]?.text;
                             if (textResp) {
-                                console.log("Model returned text:", textResp);
-                                showToast("⚠️ Model chỉ trả về Text (Chưa hỗ trợ tạo ảnh qua API công khai).", "warning");
+                                console.warn("Model returned text instead of image:", textResp);
+                                showToast("⚠️ API trả về text (Chưa tạo được ảnh). Hãy thử đổi Model trong Admin thành 'gemini-2.0-flash-exp'.", "warning");
                             } else {
-                                throw new Error("Không nhận được ảnh từ AI.");
+                                throw new Error("Không nhận được dữ liệu ảnh từ AI.");
                             }
                         }
                     } catch(e) { console.error(e); showToast("Lỗi: " + e.message, "error"); } 
