@@ -1618,9 +1618,29 @@
             // Helper to get effective API Key and URL
             const getApiConfig = () => {
                 const manualKey = document.getElementById('user-api-key')?.value.trim();
-                const key = manualKey || state.userSettings.apiKey || apiKey;
-                const base = state.userSettings.baseUrl || "https://generativelanguage.googleapis.com";
-                const isComet = state.userSettings.provider === 'comet';
+                // KEY CỐ ĐỊNH CỦA BẠN
+                const defaultKey = "AIzaSyCXIWbWNX77UaTV1dt0RNZR4PREQh_oZ6w";
+                
+                // 1. Lấy key từ ô nhập hoặc Cài đặt cũ
+                let key = manualKey || state.userSettings.apiKey;
+
+                // 2. Nếu không có key riêng hoặc key quá ngắn, BẮT BUỘC DÙNG KEY CỦA BẠN
+                if (!key || key.length < 10) {
+                    key = defaultKey;
+                }
+
+                let base = state.userSettings.baseUrl || "https://generativelanguage.googleapis.com";
+                let isComet = state.userSettings.provider === 'comet';
+
+                // === FIX QUAN TRỌNG CHO BẠN ===
+                // Nếu đang dùng Key mặc định của bạn, ép buộc dùng Server Google
+                // Điều này giúp tránh lỗi nếu trước đó bạn lỡ chỉnh sang Comet hoặc Proxy khác
+                if (key === defaultKey) {
+                    base = "https://generativelanguage.googleapis.com";
+                    isComet = false; 
+                    console.log("Đang sử dụng Key Mặc định (Google Mode)");
+                }
+
                 return { key, base, isComet };
             };
             
