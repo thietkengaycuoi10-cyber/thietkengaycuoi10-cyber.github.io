@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZALO: 0352803379 - STUDIO V35.80 (MOBILE FIX)</title>
+    <title>ZALO: 0352803379 - STUDIO V35.80 (KEY GEN FIX)</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;700&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -1310,6 +1310,36 @@
             if(btnSaveLogin) btnSaveLogin.addEventListener('click', () => { state.userSettings.username = modalUser.value.trim(); state.userSettings.apiKey = modalKey.value.trim(); state.userSettings.baseUrl = modalBaseUrl.value.trim().replace(/\/$/, ''); try { const dataStr = JSON.stringify(state.userSettings); const encrypted = SimpleSec.encrypt(dataStr); localStorage.setItem('v35_user_settings', encrypted); } catch(e){} updateLoginUI(); showToast(`Đã lưu cấu hình (Mã hóa): ${state.userSettings.provider.toUpperCase()}`, "success"); });
             if(btnLogout) btnLogout.addEventListener('click', () => { state.userSettings = { username: '', apiKey: '', provider: 'google', baseUrl: 'https://generativelanguage.googleapis.com' }; try { localStorage.removeItem('v35_user_settings'); } catch(e){} modalUser.value = ''; modalKey.value = ''; gateScreen.style.display = 'flex'; gateScreen.classList.remove('animate-fade-out'); gateSubmit.disabled = true; gateSubmit.classList.add('opacity-70'); gateStatus.textContent = "Hệ thống tự động quét lại IP..."; gateStatus.className = "mt-6 text-[10px] text-slate-500 h-4 transition-colors"; setProviderUI('google'); updateLoginUI(); adminModal.classList.add('hidden'); UserSystem.fetchIP(); showToast("Đã đăng xuất & Khóa màn hình!", "info"); });
             document.getElementById('toggle-show-key').addEventListener('click', (e) => { e.preventDefault(); modalKey.type = modalKey.type === 'password' ? 'text' : 'password'; });
+
+            // === LOGIC MÃ HÓA KEY CHO KHÁCH (FIX) ===
+            const btnEncryptKey = document.getElementById('btn-encrypt-share-key');
+            const inputRawKey = document.getElementById('admin-raw-key-input');
+            const outputShareKey = document.getElementById('share-key-output');
+            const shareKeyResult = document.getElementById('share-key-result');
+
+            if(btnEncryptKey) {
+                btnEncryptKey.onclick = () => {
+                    const raw = inputRawKey.value.trim();
+                    if(!raw) return showToast("Vui lòng nhập API Key gốc!", "error");
+                    
+                    // Mã hóa
+                    const encrypted = SimpleSec.encrypt(raw);
+                    // Thêm tiền tố để hệ thống nhận diện
+                    const finalToken = `V35-ACCESS-${encrypted}`;
+                    
+                    outputShareKey.value = finalToken;
+                    shareKeyResult.classList.remove('hidden');
+                    showToast("Đã tạo Token an toàn thành công!", "success");
+                };
+            }
+
+            if(outputShareKey) {
+                outputShareKey.onclick = () => {
+                    outputShareKey.select();
+                    document.execCommand('copy');
+                    showToast("Đã copy Token an toàn!", "success");
+                };
+            }
 
             // ... (License & Key Generator Logic - same as V35.80) ...
             
