@@ -1205,40 +1205,39 @@
         document.addEventListener('DOMContentLoaded', () => {
             const apiKey = ""; 
 
-            // === HỆ THỐNG MÃ HÓA BẢO MẬT (UPDATED V2 ROBUST) ===
+            // === HỆ THỐNG MÃ HÓA BẢO MẬT (UPDATED V3: HEX ROBUST - MOBILE SAFE) ===
+            // Chuyển sang dùng HEX để tránh lỗi copy paste thiếu ký tự trên điện thoại
             const SimpleSec = {
                 _key: "V35_SECURE_KEY_SALT", 
                 encrypt: function(text) {
                     if(!text) return '';
                     try {
-                        // V2: Encode URI để an toàn với mọi ký tự đặc biệt
-                        const safeText = encodeURIComponent(text);
-                        let result = '';
-                        for(let i = 0; i < safeText.length; i++) {
-                            result += String.fromCharCode(safeText.charCodeAt(i) ^ this._key.charCodeAt(i % this._key.length));
+                        // V3: XOR và chuyển sang HEX (An toàn tuyệt đối khi copy)
+                        let hexResult = '';
+                        for(let i = 0; i < text.length; i++) {
+                            const code = text.charCodeAt(i) ^ this._key.charCodeAt(i % this._key.length);
+                            // Chuyển thành 2 ký tự Hex, đệm số 0 nếu cần
+                            hexResult += ("00" + code.toString(16)).slice(-2);
                         }
-                        return btoa(result);
+                        return hexResult.toUpperCase(); 
                     } catch(e) { console.error("Encrypt error:", e); return text; }
                 },
                 decrypt: function(encoded) {
                     if(!encoded) return '';
                     try {
-                        // V2: Fix lỗi thiếu padding (=) khi copy thiếu
-                        let fixedEncoded = encoded.trim();
-                        while (fixedEncoded.length % 4 !== 0) {
-                            fixedEncoded += '=';
-                        }
+                        let text = '';
+                        // V3: Lọc bỏ ký tự rác nếu khách lỡ tay nhập space hoặc xuống dòng
+                        const cleanHex = encoded.replace(/[^0-9A-Fa-f]/g, '').trim();
                         
-                        let text = atob(fixedEncoded);
-                        let result = '';
-                        for(let i = 0; i < text.length; i++) {
-                            result += String.fromCharCode(text.charCodeAt(i) ^ this._key.charCodeAt(i % this._key.length));
+                        for(let i = 0; i < cleanHex.length; i += 2) {
+                            const hexPart = cleanHex.substr(i, 2);
+                            const code = parseInt(hexPart, 16) ^ this._key.charCodeAt((i / 2) % this._key.length);
+                            text += String.fromCharCode(code);
                         }
-                        // V2: Decode URI để lấy lại chuỗi gốc chính xác
-                        return decodeURIComponent(result);
+                        return text;
                     } catch(e) { 
-                        console.error("Decrypt error (Base64/URI):", e); 
-                        return null; // Trả về null để biết là giải mã thất bại
+                        console.error("Decrypt error (Hex):", e); 
+                        return null; 
                     }
                 }
             };
@@ -1811,30 +1810,34 @@
                 });
             }
             
-            // Helper to get effective API Key and URL (UPDATED FOR DECRYPTION V2)
+            // Helper to get effective API Key and URL (UPDATED FOR DECRYPTION V3)
             const getApiConfig = () => {
                 let manualKey = document.getElementById('user-api-key')?.value.trim();
                 // Ưu tiên key nhập tay, sau đó đến setting, cuối cùng là hardcode
                 let key = manualKey || state.userSettings.apiKey || apiKey;
                 
                 // DECRYPTION LOGIC: CHECK FOR V35-ACCESS PREFIX
+                // Kiểm tra xem key có phải dạng mã hóa không
                 if (key && key.startsWith("V35-ACCESS-")) {
                     try {
                         const encryptedPart = key.replace("V35-ACCESS-", "");
-                        // Thử giải mã
+                        // Thử giải mã V3
                         const decrypted = SimpleSec.decrypt(encryptedPart);
                         
-                        if (decrypted) {
+                        // Kiểm tra tính hợp lệ của key sau giải mã (Google Key thường bắt đầu bằng AIza)
+                        // Hoặc ít nhất là một chuỗi có nghĩa, không phải null/rỗng
+                        if (decrypted && decrypted.length > 10) {
                             key = decrypted;
                             console.log("✅ Decrypted API Token successfully");
                         } else {
-                            console.error("❌ Token decryption returned null");
-                            // Không showToast ngay ở đây để tránh spam nếu người dùng đang nhập dở
-                            // Nhưng nếu đang click Process thì sẽ lỗi
+                            console.error("❌ Token decryption returned invalid data");
+                            // Nếu đang chạy lệnh mà key sai thì báo lỗi ngay
+                            const isRunning = document.getElementById('process-image').disabled;
+                            if(isRunning) showToast("Mã API Key không hợp lệ hoặc giải mã thất bại!", "error");
                         }
                     } catch(e) {
                         console.error("Token decryption failed", e);
-                        showToast("Lỗi giải mã Token!", "error");
+                        showToast("Lỗi cấu trúc Token! Vui lòng copy lại.", "error");
                     }
                 }
 
