@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZALO: 0352803379 - STUDIO V35.80 (KEY GEN FIX)</title>
+    <title>ZALO: 0352803379 - STUDIO V35.80 (AUTO SCAN UPGRADE)</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;700&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -1341,6 +1341,28 @@
                 };
             }
 
+            // === NEW: QUICK SAVE KEY HANDLER ===
+            const btnQuickSave = document.getElementById('btn-quick-save-key');
+            if(btnQuickSave) {
+                btnQuickSave.addEventListener('click', () => {
+                    const inputKey = document.getElementById('user-api-key');
+                    const val = inputKey.value.trim();
+                    if(val) {
+                        state.userSettings.apiKey = val;
+                        // Save logic matches the admin save logic
+                        try { 
+                            const dataStr = JSON.stringify(state.userSettings);
+                            const encrypted = SimpleSec.encrypt(dataStr);
+                            localStorage.setItem('v35_user_settings', encrypted); 
+                        } catch(e){}
+                        updateLoginUI();
+                        showToast("Đã nhận API KEY", "success");
+                    } else {
+                        showToast("Vui lòng nhập Token/Key!", "warning");
+                    }
+                });
+            }
+
             // ... (License & Key Generator Logic - same as V35.80) ...
             
             // Helper to get effective API Key and URL
@@ -1436,6 +1458,31 @@
                             const genderSelect = document.getElementById('gender-select'); if(genderSelect && result.gender) genderSelect.value = result.gender;
                             const ageInput = document.getElementById('age-input'); if(ageInput) ageInput.value = result.age || 30;
                             // ... (Military logic, etc.) ...
+
+                            // UPGRADE: AUTO TICK & ENABLE REPLICA MODE
+                            if(result.hasStrabismus) {
+                                document.getElementById('check-cross-eyed').checked = true;
+                                document.getElementById('module-identity').classList.add('open');
+                                showToast("👁️ Phát hiện Mắt Lé: Đã tích chọn giữ mắt lé", "warning");
+                            }
+                            if(result.hasDroopyEyelids) document.getElementById('check-ptosis').checked = true;
+                            if(result.hasClosedEyes) document.getElementById('check-closed-eyes').checked = true;
+                            if(result.hasMonolids) document.getElementById('check-monolid').checked = true;
+                            if(result.hasBuckTeeth) document.getElementById('check-buck-teeth').checked = true;
+                            if(result.hasBlackenedTeeth) document.getElementById('check-black-teeth').checked = true;
+
+                            const dmgSelect = document.getElementById('damage-level');
+                            if (dmgSelect) {
+                                if (result.damageType === 'severe_damage') { dmgSelect.value = "fix torn, missing details"; document.getElementById('check-extreme-mode').checked = true; }
+                                else if (result.damageType === 'scratches') dmgSelect.value = "fix scratches, mold";
+                                else dmgSelect.value = "fix slightly blurry";
+                            }
+
+                            // FORCE REPLICA MODE ON AUTO
+                            if (!state.isReplicaMode) {
+                                document.getElementById('mode-replica').click();
+                                showToast("💎 Auto Scan: Đã kích hoạt Chế độ Sao Y Bản Chính (Replica)", "warning");
+                            }
 
                             document.getElementById('content-prompt').classList.add('open');
                             btnAutoPilot.classList.remove('btn-smart-modern');
