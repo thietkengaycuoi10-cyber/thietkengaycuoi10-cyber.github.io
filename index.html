@@ -1098,22 +1098,6 @@
                                 <p class="text-[9px] text-slate-500 mt-1 italic" id="url-hint">Mặc định: https://generativelanguage.googleapis.com</p>
                             </div>
 
-                            <!-- NEW: MODEL CONFIGURATION (UPDATED DEFAULTS) -->
-                            <div class="pt-2 mt-2 border-t border-white/5">
-                                <label class="text-[10px] font-bold text-slate-400 uppercase mb-1 block">Cấu hình Model ID (Quan trọng)</label>
-                                <div class="grid grid-cols-2 gap-2">
-                                    <div>
-                                        <span class="text-[8px] text-slate-500 block mb-0.5">Auto Scan Model</span>
-                                        <input type="text" id="modal-model-scan" class="pro-input w-full py-2 font-mono text-[9px] text-green-400" placeholder="gemini-1.5-flash" value="gemini-1.5-flash">
-                                    </div>
-                                    <div>
-                                        <span class="text-[8px] text-slate-500 block mb-0.5">Generation Model</span>
-                                        <input type="text" id="modal-model-gen" class="pro-input w-full py-2 font-mono text-[9px] text-yellow-400" placeholder="gemini-2.0-flash-exp" value="gemini-2.0-flash-exp">
-                                    </div>
-                                </div>
-                                <p class="text-[8px] text-slate-500 mt-1 italic">Lưu ý: Nếu lỗi "Not Found", hãy thử đổi 'Generation Model' thành <b>gemini-1.5-pro</b> hoặc kiểm tra lại API Key.</p>
-                            </div>
-
                             <div class="pt-2 flex flex-col gap-2">
                                 <button id="btn-save-login" class="w-full py-2 bg-violet-600 hover:bg-violet-500 text-white rounded text-xs font-bold transition-colors shadow-lg">LƯU CẤU HÌNH</button>
                                 <button id="btn-logout" class="w-full py-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 rounded text-xs font-bold transition-colors hidden">ĐĂNG XUẤT / RESET</button>
@@ -1127,7 +1111,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const apiKey = "AIzaSyCXIWbWNX77UaTV1dt0RNZR4PREQh_oZ6w"; 
+            const apiKey = ""; 
 
             // === HỆ THỐNG MÃ HÓA BẢO MẬT (NEW) ===
             const SimpleSec = {
@@ -1165,6 +1149,7 @@
                 
                 async init() {
                     // 1. TẠO ID MÁY DUY NHẤT (DEVICE SIGNATURE)
+                    // ID này sẽ lưu vào máy người dùng, đảm bảo khác biệt dù chung Wifi
                     try {
                         let storedId = localStorage.getItem('v35_unique_device_id');
                         if (!storedId) {
@@ -1179,66 +1164,83 @@
                         this.deviceId = "GUEST-" + Math.floor(Math.random()*1000);
                     }
                     
-                    // 2. Lấy IP Mạng (Cải tiến với Fallback)
+                    // 2. Lấy IP Mạng (Chỉ để hiển thị vị trí mạng)
                     await this.fetchIP();
                     
-                    // 3. Load Credits theo ID MÁY
+                    // 3. Load Credits theo ID MÁY (Không theo IP mạng nữa)
                     this.loadCredits();
                     this.updateUI();
                 },
 
                 async fetchIP() {
-                    const gateIpDisplay = document.getElementById('gate-ip-display');
-                    const gateLoader = document.getElementById('gate-loading-spinner');
-                    const adminIpDisplay = document.getElementById('display-ip-address');
-                    const gateBtn = document.getElementById('gate-submit');
-                    const gateStatus = document.getElementById('gate-status');
-                    const topBarIp = document.getElementById('top-bar-ip');
-                    const zaloMsg = document.getElementById('zalo-msg-content');
-
-                    const updateGateUI = (ipVal, isError = false) => {
-                        this.ipAddress = ipVal;
+                    try {
+                        const response = await fetch(`https://api.ipify.org?format=json&t=${Date.now()}`);
+                        const data = await response.json();
+                        this.ipAddress = data.ip;
                         
-                        if (topBarIp) topBarIp.textContent = `IP: ${ipVal}`;
-                        if (zaloMsg) zaloMsg.dataset.ipInfo = `IP: ${ipVal} - Máy: ${this.deviceId}`;
-                        if (adminIpDisplay) adminIpDisplay.value = `${ipVal} (Device: ${this.deviceId})`;
+                        const gateIpDisplay = document.getElementById('gate-ip-display');
+                        const gateLoader = document.getElementById('gate-loading-spinner');
+                        const adminIpDisplay = document.getElementById('display-ip-address');
+                        const gateBtn = document.getElementById('gate-submit');
+                        const gateStatus = document.getElementById('gate-status');
+                        
+                        // NEW: UPDATE TOP BAR IP
+                        const topBarIp = document.getElementById('top-bar-ip');
+                        if (topBarIp) topBarIp.textContent = `IP: ${data.ip}`;
+
+                        // Update base template cho Zalo Msg (Lưu lại để dùng khi chọn gói)
+                        const zaloMsg = document.getElementById('zalo-msg-content');
+                        if (zaloMsg) {
+                            zaloMsg.dataset.ipInfo = `IP: ${data.ip} - Máy: ${this.deviceId}`;
+                        }
 
                         if (gateIpDisplay) {
-                            gateIpDisplay.innerHTML = `<span class="text-slate-400 text-xs">${ipVal}</span> <span class="text-white mx-1">|</span> <span class="text-yellow-400 font-bold">${this.deviceId}</span>`; 
+                            // HIỂN THỊ KẾT HỢP: IP MẠNG + ID MÁY RIÊNG
+                            // Ví dụ: 14.162.x.x | ID-A1B2C3
+                            gateIpDisplay.innerHTML = `<span class="text-slate-400 text-xs">${data.ip}</span> <span class="text-white mx-1">|</span> <span class="text-yellow-400 font-bold">${this.deviceId}</span>`; 
                             gateIpDisplay.classList.remove('shimmer-text');
+                            
                             if(gateLoader) gateLoader.style.display = 'none';
                             
-                            // Enable Login Button even if IP fetch fails (Fail-safe)
+                            // Enable Login Button
                             if(gateBtn) {
                                 gateBtn.disabled = false;
                                 gateBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-                                gateStatus.textContent = isError ? "Không lấy được IP. Vẫn cho phép truy cập." : `Đã nhận diện thiết bị: ${this.deviceId}`;
-                                gateStatus.classList.add(isError ? 'text-yellow-500' : 'text-green-500');
+                                gateStatus.textContent = `Đã nhận diện thiết bị: ${this.deviceId}`;
+                                gateStatus.classList.add('text-green-500');
                             }
                         }
-                    };
 
-                    try {
-                        const response = await fetch(`https://api.ipify.org?format=json&t=${Date.now()}`);
-                        if(!response.ok) throw new Error("IP Service Error");
-                        const data = await response.json();
-                        updateGateUI(data.ip);
+                        if(adminIpDisplay) {
+                             adminIpDisplay.value = `${data.ip} (Device: ${this.deviceId})`;
+                        }
+
                         return data.ip;
                     } catch (e) {
-                        console.error("IP Fetch Error - Switching to Fail-safe mode", e);
-                        // Fallback Mode: Allow entry even if IP fetch fails
-                        updateGateUI("Unknown IP", true);
-                        return "Unknown";
+                        console.error("IP Fetch Error", e);
+                        this.ipAddress = "Offline";
+                        // Vẫn cho hiện ID máy kể cả khi không có mạng
+                        const gateIpDisplay = document.getElementById('gate-ip-display');
+                        if (gateIpDisplay) gateIpDisplay.textContent = `Offline | ${this.deviceId}`;
+                        
+                        // NEW: UPDATE TOP BAR IP FAIL STATE
+                        const topBarIp = document.getElementById('top-bar-ip');
+                        if (topBarIp) topBarIp.textContent = `IP: Offline`;
+
+                        return null;
                     }
                 },
 
                 loadCredits() {
+                    // QUAN TRỌNG: Key lưu trữ dựa trên DEVICE ID, không phải IP
+                    // Đảm bảo mỗi máy riêng biệt dù chung Wifi
                     const key = `v35_credits_${this.deviceId}`;
                     const savedCredits = localStorage.getItem(key);
                     
                     if (savedCredits === null) {
                         this.credits = 20; // 20 Credit Free cho MÁY MỚI này
                         this.save();
+                        console.log(`New Device ${this.deviceId} initialized with 20 credits`);
                     } else {
                         this.credits = parseInt(savedCredits);
                     }
@@ -1301,9 +1303,7 @@
                     username: '',
                     apiKey: '',
                     provider: 'google', // 'google' | 'comet' | 'custom'
-                    baseUrl: 'https://generativelanguage.googleapis.com',
-                    modelScan: 'gemini-1.5-flash',
-                    modelGen: 'gemini-2.0-flash-exp' // UPDATED DEFAULT TO WORKING MODEL
+                    baseUrl: 'https://generativelanguage.googleapis.com'
                 }
             };
 
@@ -1338,11 +1338,14 @@
                 // LOAD MÃ HÓA
                 const savedSettings = localStorage.getItem('v35_user_settings');
                 if(savedSettings) {
+                    // Thử giải mã, nếu không được (do bản cũ) thì parse thường
                     try {
                         const decrypted = SimpleSec.decrypt(savedSettings);
+                        // Nếu giải mã ra chuỗi JSON hợp lệ
                         if(decrypted && decrypted.startsWith('{')) {
                             state.userSettings = JSON.parse(decrypted);
                         } else {
+                            // Bản cũ chưa mã hóa
                             state.userSettings = JSON.parse(savedSettings);
                         }
                     } catch(e) {
@@ -1352,10 +1355,9 @@
             } catch(e) {}
 
             async function loginByIP() {
-                // Không chặn nếu IP chưa load xong (Fail-safe)
-                const currentIP = UserSystem.ipAddress || "Unknown";
+                if(!UserSystem.ipAddress) return showToast("Chưa tìm thấy IP, vui lòng đợi...", "error");
                 
-                gateStatus.textContent = `Đang xác thực thiết bị...`;
+                gateStatus.textContent = `Đang xác thực IP: ${UserSystem.ipAddress}...`;
                 gateStatus.className = "mt-6 text-[10px] text-blue-400 font-bold animate-pulse";
                 gateSubmit.disabled = true;
                 gateSubmit.classList.add('opacity-70');
@@ -1369,9 +1371,9 @@
                     setTimeout(() => {
                         gateScreen.classList.add('animate-fade-out');
                         setTimeout(() => { gateScreen.style.display = 'none'; }, 500);
-                        showToast(`Chào mừng trở lại! (ID: ${UserSystem.deviceId})`, "smart");
+                        showToast(`IP Đã Xác Thực: ${UserSystem.ipAddress}`, "smart");
                     }, 500);
-                }, 1000);
+                }, 1500);
             }
 
             gateSubmit.addEventListener('click', loginByIP);
@@ -1399,10 +1401,6 @@
             const modalUser = document.getElementById('modal-username');
             const modalKey = document.getElementById('modal-api-key');
             const modalBaseUrl = document.getElementById('modal-base-url');
-            // NEW MODAL INPUTS
-            const modalModelScan = document.getElementById('modal-model-scan');
-            const modalModelGen = document.getElementById('modal-model-gen');
-
             const btnProvGoogle = document.getElementById('btn-provider-google');
             const btnProvComet = document.getElementById('btn-provider-comet');
             const baseUrlSection = document.getElementById('base-url-section');
@@ -1453,10 +1451,6 @@
                     modalKey.value = state.userSettings.apiKey || '';
                     modalBaseUrl.value = state.userSettings.baseUrl || 'https://generativelanguage.googleapis.com';
                     
-                    // LOAD SAVED MODELS OR SET ROBUST DEFAULTS
-                    modalModelScan.value = state.userSettings.modelScan || 'gemini-1.5-flash';
-                    modalModelGen.value = state.userSettings.modelGen || 'gemini-2.0-flash-exp';
-                    
                     if(UserSystem.ipAddress) {
                         displayIp.value = UserSystem.ipAddress;
                     }
@@ -1497,9 +1491,6 @@
                 state.userSettings.username = modalUser.value.trim();
                 state.userSettings.apiKey = modalKey.value.trim();
                 state.userSettings.baseUrl = modalBaseUrl.value.trim().replace(/\/$/, '');
-                // Save Models
-                state.userSettings.modelScan = modalModelScan.value.trim() || 'gemini-1.5-flash';
-                state.userSettings.modelGen = modalModelGen.value.trim() || 'gemini-2.0-flash-exp';
                 
                 // LƯU CÓ MÃ HÓA
                 try { 
@@ -1630,10 +1621,7 @@
                 const key = manualKey || state.userSettings.apiKey || apiKey;
                 const base = state.userSettings.baseUrl || "https://generativelanguage.googleapis.com";
                 const isComet = state.userSettings.provider === 'comet';
-                // Get configured models WITH FALLBACKS
-                const modelScan = state.userSettings.modelScan || 'gemini-1.5-flash';
-                const modelGen = state.userSettings.modelGen || 'gemini-2.0-flash-exp';
-                return { key, base, isComet, modelScan, modelGen };
+                return { key, base, isComet };
             };
             
             const resizeImage = (base64Str, maxWidth = 1536) => {
@@ -2075,30 +2063,19 @@
 
             if(btnAutoPilot) {
                 btnAutoPilot.addEventListener('click', async () => {
-                    // 1. Kiểm tra API KEY trước
-                    const config = getApiConfig();
-                    if (!config.key) {
-                        showToast("⚠️ Vui lòng nhập API Key trong Cấu hình (Admin)!", "error");
-                        // Tự động mở modal admin để nhắc nhở
-                        const gateKeyBtn = document.getElementById('gate-admin-key');
-                        if(gateKeyBtn) gateKeyBtn.click();
-                        return;
-                    }
-
                     if(!state.base64) return showToast("Vui lòng tải ảnh trước!", "error");
                     const originalText = btnAutoPilot.innerHTML;
                     btnAutoPilot.disabled = true;
                     btnAutoPilot.innerHTML = `<span class="animate-pulse">AUTO-SCAN V35.60 (AUTO-SIZE)...</span>`;
                     
-                    const { key: keyToUse, base: apiBase, isComet, modelScan } = getApiConfig();
+                    const { key: keyToUse, base: apiBase, isComet } = getApiConfig();
 
                     try {
                         const resizedBase64 = await resizeImage(state.base64);
                         const headers = { 'Content-Type': 'application/json' };
                         if (isComet) headers['Authorization'] = `Bearer ${keyToUse}`;
-                        
-                        // USE DYNAMIC MODEL SCAN
-                        const response = await fetch(`${apiBase}/v1beta/models/${modelScan}:generateContent?key=${keyToUse}`, {
+
+                        const response = await fetch(`${apiBase}/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${keyToUse}`, {
                             method: 'POST',
                             headers: headers,
                             body: JSON.stringify({
@@ -2492,17 +2469,7 @@
 
             if(processBtn) {
                 processBtn.addEventListener('click', async () => {
-                    // 1. Kiểm tra API KEY trước
-                    const config = getApiConfig();
-                    if (!config.key) {
-                        showToast("⚠️ Vui lòng nhập API Key trong Cấu hình (Admin)!", "error");
-                        // Tự động mở modal admin để nhắc nhở
-                        const gateKeyBtn = document.getElementById('gate-admin-key');
-                        if(gateKeyBtn) gateKeyBtn.click();
-                        return;
-                    }
-
-                    if(!state.base64) return showToast("Vui lòng tải ảnh trước!", "error");
+                    if(!state.base64) return showToast("Vui lòng tải ảnh!", "error");
                     if (!UserSystem.deductCredits(20)) {
                         rechargeModal.classList.remove('hidden');
                         return; 
@@ -2786,7 +2753,7 @@
                         }
                     }, 800);
 
-                    const { key: keyToUse, base: apiBase, isComet, modelGen } = getApiConfig();
+                    const { key: keyToUse, base: apiBase, isComet } = getApiConfig();
 
                     try {
                         const resizedBase64 = await resizeImage(state.base64);
@@ -2798,28 +2765,20 @@
 
                         const headers = { 'Content-Type': 'application/json' };
                         if (isComet) headers['Authorization'] = `Bearer ${keyToUse}`;
-                        
-                        // USE DYNAMIC MODEL GEN & REMOVE "responseModalities" FOR PUBLIC API COMPATIBILITY
-                        const response = await fetch(`${apiBase}/v1beta/models/${modelGen}:generateContent?key=${keyToUse}`, {
+
+                        const response = await fetch(`${apiBase}/v1beta/models/gemini-2.5-flash-image-preview:generateContent?key=${keyToUse}`, {
                             method: 'POST',
                             headers: headers,
-                            body: JSON.stringify({ contents: [{ parts: parts }] }) 
+                            body: JSON.stringify({ contents: [{ parts: parts }], generationConfig: { responseModalities: ["TEXT", "IMAGE"] } })
                         });
 
                         const data = await response.json();
-                        if (data.error) {
-                            if (data.error.code === 404) {
-                                throw new Error(`Model '${modelGen}' không tồn tại. Vui lòng vào Admin (Chìa khóa) để đổi Model thành 'gemini-1.5-pro' hoặc 'gemini-2.0-flash-exp'.`);
-                            }
-                            throw new Error(data.error.message || "Lỗi kết nối đến server AI.");
-                        }
+                        if (data.error) throw new Error(data.error.message || "Lỗi kết nối đến server AI.");
                         
                         let base64Img = null;
                         if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts) {
                             for (const part of data.candidates[0].content.parts) {
-                                if (part.inlineData && part.inlineData.data) { 
-                                    base64Img = part.inlineData.data; break; 
-                                }
+                                if (part.inlineData && part.inlineData.data) { base64Img = part.inlineData.data; break; }
                             }
                         }
 
@@ -2838,16 +2797,7 @@
                                 showToast("Phục chế thành công (V35.65)!", "flux");
                             };
                             restoredImg.src = finalImgSrc;
-                        } else { 
-                            // FALLBACK: IF MODEL RETURNS TEXT (IT MEANS IT REFUSED TO GENERATE IMAGE OR MODEL IS TEXT-ONLY)
-                            const textResp = data.candidates?.[0]?.content?.parts?.[0]?.text;
-                            if (textResp) {
-                                console.warn("Model returned text instead of image:", textResp);
-                                showToast("⚠️ API trả về text (Chưa tạo được ảnh). Hãy thử đổi Model trong Admin thành 'gemini-2.0-flash-exp'.", "warning");
-                            } else {
-                                throw new Error("Không nhận được dữ liệu ảnh từ AI.");
-                            }
-                        }
+                        } else { throw new Error("Không tạo được ảnh."); }
                     } catch(e) { console.error(e); showToast("Lỗi: " + e.message, "error"); } 
                     finally {
                         clearInterval(termInterval);
