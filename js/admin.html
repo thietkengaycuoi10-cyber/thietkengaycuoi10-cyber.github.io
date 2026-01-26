@@ -85,7 +85,8 @@ LƯU & ĐỒNG BỘ
 
 <script>
 // ===== ADMIN CONFIG =====
-const ADMIN_PASS_HASH = btoa("admin123");
+const ADMIN_PASS = "admin123";
+
 
 // ===== SECURITY =====
 const Sec = {
@@ -103,7 +104,8 @@ function getDeviceId(){
 
 // ===== LOGIN =====
 function adminLogin(){
- if(btoa(adminPass.value)===ADMIN_PASS_HASH){
+ if(adminPass.value.trim() === ADMIN_PASS){
+
   sessionStorage.setItem("v35_admin","1");
   showDash();
  } else loginStatus.innerText="Sai mật khẩu!";
