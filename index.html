@@ -2627,30 +2627,34 @@ if(!raw){
 }
 
 const data=JSON.parse(Sec.d(raw));
-let credit=data.credit||0;
 
-// HIỂN THỊ CREDIT (khớp với id bạn đang dùng)
-document.getElementById("credit-count").innerText=credit;
-
-// API KEY dùng cho toàn web
 window.GEMINI_API_KEY=data.geminiKey;
+window.COMET_API_KEY=data.cometKey;
+window.API_PROVIDER=data.provider;
 
-function useCredit(){
+let credit=data.credit||0;
+const creditEl=document.getElementById("credit-count");
+creditEl.innerText=credit;
+
+function useAI(){
  if(credit<=0){
    alert("Hết credit!");
-   return false;
+   return;
  }
+
  credit--;
  data.credit=credit;
- document.getElementById("credit-count").innerText=credit;
+ creditEl.innerText=credit;
 
  localStorage.setItem(
-  "v35_active_user",
-  btoa([...JSON.stringify(data)].map((c,i)=>
-    String.fromCharCode(c.charCodeAt(0)^Sec.k.charCodeAt(i%Sec.k.length))
-  ).join(""))
- return true;
+   "v35_active_user",
+   btoa([...JSON.stringify(data)].map((c,i)=>
+     String.fromCharCode(
+       c.charCodeAt(0)^Sec.k.charCodeAt(i%Sec.k.length)
+     )
+   ).join(""))
+ );
+
+ alert("Đã dùng 1 credit (demo)");
 }
 </script>
-
-</html>

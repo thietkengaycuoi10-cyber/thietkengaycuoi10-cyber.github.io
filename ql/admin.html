@@ -2,142 +2,70 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>V35 ADMIN – API KEY MANAGER</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<title>V35 ADMIN</title>
 <script src="https://cdn.tailwindcss.com"></script>
-
-<style>
-body { background:#050505; color:#e5e7eb; font-family:'Plus Jakarta Sans',sans-serif }
-.glass { background:rgba(20,20,25,.95); border:1px solid rgba(255,255,255,.08); backdrop-filter:blur(20px) }
-.pro-input { background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.1); color:#fff }
-.pro-input:focus { outline:none; border-color:#8b5cf6; background:rgba(139,92,246,.15) }
-</style>
 </head>
+<body class="bg-black text-white flex items-center justify-center min-h-screen">
 
-<body class="min-h-screen flex items-center justify-center">
+<div class="bg-zinc-900 p-6 rounded-xl w-full max-w-md space-y-4">
+<h1 class="text-center font-bold">ADMIN V35</h1>
 
-<div class="w-full max-w-md p-6 rounded-2xl glass shadow-2xl">
+<input id="pass" type="password" placeholder="Mật khẩu admin"
+ class="w-full p-2 rounded bg-black border border-zinc-700">
 
-<!-- LOGIN ADMIN -->
-<div id="loginBox" class="space-y-4">
-<h1 class="text-center text-xl font-bold">ADMIN V35</h1>
-<input id="adminPass" type="password" placeholder="Mật khẩu admin"
- class="pro-input w-full px-4 py-3 rounded-xl text-center font-mono">
-<button onclick="adminLogin()"
- class="w-full py-3 bg-gradient-to-r from-violet-600 to-blue-600 rounded-xl font-bold">
-ĐĂNG NHẬP
-</button>
-<p id="loginStatus" class="text-center text-xs text-red-500"></p>
-</div>
+<div id="panel" class="hidden space-y-3">
 
-<!-- DASHBOARD -->
-<div id="dashboard" class="hidden space-y-5">
+<input id="gemini" placeholder="Gemini API Key"
+ class="w-full p-2 rounded bg-black border border-zinc-700">
 
-<h2 class="text-center font-bold text-lg">QUẢN LÝ API KEY</h2>
+<input id="comet" placeholder="Comet API Key"
+ class="w-full p-2 rounded bg-black border border-zinc-700">
 
-<div class="bg-black/40 p-3 rounded-lg text-xs">
-<b>Device ID:</b>
-<span id="deviceId" class="text-green-400 font-mono"></span>
-</div>
+<input id="credit" type="number" placeholder="Credit"
+ class="w-full p-2 rounded bg-black border border-zinc-700">
 
-<button onclick="createUserKey()"
- class="w-full py-2 bg-green-600/20 border border-green-500/30 rounded-xl text-green-400 text-xs font-bold">
-TẠO API KEY CHO KHÁCH
-</button>
-
-<input id="userKey" class="pro-input w-full px-3 py-2 rounded-xl text-xs font-mono"
- placeholder="V35-USER-XXXX">
-
-<div class="space-y-2">
-<label class="text-[10px] text-slate-400">GOOGLE GEMINI API KEY</label>
-<input id="geminiKey" class="pro-input w-full px-3 py-2 rounded-xl text-xs font-mono text-blue-400"
- placeholder="AIza...">
-</div>
-
-<div class="space-y-2">
-<label class="text-[10px] text-slate-400">COMET API KEY</label>
-<input id="cometKey" class="pro-input w-full px-3 py-2 rounded-xl text-xs font-mono text-green-400"
- placeholder="sk-...">
-</div>
-
-<select id="provider" class="pro-input w-full px-3 py-2 rounded-xl text-xs">
-<option value="gemini">Google Gemini</option>
-<option value="comet">Comet API</option>
+<select id="provider" class="w-full p-2 rounded bg-black border border-zinc-700">
+<option value="gemini">Gemini</option>
+<option value="comet">Comet</option>
 </select>
 
-<button onclick="saveUser()"
- class="w-full py-3 bg-white/10 hover:bg-white/20 rounded-xl text-xs font-bold">
-LƯU & ĐỒNG BỘ
+<button onclick="save()" class="w-full py-2 bg-violet-600 rounded">
+LƯU & CẤP KEY
 </button>
-
-<button onclick="logout()"
- class="w-full py-2 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400 text-xs font-bold">
-ĐĂNG XUẤT
-</button>
-
 </div>
+
+<button onclick="login()" class="w-full py-2 bg-green-600 rounded">
+ĐĂNG NHẬP
+</button>
+
+<p id="msg" class="text-center text-sm text-red-400"></p>
 </div>
 
 <script>
-// ===== ADMIN CONFIG =====
-const ADMIN_PASS_HASH = btoa("admin123");
+const ADMIN_PASS = "admin123";
 
-// ===== SECURITY =====
-const Sec = {
- key:"V35_SEC",
- enc(t){return btoa([...t].map((c,i)=>String.fromCharCode(c.charCodeAt(0)^this.key.charCodeAt(i%this.key.length))).join(""))},
- dec(t){let s=atob(t);return [...s].map((c,i)=>String.fromCharCode(c.charCodeAt(0)^this.key.charCodeAt(i%this.key.length))).join("")}
+const Sec={
+ k:"V35_SEC",
+ e:t=>btoa([...t].map((c,i)=>String.fromCharCode(c.charCodeAt(0)^Sec.k.charCodeAt(i%Sec.k.length))).join("")),
 };
 
-// ===== DEVICE ID =====
-function getDeviceId(){
- let id=localStorage.getItem("v35_device_id");
- if(!id){id="V35-"+crypto.randomUUID();localStorage.setItem("v35_device_id",id)}
- return id;
+function login(){
+ if(document.getElementById("pass").value!==ADMIN_PASS){
+   msg.innerText="Sai mật khẩu";return;
+ }
+ panel.classList.remove("hidden");
+ msg.innerText="";
 }
 
-// ===== LOGIN =====
-function adminLogin(){
- if(btoa(adminPass.value)===ADMIN_PASS_HASH){
-  sessionStorage.setItem("v35_admin","1");
-  showDash();
- } else loginStatus.innerText="Sai mật khẩu!";
-}
-
-// ===== DASH =====
-function showDash(){
- loginBox.style.display="none";
- dashboard.classList.remove("hidden");
- deviceId.innerText=getDeviceId();
-}
-
-if(sessionStorage.getItem("v35_admin")==="1") showDash();
-
-// ===== USER KEY =====
-function createUserKey(){
- userKey.value="V35-USER-"+Math.random().toString(36).substr(2,8).toUpperCase();
-}
-
-// ===== SAVE =====
-function saveUser(){
- if(!userKey.value) return alert("Chưa có USER KEY");
+function save(){
  const data={
-  deviceId:getDeviceId(),
-  userKey:userKey.value,
-  geminiKey:geminiKey.value,
-  cometKey:cometKey.value,
-  provider:provider.value
+   geminiKey:gemini.value.trim(),
+   cometKey:comet.value.trim(),
+   credit:parseInt(credit.value)||0,
+   provider:provider.value
  };
- localStorage.setItem("v35_user_"+userKey.value,Sec.enc(JSON.stringify(data)));
- localStorage.setItem("v35_active_user",Sec.enc(JSON.stringify(data)));
- alert("Đã lưu & index.html đọc được!");
-}
-
-// ===== LOGOUT =====
-function logout(){
- sessionStorage.clear(); location.reload();
+ localStorage.setItem("v35_active_user",Sec.e(JSON.stringify(data)));
+ alert("Đã lưu cho khách ✔");
 }
 </script>
 
