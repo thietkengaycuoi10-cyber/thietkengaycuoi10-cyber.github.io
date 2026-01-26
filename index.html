@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZALO: 0352803379 - STUDIO V35.75 (IP LOGIN SYSTEM)</title>
+    <title>ZALO: 0352803379 - STUDIO V35.85 (COMET API)</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;700&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -302,7 +302,7 @@
                         <!-- EDITED: REPLACE ZALO WITH IP -->
                         <span id="top-bar-ip" class="text-[9px] text-slate-400 font-mono">IP: Loading...</span>
                         <span class="w-1 h-1 rounded-full bg-violet-500"></span>
-                        <span class="text-[9px] text-violet-400 font-bold">V35.75 (IP LOGIN)</span>
+                        <span class="text-[9px] text-violet-400 font-bold">V35.85 (COMET)</span>
                     </div>
                 </div>
                 
@@ -1081,8 +1081,8 @@
                             <div>
                                 <label class="text-[10px] font-bold text-slate-400 uppercase mb-1 block">Nhà cung cấp (Provider)</label>
                                 <div class="grid grid-cols-2 gap-2 mb-2">
-                                    <button class="py-2 rounded border border-white/10 bg-white/5 hover:bg-white/10 text-[10px] font-bold transition-all text-slate-300" id="btn-provider-google">GOOGLE (Default)</button>
-                                    <button class="py-2 rounded border border-violet-500/30 bg-violet-500/10 hover:bg-violet-500/20 text-[10px] font-bold transition-all text-violet-300 shadow-[0_0_10px_rgba(139,92,246,0.1)]" id="btn-provider-comet">COMET API (Proxy)</button>
+                                    <button class="py-2 rounded border border-white/10 bg-white/5 hover:bg-white/10 text-[10px] font-bold transition-all text-slate-300" id="btn-provider-google">GOOGLE</button>
+                                    <button class="py-2 rounded border border-violet-500/30 bg-violet-500/10 hover:bg-violet-500/20 text-[10px] font-bold transition-all text-violet-300 shadow-[0_0_10px_rgba(139,92,246,0.1)]" id="btn-provider-comet">COMET API (Mặc định)</button>
                                 </div>
                             </div>
 
@@ -1094,8 +1094,8 @@
 
                             <div id="base-url-section" class="hidden">
                                 <label class="text-[10px] font-bold text-slate-400 uppercase mb-1 block">Base URL (Endpoint)</label>
-                                <input type="text" id="modal-base-url" class="pro-input w-full py-2 font-mono text-[10px]" value="https://generativelanguage.googleapis.com">
-                                <p class="text-[9px] text-slate-500 mt-1 italic" id="url-hint">Mặc định: https://generativelanguage.googleapis.com</p>
+                                <input type="text" id="modal-base-url" class="pro-input w-full py-2 font-mono text-[10px]" value="https://api.cometapi.com">
+                                <p class="text-[9px] text-slate-500 mt-1 italic" id="url-hint">Mặc định: https://api.cometapi.com</p>
                             </div>
 
                             <div class="pt-2 flex flex-col gap-2">
@@ -1111,7 +1111,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const apiKey = ""; 
+            const apiKey = ""; // Nhập Key CometAPI của bạn vào đây nếu muốn hardcode cho GitHub
 
             // === HỆ THỐNG MÃ HÓA BẢO MẬT (NEW) ===
             const SimpleSec = {
@@ -1302,8 +1302,8 @@
                 userSettings: {
                     username: '',
                     apiKey: '',
-                    provider: 'google', // 'google' | 'comet' | 'custom'
-                    baseUrl: 'https://generativelanguage.googleapis.com'
+                    provider: 'comet', // MẶC ĐỊNH COMET
+                    baseUrl: 'https://api.cometapi.com' // BASE URL MẶC ĐỊNH
                 }
             };
 
@@ -1449,11 +1449,14 @@
                     
                     modalUser.value = state.userSettings.username || '';
                     modalKey.value = state.userSettings.apiKey || '';
-                    modalBaseUrl.value = state.userSettings.baseUrl || 'https://generativelanguage.googleapis.com';
+                    
+                    // NẾU CÓ SETTINGS CŨ THÌ LẤY, KHÔNG THÌ LẤY MẶC ĐỊNH
+                    modalBaseUrl.value = state.userSettings.baseUrl || 'https://api.cometapi.com';
                     
                     if(UserSystem.ipAddress) {
                         displayIp.value = UserSystem.ipAddress;
                     }
+                    // SET UI PROVIDER DỰA TRÊN STATE HIỆN TẠI
                     setProviderUI(state.userSettings.provider);
 
                 } else {
@@ -1504,7 +1507,8 @@
             });
 
             if(btnLogout) btnLogout.addEventListener('click', () => {
-                state.userSettings = { username: '', apiKey: '', provider: 'google', baseUrl: 'https://generativelanguage.googleapis.com' };
+                // RESET VỀ MẶC ĐỊNH LÀ COMET KHI ĐĂNG XUẤT
+                state.userSettings = { username: '', apiKey: '', provider: 'comet', baseUrl: 'https://api.cometapi.com' };
                 try { localStorage.removeItem('v35_user_settings'); } catch(e){}
                 modalUser.value = ''; modalKey.value = '';
                 
@@ -1515,7 +1519,7 @@
                 gateStatus.textContent = "Hệ thống tự động quét lại IP...";
                 gateStatus.className = "mt-6 text-[10px] text-slate-500 h-4 transition-colors";
 
-                setProviderUI('google');
+                setProviderUI('comet');
                 updateLoginUI();
                 adminModal.classList.add('hidden');
                 UserSystem.fetchIP(); // Refetch IP
@@ -2082,7 +2086,7 @@
                     try {
                         const resizedBase64 = await resizeImage(state.base64);
                         const headers = { 'Content-Type': 'application/json' };
-                        if (isComet) headers['Authorization'] = `Bearer ${keyToUse}`;
+                        if (isComet) headers['Authorization'] = `Bearer ${keyToUse}`; // COMET API AUTH
 
                         const response = await fetch(`${apiBase}/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${keyToUse}`, {
                             method: 'POST',
@@ -2773,7 +2777,7 @@
                         if (state.refBase64) parts.push({ inlineData: { mimeType: "image/jpeg", data: state.refBase64.split(',')[1] } });
 
                         const headers = { 'Content-Type': 'application/json' };
-                        if (isComet) headers['Authorization'] = `Bearer ${keyToUse}`;
+                        if (isComet) headers['Authorization'] = `Bearer ${keyToUse}`; // COMET API AUTH
 
                         const response = await fetch(`${apiBase}/v1beta/models/gemini-2.5-flash-image-preview:generateContent?key=${keyToUse}`, {
                             method: 'POST',
