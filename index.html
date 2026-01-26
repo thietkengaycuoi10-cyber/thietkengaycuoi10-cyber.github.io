@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZALO: 0352803379 - STUDIO V35.85 (COMET API)</title>
+    <title>ZALO: 0352803379 - STUDIO V35.75 (IP LOGIN SYSTEM)</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;700&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -230,10 +230,7 @@
         <!-- Main Card Container -->
         <div class="relative z-10 w-full max-w-[400px] bg-white/[0.02] border border-white/5 rounded-3xl p-8 shadow-2xl animate-enter-up flex flex-col items-center">
             
-            <!-- ADMIN KEY BUTTON (Discrete Top Right) -->
-            <button id="gate-admin-key" class="absolute top-4 right-4 text-slate-600 hover:text-white transition-colors p-2 z-50 rounded-full hover:bg-white/5" title="Đăng nhập Admin">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path></svg>
-            </button>
+            <!-- REMOVED ADMIN BUTTON -->
 
             <!-- Logo / Brand Section -->
             <div class="flex flex-col items-center mb-8">
@@ -302,7 +299,7 @@
                         <!-- EDITED: REPLACE ZALO WITH IP -->
                         <span id="top-bar-ip" class="text-[9px] text-slate-400 font-mono">IP: Loading...</span>
                         <span class="w-1 h-1 rounded-full bg-violet-500"></span>
-                        <span class="text-[9px] text-violet-400 font-bold">V35.85 (COMET)</span>
+                        <span class="text-[9px] text-violet-400 font-bold">V35.75 (IP LOGIN)</span>
                     </div>
                 </div>
                 
@@ -901,7 +898,7 @@
                         </div>
                     </div>
                     
-                    <div id="placeholder-state" class="text-center px-6 py-10 md:p-24 border border-dashed border-violet-500/50 rounded-2xl bg-white/[0.01] hover:bg-white/[0.02] transition-all duration-500 animate-float backdrop-blur-sm w-[85%] max-w-lg md:w-auto mx-auto flex flex-col items-center justify-center mb-16 md:mb-0 cursor-pointer">
+                    <div id="placeholder-state" class="text-center p-24 border border-dashed border-violet-500/50 rounded-2xl bg-white/[0.01] hover:bg-white/[0.02] transition-all duration-500 animate-float backdrop-blur-sm">
                         <div class="w-20 h-20 bg-gradient-to-tr from-slate-800 to-slate-700 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner border border-white/5"><svg class="w-10 h-10 text-violet-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l-1.586-1.586a2 2 0 00-2.828 0L6 18H4a2 2 0 01-2-2V6a2 2 0 01-2-2V6a2 2 0 012-2h16a2 2 0 012 2v8a2 2 0 01-2 2h-2m-4-4l-3 3m0 0l-3-3m3 3V4"></path></svg></div>
                         <!-- EDITED: CHANGE TEXT HERE -->
                         <h3 class="text-2xl font-bold text-violet-500 tracking-tight mb-2">PHỤC HỒI ẢNH</h3>
@@ -977,141 +974,11 @@
         </div>
     </div>
 
-    <!-- NEW: ADMIN MODAL WITH API CONFIG & LICENSE GENERATOR -->
-    <div id="admin-modal" class="fixed inset-0 z-[10002] bg-black/90 backdrop-blur-md hidden flex items-center justify-center modal-fade-in overflow-y-auto">
-        <div class="w-[450px] glass-panel rounded-xl border border-white/10 shadow-2xl p-6 relative my-10">
-            <button id="close-admin" class="absolute top-4 right-4 text-slate-400 hover:text-white"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
-            
-            <!-- ADMIN LOGIN STATE -->
-            <div id="admin-login-view">
-                <div class="mb-6 text-center">
-                    <h2 class="text-lg font-bold text-slate-200 tracking-widest mb-1">QUẢN TRỊ HỆ THỐNG</h2>
-                    <p class="text-[10px] text-slate-500">Vui lòng đăng nhập quyền Admin để cấu hình API</p>
-                </div>
-                <div class="space-y-4">
-                    <input type="password" id="admin-password" class="pro-input w-full py-3 text-center tracking-widest" placeholder="Nhập mật khẩu quản trị">
-                    <button id="btn-admin-login" class="w-full py-3 bg-violet-600 hover:bg-violet-500 text-white rounded text-xs font-bold transition-colors shadow-lg">ĐĂNG NHẬP ADMIN</button>
-                </div>
-            </div>
-
-            <!-- ADMIN DASHBOARD STATE -->
-            <div id="admin-dashboard-view" class="hidden">
-                 <div class="flex justify-between items-center mb-6 border-b border-white/5 pb-4">
-                    <h2 class="text-sm font-bold text-green-400 tracking-widest">DASHBOARD V35</h2>
-                    <span class="text-[9px] bg-green-500/20 text-green-400 px-2 py-1 rounded">ADMIN ACCESS GRANTED</span>
-                </div>
-                
-                <div class="space-y-4">
-                    <!-- Credits Management -->
-                    <div class="bg-white/5 p-3 rounded border border-white/10 flex justify-between items-center">
-                        <div>
-                            <label class="text-[9px] font-bold text-slate-500 uppercase block mb-1">SỐ DƯ HIỆN TẠI</label>
-                            <div class="text-xl font-mono font-bold text-yellow-400" id="admin-current-credits">0</div>
-                        </div>
-                        <div class="flex flex-col gap-1">
-                             <button class="add-credit-btn px-3 py-1.5 bg-green-600 hover:bg-green-500 text-white text-[9px] font-bold rounded" data-amount="100">+100 CR</button>
-                             <button class="add-credit-btn px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-[9px] font-bold rounded" data-amount="500">+500 CR</button>
-                             <button class="add-credit-btn px-3 py-1.5 bg-red-600 hover:bg-red-500 text-white text-[9px] font-bold rounded" data-amount="-20">-20 CR (Test)</button>
-                        </div>
-                    </div>
-                    
-                    <div class="bg-white/5 p-3 rounded border border-white/10">
-                        <label class="text-[9px] font-bold text-slate-500 uppercase block mb-1">DEVICE ID (Máy hiện tại)</label>
-                        <div class="text-[10px] font-mono text-violet-300 break-all" id="admin-device-id">---</div>
-                    </div>
-
-                    <!-- NEW: LICENSE GENERATOR SECTION -->
-                    <div class="pt-4 mt-2 border-t border-white/5">
-                        <h3 class="text-xs font-bold text-yellow-500 tracking-widest mb-3 uppercase flex items-center gap-2">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path></svg>
-                            🛠 CÔNG CỤ TẠO MÃ KÍCH HOẠT (V2 - CHỐNG SPAM)
-                        </h3>
-                        
-                        <div class="space-y-3 bg-white/5 p-3 rounded-lg border border-white/10">
-                            <div>
-                                <label class="text-[9px] font-bold text-slate-400 uppercase mb-1 block">Mã Khách Hàng (Từ Email)</label>
-                                <div class="flex gap-2">
-                                    <input type="text" id="gen-customer-email" class="pro-input w-full py-2" placeholder="Nhập Email khách hàng...">
-                                    <input type="text" id="gen-customer-hash" class="pro-input w-24 py-2 font-mono text-center text-slate-500" readonly placeholder="HASH ID">
-                                </div>
-                            </div>
-
-                            <div>
-                                <label class="text-[9px] font-bold text-slate-400 uppercase mb-1 block">Gói Credits</label>
-                                <div class="grid grid-cols-3 gap-2">
-                                    <button class="gen-pkg-btn py-1.5 rounded border border-white/10 bg-white/5 hover:bg-violet-500 hover:text-white text-[9px] font-bold transition-all text-slate-300" data-val="100">100 CR</button>
-                                    <button class="gen-pkg-btn py-1.5 rounded border border-white/10 bg-white/5 hover:bg-violet-500 hover:text-white text-[9px] font-bold transition-all text-slate-300" data-val="200">200 CR</button>
-                                    <button class="gen-pkg-btn py-1.5 rounded border border-white/10 bg-white/5 hover:bg-violet-500 hover:text-white text-[9px] font-bold transition-all text-slate-300" data-val="500">500 CR</button>
-                                </div>
-                                <input type="hidden" id="gen-selected-credit" value="">
-                            </div>
-
-                            <button id="btn-generate-key" class="w-full py-2 bg-yellow-600 hover:bg-yellow-500 text-white rounded text-xs font-bold transition-colors shadow-lg flex items-center justify-center gap-2">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                                TẠO MÃ (GENERATE)
-                            </button>
-
-                            <div id="gen-result-container" class="hidden animate-fade-in mt-2 pt-2 border-t border-white/10">
-                                <label class="text-[9px] font-bold text-green-400 uppercase mb-1 block">Mã Kích Hoạt (Click để copy)</label>
-                                <div class="relative group">
-                                    <input type="text" id="gen-result-key" class="pro-input w-full py-2.5 font-mono text-center text-yellow-400 font-bold border-yellow-500/30 bg-yellow-500/10 cursor-pointer text-xs tracking-wider" readonly>
-                                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none opacity-50">
-                                        <svg class="w-4 h-4 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- API CONFIGURATION SECTION -->
-                    <div class="pt-4 mt-2 border-t border-white/5">
-                        <h3 class="text-xs font-bold text-violet-400 tracking-widest mb-3 uppercase">CẤU HÌNH API & TÀI KHOẢN</h3>
-                        
-                        <div class="space-y-3">
-                            <div>
-                                <label class="text-[10px] font-bold text-slate-400 uppercase mb-1 block">IP Thiết Bị</label>
-                                <input type="text" id="display-ip-address" class="pro-input w-full py-2 bg-white/5 border-violet-500/20 text-violet-300 font-mono tracking-widest text-center" readonly value="Đang quét IP...">
-                            </div>
-
-                            <div>
-                                <label class="text-[10px] font-bold text-slate-400 uppercase mb-1 block">Tên người dùng (Tùy chọn)</label>
-                                <input type="text" id="modal-username" class="pro-input w-full py-2" placeholder="Ví dụ: Studio V35">
-                            </div>
-
-                            <div>
-                                <label class="text-[10px] font-bold text-slate-400 uppercase mb-1 block">Nhà cung cấp (Provider)</label>
-                                <div class="grid grid-cols-2 gap-2 mb-2">
-                                    <button class="py-2 rounded border border-white/10 bg-white/5 hover:bg-white/10 text-[10px] font-bold transition-all text-slate-300" id="btn-provider-google">GOOGLE</button>
-                                    <button class="py-2 rounded border border-violet-500/30 bg-violet-500/10 hover:bg-violet-500/20 text-[10px] font-bold transition-all text-violet-300 shadow-[0_0_10px_rgba(139,92,246,0.1)]" id="btn-provider-comet">COMET API (Mặc định)</button>
-                                </div>
-                            </div>
-
-                            <div>
-                                <label class="text-[10px] font-bold text-slate-400 uppercase mb-1 block">API Key (Lưu vào trình duyệt)</label>
-                                <input type="password" id="modal-api-key" class="pro-input w-full py-2 text-center tracking-widest font-mono text-violet-300" placeholder="sk-...">
-                                <div class="flex justify-end mt-1"><button id="toggle-show-key" class="text-[9px] text-slate-500 hover:text-slate-300">Hiện/Ẩn</button></div>
-                            </div>
-
-                            <div id="base-url-section" class="hidden">
-                                <label class="text-[10px] font-bold text-slate-400 uppercase mb-1 block">Base URL (Endpoint)</label>
-                                <input type="text" id="modal-base-url" class="pro-input w-full py-2 font-mono text-[10px]" value="https://api.cometapi.com">
-                                <p class="text-[9px] text-slate-500 mt-1 italic" id="url-hint">Mặc định: https://api.cometapi.com</p>
-                            </div>
-
-                            <div class="pt-2 flex flex-col gap-2">
-                                <button id="btn-save-login" class="w-full py-2 bg-violet-600 hover:bg-violet-500 text-white rounded text-xs font-bold transition-colors shadow-lg">LƯU CẤU HÌNH</button>
-                                <button id="btn-logout" class="w-full py-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 rounded text-xs font-bold transition-colors hidden">ĐĂNG XUẤT / RESET</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- REMOVED ADMIN MODAL -->
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const apiKey = ""; // Nhập Key CometAPI của bạn vào đây nếu muốn hardcode cho GitHub
+            const apiKey = ""; 
 
             // === HỆ THỐNG MÃ HÓA BẢO MẬT (NEW) ===
             const SimpleSec = {
@@ -1180,7 +1047,6 @@
                         
                         const gateIpDisplay = document.getElementById('gate-ip-display');
                         const gateLoader = document.getElementById('gate-loading-spinner');
-                        const adminIpDisplay = document.getElementById('display-ip-address');
                         const gateBtn = document.getElementById('gate-submit');
                         const gateStatus = document.getElementById('gate-status');
                         
@@ -1209,10 +1075,6 @@
                                 gateStatus.textContent = `Đã nhận diện thiết bị: ${this.deviceId}`;
                                 gateStatus.classList.add('text-green-500');
                             }
-                        }
-
-                        if(adminIpDisplay) {
-                             adminIpDisplay.value = `${data.ip} (Device: ${this.deviceId})`;
                         }
 
                         return data.ip;
@@ -1276,10 +1138,6 @@
                 updateUI() {
                     const el = document.getElementById('credit-count');
                     if (el) el.textContent = this.credits;
-                    const adminCredit = document.getElementById('admin-current-credits');
-                    if (adminCredit) adminCredit.textContent = this.credits;
-                    const adminDevId = document.getElementById('admin-device-id');
-                    if(adminDevId) adminDevId.textContent = `${this.ipAddress || '...'} | ${this.deviceId}`;
                 }
             };
 
@@ -1302,8 +1160,8 @@
                 userSettings: {
                     username: '',
                     apiKey: '',
-                    provider: 'comet', // MẶC ĐỊNH COMET
-                    baseUrl: 'https://api.cometapi.com' // BASE URL MẶC ĐỊNH
+                    provider: 'google', // 'google' | 'comet' | 'custom'
+                    baseUrl: 'https://generativelanguage.googleapis.com'
                 }
             };
 
@@ -1332,7 +1190,6 @@
             const gateScreen = document.getElementById('security-gate');
             const gateSubmit = document.getElementById('gate-submit');
             const gateStatus = document.getElementById('gate-status');
-            const gateAdminKey = document.getElementById('gate-admin-key');
             
             try {
                 // LOAD MÃ HÓA
@@ -1378,246 +1235,12 @@
 
             gateSubmit.addEventListener('click', loginByIP);
             
-            if(gateAdminKey) gateAdminKey.addEventListener('click', (e) => {
-                e.stopPropagation();
-                adminModal.classList.remove('hidden');
-                adminLoginView.classList.remove('hidden');
-                adminDashView.classList.add('hidden');
-                adminPassInput.value = '';
-                adminPassInput.focus();
-            });
-
-            // === ADMIN MODAL LOGIC ===
-            const btnOpenAdmin = document.getElementById('btn-login-modal');
-            const adminModal = document.getElementById('admin-modal');
-            const closeAdminBtn = document.getElementById('close-admin');
-            const btnAdminLogin = document.getElementById('btn-admin-login');
-            const adminPassInput = document.getElementById('admin-password');
-            const adminLoginView = document.getElementById('admin-login-view');
-            const adminDashView = document.getElementById('admin-dashboard-view');
-            const btnSaveLogin = document.getElementById('btn-save-login');
-            const btnLogout = document.getElementById('btn-logout');
-            
-            const modalUser = document.getElementById('modal-username');
-            const modalKey = document.getElementById('modal-api-key');
-            const modalBaseUrl = document.getElementById('modal-base-url');
-            const btnProvGoogle = document.getElementById('btn-provider-google');
-            const btnProvComet = document.getElementById('btn-provider-comet');
-            const baseUrlSection = document.getElementById('base-url-section');
-            const loginDot = document.getElementById('login-status-dot');
-            const urlHint = document.getElementById('url-hint');
-            const displayIp = document.getElementById('display-ip-address');
+            // REMOVED ADMIN MODAL LOGIC
 
             function updateLoginUI() {
-                if(state.userSettings.apiKey) {
-                    if(loginDot) {
-                        loginDot.classList.remove('bg-slate-600');
-                        loginDot.classList.add('bg-green-500', 'shadow-[0_0_8px_#22c55e]');
-                    }
-                    if(btnLogout) btnLogout.classList.remove('hidden');
-                    if(btnOpenAdmin) btnOpenAdmin.title = `Admin: ${state.userSettings.provider.toUpperCase()}`;
-                } else {
-                    if(loginDot) {
-                        loginDot.classList.remove('bg-green-500', 'shadow-[0_0_8px_#22c55e]');
-                        loginDot.classList.add('bg-slate-600');
-                    }
-                    if(btnLogout) btnLogout.classList.add('hidden');
-                    if(btnOpenAdmin) btnOpenAdmin.title = "Admin / Cấu hình";
-                }
+                // Keep minimal UI update logic if needed for other parts, but admin buttons are gone
             }
             if(state.userSettings.apiKey) updateLoginUI();
-
-            if(btnOpenAdmin) btnOpenAdmin.addEventListener('click', () => {
-                adminModal.classList.remove('hidden');
-                adminLoginView.classList.remove('hidden');
-                adminDashView.classList.add('hidden');
-                adminPassInput.value = '';
-                adminPassInput.focus();
-            });
-
-            if(closeAdminBtn) closeAdminBtn.addEventListener('click', () => adminModal.classList.add('hidden'));
-
-            if(btnAdminLogin) btnAdminLogin.onclick = () => {
-                const pass = adminPassInput.value.trim();
-                // BẢO MẬT: SO SÁNH HASH (BASE64) THAY VÌ TEXT THUẦN
-                // "ccdnacyme@1985" -> "Y2NkbmFjeW1lQDE5ODU="
-                if(btoa(pass) === "Y2NkbmFjeW1lQDE5ODU=") {
-                    showToast("Đăng nhập Admin thành công!", "success");
-                    adminLoginView.classList.add('hidden');
-                    adminDashView.classList.remove('hidden');
-                    UserSystem.updateUI();
-                    
-                    modalUser.value = state.userSettings.username || '';
-                    modalKey.value = state.userSettings.apiKey || '';
-                    
-                    // NẾU CÓ SETTINGS CŨ THÌ LẤY, KHÔNG THÌ LẤY MẶC ĐỊNH
-                    modalBaseUrl.value = state.userSettings.baseUrl || 'https://api.cometapi.com';
-                    
-                    if(UserSystem.ipAddress) {
-                        displayIp.value = UserSystem.ipAddress;
-                    }
-                    // SET UI PROVIDER DỰA TRÊN STATE HIỆN TẠI
-                    setProviderUI(state.userSettings.provider);
-
-                } else {
-                    showToast("Mật khẩu không đúng!", "error");
-                    adminPassInput.classList.add('border-red-500', 'text-red-500');
-                    setTimeout(() => adminPassInput.classList.remove('border-red-500', 'text-red-500'), 2000);
-                }
-            };
-
-            function setProviderUI(provider) {
-                if(provider === 'comet') {
-                    btnProvComet.classList.add('bg-violet-500', 'text-white', 'border-transparent');
-                    btnProvComet.classList.remove('bg-violet-500/10', 'text-violet-300');
-                    btnProvGoogle.classList.remove('bg-blue-500', 'text-white');
-                    btnProvGoogle.classList.add('bg-white/5', 'text-slate-300');
-                    baseUrlSection.classList.remove('hidden');
-                    if(modalBaseUrl.value === 'https://generativelanguage.googleapis.com') {
-                        modalBaseUrl.value = 'https://api.cometapi.com'; 
-                    }
-                    urlHint.textContent = "Endpoint CometAPI (VD: https://api.cometapi.com)";
-                } else {
-                    btnProvGoogle.classList.add('bg-blue-500', 'text-white');
-                    btnProvGoogle.classList.remove('bg-white/5', 'text-slate-300');
-                    btnProvComet.classList.remove('bg-violet-500', 'text-white');
-                    btnProvComet.classList.add('bg-violet-500/10', 'text-violet-300');
-                    baseUrlSection.classList.add('hidden');
-                    modalBaseUrl.value = 'https://generativelanguage.googleapis.com';
-                }
-            }
-
-            if(btnProvGoogle) btnProvGoogle.addEventListener('click', () => { state.userSettings.provider = 'google'; setProviderUI('google'); });
-            if(btnProvComet) btnProvComet.addEventListener('click', () => { state.userSettings.provider = 'comet'; setProviderUI('comet'); });
-
-            if(btnSaveLogin) btnSaveLogin.addEventListener('click', () => {
-                state.userSettings.username = modalUser.value.trim();
-                state.userSettings.apiKey = modalKey.value.trim();
-                state.userSettings.baseUrl = modalBaseUrl.value.trim().replace(/\/$/, '');
-                
-                // LƯU CÓ MÃ HÓA
-                try { 
-                    const dataStr = JSON.stringify(state.userSettings);
-                    const encrypted = SimpleSec.encrypt(dataStr);
-                    localStorage.setItem('v35_user_settings', encrypted); 
-                } catch(e){}
-
-                updateLoginUI();
-                showToast(`Đã lưu cấu hình (Mã hóa): ${state.userSettings.provider.toUpperCase()}`, "success");
-            });
-
-            if(btnLogout) btnLogout.addEventListener('click', () => {
-                // RESET VỀ MẶC ĐỊNH LÀ COMET KHI ĐĂNG XUẤT
-                state.userSettings = { username: '', apiKey: '', provider: 'comet', baseUrl: 'https://api.cometapi.com' };
-                try { localStorage.removeItem('v35_user_settings'); } catch(e){}
-                modalUser.value = ''; modalKey.value = '';
-                
-                gateScreen.style.display = 'flex';
-                gateScreen.classList.remove('animate-fade-out');
-                gateSubmit.disabled = true; // Wait for IP again
-                gateSubmit.classList.add('opacity-70');
-                gateStatus.textContent = "Hệ thống tự động quét lại IP...";
-                gateStatus.className = "mt-6 text-[10px] text-slate-500 h-4 transition-colors";
-
-                setProviderUI('comet');
-                updateLoginUI();
-                adminModal.classList.add('hidden');
-                UserSystem.fetchIP(); // Refetch IP
-                showToast("Đã đăng xuất & Khóa màn hình!", "info");
-            });
-
-            document.getElementById('toggle-show-key').addEventListener('click', (e) => {
-                e.preventDefault();
-                modalKey.type = modalKey.type === 'password' ? 'text' : 'password';
-            });
-            
-            // === NEW: LICENSE KEY GENERATOR LOGIC ===
-            const pkgBtns = document.querySelectorAll('.gen-pkg-btn');
-            const selectedCreditInput = document.getElementById('gen-selected-credit');
-            const btnGenerate = document.getElementById('btn-generate-key');
-            const inputEmail = document.getElementById('gen-customer-email');
-            const inputHash = document.getElementById('gen-customer-hash');
-            const resultContainer = document.getElementById('gen-result-container');
-            const resultKey = document.getElementById('gen-result-key');
-
-            // Auto-Hash Email to Customer ID
-            if(inputEmail && inputHash) {
-                inputEmail.addEventListener('input', (e) => {
-                    const val = e.target.value.trim();
-                    if(val) {
-                        // Create a simple hash from email
-                        let hash = 0;
-                        for (let i = 0; i < val.length; i++) {
-                            const char = val.charCodeAt(i);
-                            hash = ((hash << 5) - hash) + char;
-                            hash = hash & hash; // Convert to 32bit integer
-                        }
-                        const hexHash = Math.abs(hash).toString(16).toUpperCase().substring(0, 8);
-                        inputHash.value = hexHash;
-                    } else {
-                        inputHash.value = "HASH ID";
-                    }
-                });
-            }
-
-            // Package Selection
-            pkgBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    pkgBtns.forEach(b => {
-                        b.classList.remove('bg-violet-500', 'text-white', 'border-violet-500');
-                        b.classList.add('bg-white/5', 'text-slate-300', 'border-white/10');
-                    });
-                    btn.classList.remove('bg-white/5', 'text-slate-300', 'border-white/10');
-                    btn.classList.add('bg-violet-500', 'text-white', 'border-violet-500');
-                    selectedCreditInput.value = btn.dataset.val;
-                });
-            });
-
-            // Generate Key
-            if(btnGenerate) {
-                btnGenerate.addEventListener('click', () => {
-                    const email = inputEmail.value.trim();
-                    const hash = inputHash.value;
-                    let credits = selectedCreditInput.value;
-                    
-                    if(!email) return showToast("Vui lòng nhập Email khách hàng!", "error");
-                    if(!credits) { credits = "100"; } // Default
-
-                    const rand = Math.random().toString(36).substring(2, 6).toUpperCase();
-                    const timestamp = Date.now().toString(36).substring(4, 8).toUpperCase();
-                    
-                    // Format: V35-{CREDITS}-{HASH}-{RANDOM}-{TIME}
-                    const key = `V35-${credits}-${hash}-${rand}-${timestamp}`;
-                    
-                    resultKey.value = key;
-                    resultContainer.classList.remove('hidden');
-                    showToast(`Đã tạo mã ${credits} Credits thành công!`, "success");
-                });
-            }
-
-            // Copy Key
-            if(resultKey) {
-                resultKey.addEventListener('click', () => {
-                    // Use execCommand for iframe compatibility
-                    const textArea = document.createElement("textarea");
-                    textArea.value = resultKey.value;
-                    textArea.style.position = "fixed"; // Prevent scrolling
-                    document.body.appendChild(textArea);
-                    textArea.focus();
-                    textArea.select();
-                    
-                    try {
-                        document.execCommand('copy');
-                        showToast("Đã copy Mã Kích Hoạt!", "success");
-                    } catch (err) {
-                        console.error('Fallback copy failed', err);
-                        showToast("Lỗi copy: " + err, "error");
-                    }
-                    
-                    document.body.removeChild(textArea);
-                    resultKey.select();
-                });
-            }
             
             // Helper to get effective API Key and URL
             const getApiConfig = () => {
@@ -2065,15 +1688,6 @@
                 });
             }
 
-            // === UPDATED: CLICK PLACEHOLDER TO TRIGGER UPLOAD ON MOBILE ===
-            const placeholder = document.getElementById('placeholder-state');
-            if(placeholder) {
-                placeholder.addEventListener('click', () => {
-                    const uploadInput = document.getElementById('image-upload');
-                    if(uploadInput) uploadInput.click();
-                });
-            }
-
             if(btnAutoPilot) {
                 btnAutoPilot.addEventListener('click', async () => {
                     if(!state.base64) return showToast("Vui lòng tải ảnh trước!", "error");
@@ -2086,7 +1700,7 @@
                     try {
                         const resizedBase64 = await resizeImage(state.base64);
                         const headers = { 'Content-Type': 'application/json' };
-                        if (isComet) headers['Authorization'] = `Bearer ${keyToUse}`; // COMET API AUTH
+                        if (isComet) headers['Authorization'] = `Bearer ${keyToUse}`;
 
                         const response = await fetch(`${apiBase}/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${keyToUse}`, {
                             method: 'POST',
@@ -2777,7 +2391,7 @@
                         if (state.refBase64) parts.push({ inlineData: { mimeType: "image/jpeg", data: state.refBase64.split(',')[1] } });
 
                         const headers = { 'Content-Type': 'application/json' };
-                        if (isComet) headers['Authorization'] = `Bearer ${keyToUse}`; // COMET API AUTH
+                        if (isComet) headers['Authorization'] = `Bearer ${keyToUse}`;
 
                         const response = await fetch(`${apiBase}/v1beta/models/gemini-2.5-flash-image-preview:generateContent?key=${keyToUse}`, {
                             method: 'POST',
