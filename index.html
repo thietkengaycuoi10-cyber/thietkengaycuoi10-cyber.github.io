@@ -2611,5 +2611,46 @@
             if(structureSlider && structureVal) structureSlider.addEventListener('input', (e) => { structureVal.textContent = "Mạnh (" + (e.target.value/100).toFixed(1) + ")"; });
         });
     </script>
-</body>
+</body><script>
+const Sec={
+ k:"V35_SEC",
+ d:t=>[...atob(t)].map((c,i)=>
+   String.fromCharCode(c.charCodeAt(0)^Sec.k.charCodeAt(i%Sec.k.length))
+ ).join("")
+};
+
+const raw=localStorage.getItem("v35_active_user");
+if(!raw){
+ alert("Chưa được cấp quyền / credit");
+ location.href="admin.html";
+ throw "";
+}
+
+const data=JSON.parse(Sec.d(raw));
+let credit=data.credit||0;
+
+// HIỂN THỊ CREDIT (khớp với id bạn đang dùng)
+document.getElementById("credit-count").innerText=credit;
+
+// API KEY dùng cho toàn web
+window.GEMINI_API_KEY=data.geminiKey;
+
+function useCredit(){
+ if(credit<=0){
+   alert("Hết credit!");
+   return false;
+ }
+ credit--;
+ data.credit=credit;
+ document.getElementById("credit-count").innerText=credit;
+
+ localStorage.setItem(
+  "v35_active_user",
+  btoa([...JSON.stringify(data)].map((c,i)=>
+    String.fromCharCode(c.charCodeAt(0)^Sec.k.charCodeAt(i%Sec.k.length))
+  ).join(""))
+ return true;
+}
+</script>
+
 </html>
