@@ -62,10 +62,13 @@ TẠO API KEY CHO KHÁCH
  placeholder="sk-...">
 </div>
 
-<select id="provider" class="pro-input w-full px-3 py-2 rounded-xl text-xs">
-<option value="gemini">Google Gemini</option>
-<option value="comet">Comet API</option>
-</select>
+<div class="space-y-2">
+<label class="text-[10px] text-slate-400">NẠP CREDIT CHO KHÁCH</label>
+<input id="credit" type="number"
+ class="pro-input w-full px-3 py-2 rounded-xl text-xs font-mono text-yellow-400"
+ placeholder="Ví dụ: 100">
+</div>
+
 
 <button onclick="saveUser()"
  class="w-full py-3 bg-white/10 hover:bg-white/20 rounded-xl text-xs font-bold">
@@ -121,19 +124,34 @@ function createUserKey(){
 }
 
 // ===== SAVE =====
-function saveUser(){
+
  if(!userKey.value) return alert("Chưa có USER KEY");
+ const data={
+  devicfunction saveUser(){
+ if(!userKey.value) return alert("Chưa có USER KEY");
+
  const data={
   deviceId:getDeviceId(),
   userKey:userKey.value,
   geminiKey:geminiKey.value,
   cometKey:cometKey.value,
-  provider:provider.value
+  provider:provider.value,
+  credit: Number(credit.value || 0)
  };
- localStorage.setItem("v35_user_"+userKey.value,Sec.enc(JSON.stringify(data)));
- localStorage.setItem("v35_active_user",Sec.enc(JSON.stringify(data)));
- alert("Đã lưu & index.html đọc được!");
+
+ localStorage.setItem(
+  "v35_user_"+userKey.value,
+  Sec.enc(JSON.stringify(data))
+ );
+
+ localStorage.setItem(
+  "v35_active_user",
+  Sec.enc(JSON.stringify(data))
+ );
+
+ alert("Đã nạp credit & index.html đọc được!");
 }
+
 
 // ===== LOGOUT =====
 function logout(){
