@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Phục Hồi Ảnh</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <div class="admin-container">
+        <h2>Khu Vực Quản Trị Viên</h2>
+        
+        <div id="login-box">
+            <p>Vui lòng nhập mật khẩu quản trị</p>
+            <input type="password" id="pass" placeholder="Nhập mật khẩu...">
+            <button class="btn-primary" onclick="login()">Đăng Nhập</button>
+            <p id="status" class="error-msg"></p>
+        </div>
+
+        <div id="dashboard" style="display: none;">
+            <div class="card">
+                <h3>Cấu hình API Key</h3>
+                <p>Nhập API Key RunningHub hoặc Server của bạn:</p>
+                <input type="text" id="apiKeyInput" placeholder="dán-api-key-vào-đây">
+                <button class="btn-success" onclick="saveConfig()">Lưu Cấu Hình</button>
+            </div>
+
+            <div class="card">
+                <h3>Quản lý Credits</h3>
+                <p>Số dư hệ thống: <span id="credit-display">Loading...</span></p>
+                <button class="btn-secondary" onclick="alert('Đang kết nối API ngân hàng...')">Kiểm tra giao dịch mới</button>
+            </div>
+            
+            <button class="btn-logout" onclick="logout()">Đăng Xuất</button>
+        </div>
+    </div>
+
+    <script src="js/admin.js"></script>
+</body>
+</html>
