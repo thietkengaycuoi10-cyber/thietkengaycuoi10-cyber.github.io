@@ -2,8 +2,7 @@
 <html lang="vi" class="h-full antialiased">
 <head>
     <meta charset="UTF-8">
-    <!-- BƯỚC 1: VIEWPORT CHUẨN CHO MOBILE -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>ZALO: 0352803379 - STUDIO V35.75 (IP LOGIN SYSTEM)</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;700&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
@@ -36,10 +35,8 @@
             console.log("%cDỪNG LẠI!", "color: red; font-size: 50px; font-weight: bold; text-shadow: 2px 2px #000;");
             console.log("%cĐây là phần mềm có bản quyền của ZALO: 0352803379.", "color: white; background: red; font-size: 16px; padding: 10px; border-radius: 5px;");
         })();
-    </script>
 
     <!-- AUTH CONFIG SCRIPT -->
-    <script>
     const Sec = {
      key:"V35_SEC",
      dec(t){let s=atob(t);return [...s].map((c,i)=>String.fromCharCode(c.charCodeAt(0)^this.key.charCodeAt(i%this.key.length))).join("")}
@@ -153,26 +150,16 @@
         /* THEME STYLES - PRO MASTER */
         :root { --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         
-        /* BƯỚC 2: CHO WEB DÙNG TOÀN BỘ MÀN HÌNH */
-        html, body { 
-            width: 100%;
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
+        /* FIX: Use 100dvh for better mobile browser support (address bar handling) */
+        body { 
             background-color: #050505; 
             background-image: radial-gradient(circle at top right, #0f172a, #050505);
             color: #e2e8f0;
             -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
+            height: 100dvh; 
         }
         input, textarea { -webkit-user-select: text; -moz-user-select: text; -ms-user-select: text; user-select: text; }
 
-        img {
-            max-width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        /* Background blobs */
         .bg-blob { position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.15; z-index: 0; animation: blob 15s infinite; }
         .blob-1 { top: -10%; left: -10%; width: 500px; height: 500px; background: #8b5cf6; } 
         .blob-2 { bottom: -10%; right: -10%; width: 500px; height: 500px; background: #3b82f6; animation-delay: 2s; }
@@ -212,26 +199,12 @@
         .slider-cyan::-webkit-slider-thumb { background: #06b6d4; box-shadow: 0 0 10px #06b6d4; }
         .slider-real::-webkit-slider-thumb { background: #f97316; box-shadow: 0 0 10px #f97316; }
 
-        .btn-primary-modern { background: #3b82f6; border: 1px solid rgba(255,255,255,0.1); transition: all 0.2s ease; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
-        .btn-primary-modern:hover { background: #2563eb; transform: translateY(-1px); }
-        .btn-gold-modern { background: linear-gradient(135deg, #b45309 0%, #f59e0b 100%); border: 1px solid rgba(255,215,0,0.3); color: white; box-shadow: 0 0 15px rgba(245, 158, 11, 0.3); }
-        .btn-gold-modern:hover { transform: translateY(-1px); box-shadow: 0 0 25px rgba(245, 158, 11, 0.5); }
-        .btn-smart-modern { background: linear-gradient(135deg, #059669 0%, #10b981 100%); border: 1px solid rgba(16, 185, 129, 0.3); color: white; box-shadow: 0 0 15px rgba(16, 185, 129, 0.3); }
-        .btn-smart-modern:hover { transform: translateY(-1px); box-shadow: 0 0 25px rgba(16, 185, 129, 0.5); }
-        .btn-flux-modern { background: linear-gradient(135deg, #6d28d9 0%, #8b5cf6 100%); border: 1px solid rgba(139, 92, 246, 0.3); color: white; box-shadow: 0 0 15px rgba(139, 92, 246, 0.3); }
-        .btn-flux-modern:hover { transform: translateY(-1px); box-shadow: 0 0 25px rgba(139, 92, 246, 0.5); }
-        .btn-real-modern { background: linear-gradient(135deg, #c2410c 0%, #f97316 100%); border: 1px solid rgba(249, 115, 22, 0.3); color: white; box-shadow: 0 0 15px rgba(249, 115, 22, 0.3); }
-        .btn-real-modern:hover { transform: translateY(-1px); box-shadow: 0 0 25px rgba(249, 115, 22, 0.5); }
-        .btn-ancient-modern { background: linear-gradient(135deg, #6b21a8 0%, #a855f7 100%); border: 1px solid rgba(168, 85, 247, 0.3); color: white; box-shadow: 0 0 15px rgba(168, 85, 247, 0.3); }
-        .btn-ancient-modern:hover { transform: translateY(-1px); box-shadow: 0 0 25px rgba(168, 85, 247, 0.5); }
-
         .modal-fade-in { animation: modalFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
         @keyframes modalFadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
         
-        /* SECURITY GATE STYLES (UPDATED FOR IP LOGIN) */
         .gate-backdrop {
             position: fixed; inset: 0; z-index: 9999;
-            background: rgba(5, 5, 8, 0.85); /* Fallback */
+            background: rgba(5, 5, 8, 0.85);
             display: flex; align-items: center; justify-content: center;
             transition: opacity 0.5s ease;
         }
@@ -244,107 +217,22 @@
             animation: shine 3s linear infinite;
         }
         @keyframes shine { to { background-position: 200% center; } }
-
-        /* =====================
-           MOBILE FIX GIAO DIỆN (UPDATED V3)
-           ===================== */
-        @media (max-width: 768px) {
-            
-            /* KHUNG ẢNH CHÍNH */
-            .mobile-image-wrapper {
-                width: 100%;
-                aspect-ratio: 3 / 4;   /* CHÌA KHÓA: Ép tỉ lệ 3:4 */
-                max-height: 70vh;      /* KHÔNG BAO GIỜ DÀI QUÁ 70% màn hình */
-                overflow: hidden;
-                border-radius: 14px;
-                background: #000;
-                margin-bottom: 0;
-            }
-
-            /* TOÀN BỘ ẢNH / COMPARE */
-            /* Đảm bảo ảnh luôn nằm gọn trong khung (contain) */
-            .mobile-image-wrapper img,
-            .mobile-image-wrapper canvas,
-            .mobile-image-wrapper video,
-            #comparison-view,
-            #comp-inner {
-                width: 100% !important;
-                height: 100% !important;
-                object-fit: contain;
-                max-height: 100% !important;
-            }
-            
-            /* Center nội dung */
-            #canvas-scale-container {
-                width: 100%;
-                height: 100%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-
-            /* MENU PHẢI “DÍNH” SÁT ẢNH */
-            .mobile-panel {
-                margin-top: 8px;   /* KHÔNG ĐƯỢC > 12 */
-                padding-bottom: 90px;
-                position: relative;
-                width: 100%;
-            }
-
-            /* Ép menu tràn viền */
-            #sidebar {
-                width: 100vw !important;
-                max-width: 100vw !important;
-                margin: 0 !important;
-                border-radius: 0 !important;
-                border: none !important;
-                background: transparent !important;
-                height: auto !important;
-                overflow: visible !important;
-            }
-
-            /* CẤM ABSOLUTE / FIXED KHÔNG CẦN THIẾT */
-            /* Trừ slider handle cần absolute để chạy */
-            .mobile-image-wrapper > *:not(#canvas-scale-container) {
-                position: relative !important;
-            }
-
-            /* Reset Layout chính */
-            #fullscreen-target {
-                flex-direction: column-reverse !important;
-                height: auto !important;
-                overflow-y: auto !important;
-            }
-            
-            /* Main workspace */
-            #main-workspace {
-                height: auto !important;
-                flex: none !important;
-            }
-            
-            /* Mobile Buttons */
-            button.mobile-touch {
-                min-height: 44px;
-            }
-        }
     </style>
 </head>
 
-<body class="text-slate-300 font-sans h-screen flex overflow-hidden select-none relative" oncontextmenu="return false;">
+<body class="text-slate-300 font-sans h-[100dvh] flex overflow-hidden select-none relative" oncontextmenu="return false;">
     
-    <!-- SECURITY GATE (REDESIGNED: SOFTER & PROFESSIONAL) -->
-    <div id="security-gate" class="fixed inset-0 z-[9999] flex items-center justify-center bg-[#050505]/90 backdrop-blur-3xl transition-opacity duration-500">
-        <!-- Ambient Background Glow (Subtle) -->
+    <!-- SECURITY GATE (FIXED: RESPONSIVE WIDTH) -->
+    <div id="security-gate" class="fixed inset-0 z-[9999] flex items-center justify-center bg-[#050505]/90 backdrop-blur-3xl transition-opacity duration-500 p-4">
+        <!-- Ambient Background Glow -->
         <div class="absolute inset-0 overflow-hidden pointer-events-none">
             <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-violet-600/10 rounded-full blur-[120px] animate-pulse"></div>
             <div class="absolute bottom-0 right-0 w-[400px] h-[400px] bg-blue-600/10 rounded-full blur-[100px]"></div>
         </div>
         
-        <!-- Main Card Container (Responsive Fixed) -->
-        <div class="relative z-10 w-full sm:max-w-[400px] bg-white/[0.02] border border-white/5 rounded-3xl p-8 shadow-2xl animate-enter-up flex flex-col items-center m-4">
+        <!-- Main Card Container -->
+        <div class="relative z-10 w-[90%] max-w-[400px] bg-white/[0.02] border border-white/5 rounded-3xl p-6 sm:p-8 shadow-2xl animate-enter-up flex flex-col items-center">
             
-            <!-- ADMIN KEY BUTTON REMOVED HERE -->
-
             <!-- Logo / Brand Section -->
             <div class="flex flex-col items-center mb-8">
                 <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-violet-600 to-blue-600 p-[1px] mb-4 shadow-lg shadow-violet-500/20 rotate-3 hover:rotate-0 transition-transform duration-500 cursor-pointer group">
@@ -354,8 +242,7 @@
                      </div>
                 </div>
                 
-                <!-- EDITED: TITLE GATE -->
-                <h1 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-slate-400 tracking-tight mb-1">PHỤC CHẾ ẢNH</h1>
+                <h1 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-slate-400 tracking-tight mb-1 text-center">PHỤC CHẾ ẢNH</h1>
                 <div class="flex items-center gap-2 opacity-70">
                     <div class="h-[1px] w-8 bg-gradient-to-r from-transparent to-violet-500"></div>
                     <p class="text-[10px] text-violet-300 font-mono tracking-[0.3em] uppercase">Professional AI</p>
@@ -365,32 +252,27 @@
             
             <!-- IP & Login Section -->
             <div class="w-full space-y-4">
-                <!-- IP Display Box -->
                 <div class="relative group w-full">
                     <div class="absolute -inset-0.5 bg-gradient-to-r from-violet-600 to-blue-600 rounded-2xl blur opacity-10 group-hover:opacity-30 transition duration-500"></div>
                     <div class="relative bg-black/40 border border-white/10 rounded-2xl p-4 flex flex-col items-center justify-center transition-all group-hover:border-white/20">
                         <span class="text-[9px] text-slate-500 uppercase tracking-widest font-bold mb-1.5">THIẾT BỊ TRUY CẬP</span>
-                        <div class="flex items-center gap-2 h-8">
-                            <!-- IP Display with Shimmer Effect -->
-                            <span id="gate-ip-display" class="font-mono text-sm font-bold text-white tracking-wider shimmer-text">Đang kết nối...</span>
-                            <div id="gate-loading-spinner" class="w-3 h-3 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
+                        <div class="flex items-center justify-center gap-2 h-8 w-full">
+                            <span id="gate-ip-display" class="font-mono text-xs sm:text-sm font-bold text-white tracking-wider shimmer-text truncate max-w-full">Đang kết nối...</span>
+                            <div id="gate-loading-spinner" class="w-3 h-3 border-2 border-white/20 border-t-white rounded-full animate-spin flex-shrink-0"></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Submit Button -->
-                <button id="gate-submit" class="w-full py-3.5 bg-gradient-to-r from-indigo-100 to-violet-100 text-slate-900 hover:to-white rounded-xl text-xs font-bold tracking-[0.15em] transition-all active:scale-[0.98] shadow-[0_0_20px_rgba(255,255,255,0.1)] flex items-center justify-center gap-2 group disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden relative mobile-touch" disabled>
+                <button id="gate-submit" class="w-full py-3.5 bg-gradient-to-r from-indigo-100 to-violet-100 text-slate-900 hover:to-white rounded-xl text-xs font-bold tracking-[0.15em] transition-all active:scale-[0.98] shadow-[0_0_20px_rgba(255,255,255,0.1)] flex items-center justify-center gap-2 group disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden relative" disabled>
                     <span class="relative z-10">VÀO PHỤC CHẾ ẢNH</span>
                     <svg class="w-3.5 h-3.5 relative z-10 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                 </button>
             </div>
             
-            <!-- Status Text -->
             <div class="mt-6 h-4 flex items-center justify-center">
-                <p id="gate-status" class="text-[10px] text-slate-500 transition-colors animate-pulse">Đang quét thông tin thiết bị...</p>
+                <p id="gate-status" class="text-[10px] text-slate-500 transition-colors animate-pulse text-center">Đang quét thông tin thiết bị...</p>
             </div>
 
-            <!-- Footer Info -->
             <div class="absolute bottom-4 left-0 right-0 text-center opacity-30 pointer-events-none">
                 <p class="text-[8px] font-mono">SECURE GATEWAY • IP VERIFICATION</p>
             </div>
@@ -398,21 +280,19 @@
     </div>
 
     <div class="bg-blob blob-1"></div><div class="bg-blob blob-2"></div>
-    <div id="toast-container" class="fixed top-6 right-6 z-[100] flex flex-col gap-3 pointer-events-none"></div>
+    <div id="toast-container" class="fixed top-6 right-6 z-[100] flex flex-col gap-3 pointer-events-none w-[90%] sm:w-auto"></div>
     
     <div class="flex w-full h-full relative z-10 backdrop-blur-[1px]" id="fullscreen-target">
         
-        <!-- Sidebar - EDITED: BƯỚC 3 - ÉP MENU TRÀN VIỀN MOBILE (w-full on mobile) -->
-        <aside id="sidebar" class="w-full lg:w-[360px] flex-shrink-0 glass-panel mobile-sidebar-bg flex flex-col transition-transform duration-500 ease-[cubic-bezier(0.33,1,0.68,1)] absolute z-50 h-full lg:relative lg:translate-x-0 -translate-x-full">
+        <!-- SIDEBAR (FIXED: RESPONSIVE WIDTH) -->
+        <aside id="sidebar" class="w-[85vw] max-w-[360px] sm:w-[360px] flex-shrink-0 glass-panel mobile-sidebar-bg flex flex-col transition-transform duration-500 ease-[cubic-bezier(0.33,1,0.68,1)] absolute z-50 h-full lg:relative lg:translate-x-0 -translate-x-full shadow-2xl lg:shadow-none border-r border-white/5">
             <div class="h-14 px-4 flex items-center justify-between border-b border-white/5 bg-white/[0.02]">
                 <div class="flex flex-col">
-                    <!-- EDITED: SIDEBAR TITLE -->
                     <h1 class="text-xs font-bold tracking-widest text-violet-500">PHỤC CHẾ ẢNH</h1>
                     <div class="flex items-center gap-2">
-                        <!-- EDITED: REPLACE ZALO WITH IP -->
                         <span id="top-bar-ip" class="text-[9px] text-slate-400 font-mono">IP: Loading...</span>
                         <span class="w-1 h-1 rounded-full bg-violet-500"></span>
-                        <span class="text-[9px] text-violet-400 font-bold">V35.75 (IP LOGIN)</span>
+                        <span class="text-[9px] text-violet-400 font-bold">V35.75</span>
                     </div>
                 </div>
                 
@@ -421,7 +301,6 @@
                         <span class="text-[8px] text-slate-400 font-bold uppercase tracking-wider">CREDITS</span>
                         <span class="text-xs font-mono font-bold text-yellow-400 shadow-[0_0_10px_rgba(250,204,21,0.3)]" id="credit-count">---</span>
                     </div>
-                    <!-- REMOVED ADMIN BUTTON AS REQUESTED -->
                     <button id="close-sidebar-mobile" class="lg:hidden text-slate-400 p-2"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path></svg></button>
                 </div>
             </div>
@@ -430,16 +309,16 @@
                 <!-- 1. MAIN UPLOAD -->
                 <div class="relative group">
                     <input type="file" id="image-upload" accept="image/*" style="position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); border:0;">
-                    <label id="drop-zone" for="image-upload" class="flex flex-col items-center justify-center w-full h-28 border border-dashed border-violet-500/50 rounded-lg cursor-pointer bg-white/[0.02] hover:bg-violet-900/[0.1] hover:border-violet-500 transition-all duration-200">
+                    <label id="drop-zone" for="image-upload" class="flex flex-col items-center justify-center w-full h-24 sm:h-28 border border-dashed border-violet-500/50 rounded-lg cursor-pointer bg-white/[0.02] hover:bg-violet-900/[0.1] hover:border-violet-500 transition-all duration-200">
                         <div id="upload-placeholder" class="flex flex-col items-center pointer-events-none">
                             <svg class="w-5 h-5 text-violet-500 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l-1.586-1.586a2 2 0 00-2.828 0L6 18H4a2 2 0 01-2-2V6a2 2 0 01-2-2V6a2 2 0 012-2h16a2 2 0 012 2v8a2 2 0 01-2 2h-2m-4-4l-3 3m0 0l-3-3m3 3V4"></path></svg>
-                            <span class="text-[10px] font-bold text-slate-400 uppercase">Tải ảnh gốc (Kéo thả hoặc Bấm vào)</span>
+                            <span class="text-[10px] font-bold text-slate-400 uppercase">Tải ảnh gốc (Bấm vào)</span>
                         </div>
                     </label>
                 </div>
 
                 <!-- 2. AUTO-PILOT BUTTON -->
-                <button id="btn-auto-pilot" class="w-full py-2.5 mb-3 btn-flux-modern text-white rounded-lg flex items-center justify-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_15px_rgba(139,92,246,0.2)] mobile-touch">
+                <button id="btn-auto-pilot" class="w-full py-2.5 mb-3 btn-flux-modern text-white rounded-lg flex items-center justify-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_15px_rgba(139,92,246,0.2)]">
                     <svg class="w-4 h-4 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
                     <span class="text-[10px] font-bold tracking-widest">AUTO SCAN V35.60 (AUTO-SIZE)</span>
                 </button>
@@ -902,17 +781,17 @@
 
             <!-- Footer Actions -->
             <div class="p-4 glass-panel border-t-0 space-y-2 z-20">
-                <button id="process-image" class="w-full py-3 btn-flux-modern text-white font-bold text-xs tracking-widest flex justify-center items-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed mobile-touch">
+                <button id="process-image" class="w-full py-3 btn-flux-modern text-white font-bold text-xs tracking-widest flex justify-center items-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                     TẠO ẢNH (FLUX KONTEXT)
                 </button>
-                <button id="reset-button" class="w-full py-2 bg-white/5 hover:bg-white/10 text-slate-400 text-[10px] font-bold tracking-widest rounded transition-colors border border-white/5 mobile-touch">LÀM MỚI</button>
+                <button id="reset-button" class="w-full py-2 bg-white/5 hover:bg-white/10 text-slate-400 text-[10px] font-bold tracking-widest rounded transition-colors border border-white/5">LÀM MỚI</button>
             </div>
         </aside>
 
         <!-- WORKSPACE -->
         <main class="flex-1 flex flex-col relative overflow-hidden" id="main-workspace">
-            <!-- MOBILE HEADER -->
+            <!-- MOBILE HEADER (FIXED: CONTENT SPACING) -->
             <div class="lg:hidden h-14 glass-panel border-b border-white/5 flex items-center px-4 justify-between z-30 relative bg-[#0a0a0f]/90 backdrop-blur-xl">
                 <button id="toggle-sidebar-btn" class="text-slate-400 p-2 border border-white/10 rounded-lg hover:bg-white/5"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg></button>
                 <div class="flex flex-col items-center">
@@ -924,30 +803,30 @@
                 </button>
             </div>
             
-            <!-- SMART MOBILE ACTION BAR (REDESIGNED PROFESSIONAL DOCK) -->
+            <!-- SMART MOBILE ACTION BAR -->
             <div id="mobile-action-bar" class="lg:hidden fixed bottom-6 left-4 right-4 z-40 flex items-center justify-center pointer-events-none transition-all duration-500 translate-y-24 opacity-0">
                 <div class="bg-[#0f1016]/90 backdrop-blur-2xl border border-white/10 p-2 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.6)] flex gap-3 w-full max-w-sm pointer-events-auto ring-1 ring-white/5">
                     
                     <!-- 1. UPLOAD BUTTON -->
-                    <button id="mob-btn-upload" class="flex-1 py-3.5 bg-slate-800/50 hover:bg-slate-700/50 border border-white/10 rounded-xl text-slate-200 font-bold text-[10px] tracking-widest flex flex-col items-center justify-center gap-1 active:scale-95 transition-all shadow-inner group mobile-touch">
+                    <button id="mob-btn-upload" class="flex-1 py-3.5 bg-slate-800/50 hover:bg-slate-700/50 border border-white/10 rounded-xl text-slate-200 font-bold text-[10px] tracking-widest flex flex-col items-center justify-center gap-1 active:scale-95 transition-all shadow-inner group">
                         <svg class="w-5 h-5 text-blue-400 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
                         <span>TẢI ẢNH</span>
                     </button>
 
                     <!-- 2. SCAN BUTTON -->
-                    <button id="mob-btn-scan" class="hidden flex-1 py-3.5 bg-gradient-to-b from-violet-600 to-violet-700 hover:from-violet-500 hover:to-violet-600 border border-violet-500/30 rounded-xl text-white font-bold text-[10px] tracking-widest flex flex-col items-center justify-center gap-1 shadow-[0_0_15px_rgba(124,58,237,0.3)] animate-pulse active:scale-95 transition-all mobile-touch">
+                    <button id="mob-btn-scan" class="hidden flex-1 py-3.5 bg-gradient-to-b from-violet-600 to-violet-700 hover:from-violet-500 hover:to-violet-600 border border-violet-500/30 rounded-xl text-white font-bold text-[10px] tracking-widest flex flex-col items-center justify-center gap-1 shadow-[0_0_15px_rgba(124,58,237,0.3)] animate-pulse active:scale-95 transition-all">
                         <svg class="w-5 h-5 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                         <span>AUTO SCAN</span>
                     </button>
 
                     <!-- 3. GENERATE BUTTON -->
-                    <button id="mob-btn-run" class="hidden flex-1 py-3.5 bg-gradient-to-b from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 border border-emerald-500/30 rounded-xl text-white font-bold text-[10px] tracking-widest flex flex-col items-center justify-center gap-1 shadow-[0_0_15px_rgba(16,185,129,0.3)] active:scale-95 transition-all mobile-touch">
+                    <button id="mob-btn-run" class="hidden flex-1 py-3.5 bg-gradient-to-b from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 border border-emerald-500/30 rounded-xl text-white font-bold text-[10px] tracking-widest flex flex-col items-center justify-center gap-1 shadow-[0_0_15px_rgba(16,185,129,0.3)] active:scale-95 transition-all">
                          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                         <span>CHẠY NGAY</span>
                     </button>
 
                     <!-- Reset Small Btn -->
-                    <button id="mob-btn-reset" class="w-12 flex flex-col items-center justify-center bg-white/5 hover:bg-red-500/20 text-slate-400 hover:text-red-400 rounded-xl border border-white/10 active:scale-95 transition-all mobile-touch" title="Làm mới">
+                    <button id="mob-btn-reset" class="w-12 flex flex-col items-center justify-center bg-white/5 hover:bg-red-500/20 text-slate-400 hover:text-red-400 rounded-xl border border-white/10 active:scale-95 transition-all" title="Làm mới">
                         <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
                         <span class="text-[8px] font-bold">RESET</span>
                     </button>
@@ -978,56 +857,53 @@
             </div>
             
             <div class="flex-1 relative flex items-center justify-center overflow-hidden perspective-1000">
-                <!-- BƯỚC 1: BỌC ẢNH VÀO 1 KHUNG RIÊNG -->
-                <div class="mobile-image-wrapper">
-                    <div id="canvas-scale-container" class="relative transition-transform duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] origin-center will-change-transform" style="transform: scale(1);">
-                        <div id="scan-beam" class="scan-beam"></div>
-                        
-                        <div id="comparison-view" class="relative max-w-[95vw] max-h-[80vh] flex justify-center items-center" style="display:none;">
-                             <div id="comp-inner" class="relative shadow-2xl rounded overflow-hidden cursor-ew-resize group select-none border border-white/10 bg-black">
-                                  <img id="img-original" class="block max-h-[75vh] w-auto pointer-events-none select-none">
-                                  <div id="img-modified-wrapper" class="absolute top-0 left-0 h-full w-[50%] overflow-hidden border-r border-white/50 bg-black/5">
-                                      <img id="img-modified" class="absolute top-0 left-0 max-h-[75vh] w-auto pointer-events-none select-none" style="max-width: none;">
+                <div id="canvas-scale-container" class="relative transition-transform duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] origin-center will-change-transform" style="transform: scale(1);">
+                    <div id="scan-beam" class="scan-beam"></div>
+                    
+                    <div id="comparison-view" class="relative max-w-[95vw] max-h-[80vh] flex justify-center items-center" style="display:none;">
+                         <div id="comp-inner" class="relative shadow-2xl rounded overflow-hidden cursor-ew-resize group select-none border border-white/10 bg-black">
+                              <img id="img-original" class="block max-h-[75vh] w-auto pointer-events-none select-none">
+                              <div id="img-modified-wrapper" class="absolute top-0 left-0 h-full w-[50%] overflow-hidden border-r border-white/50 bg-black/5">
+                                  <img id="img-modified" class="absolute top-0 left-0 max-h-[75vh] w-auto pointer-events-none select-none" style="max-width: none;">
+                              </div>
+                              <div id="logo-overlay" class="logo-overlay"></div>
+                              <div id="magnifier" class="magnifier"></div>
+                              <div id="slider-handle" class="absolute top-0 bottom-0 left-[50%] w-0.5 bg-white/80 z-20 pointer-events-none shadow-[0_0_10px_rgba(0,0,0,0.5)]">
+                                  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 bg-white/20 backdrop-blur-md border border-white rounded-full flex items-center justify-center shadow-lg">
+                                      <svg class="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>
                                   </div>
-                                  <div id="logo-overlay" class="logo-overlay"></div>
-                                  <div id="magnifier" class="magnifier"></div>
-                                  <div id="slider-handle" class="absolute top-0 bottom-0 left-[50%] w-0.5 bg-white/80 z-20 pointer-events-none shadow-[0_0_10px_rgba(0,0,0,0.5)]">
-                                      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 bg-white/20 backdrop-blur-md border border-white rounded-full flex items-center justify-center shadow-lg">
-                                          <svg class="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>
-                                      </div>
-                                  </div>
-                                  <div class="absolute bottom-4 left-1/2 -translate-x-1/2 text-[9px] bg-black/50 backdrop-blur text-white px-2 py-1 rounded-full pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                      Giữ để xem gốc / Hold to compare
-                                  </div>
-                             </div>
-                        </div>
+                              </div>
+                              <div class="absolute bottom-4 left-1/2 -translate-x-1/2 text-[9px] bg-black/50 backdrop-blur text-white px-2 py-1 rounded-full pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                  Giữ để xem gốc / Hold to compare
+                              </div>
+                         </div>
+                    </div>
 
-                        <canvas id="canvas-process" class="hidden"></canvas>
+                    <canvas id="canvas-process" class="hidden"></canvas>
 
-                        <div id="ai-terminal-overlay" class="absolute inset-0 z-50 bg-[#000]/90 backdrop-blur-md hidden flex flex-col items-center justify-center font-mono">
-                            <div class="w-full max-w-md p-6 rounded-xl border border-white/10 bg-white/5 shadow-2xl relative overflow-hidden">
-                                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-violet-500 to-transparent animate-scan opacity-70"></div>
-                                <div class="flex items-center gap-3 mb-6 border-b border-white/5 pb-4"><div class="w-2 h-2 rounded-full bg-slate-500"></div><div class="w-2 h-2 rounded-full bg-slate-500"></div><span class="ml-auto text-[10px] text-violet-400 font-bold tracking-widest">FLUX/KONTEXT ENGINE ACTIVATED...</span></div>
-                                <div id="terminal-content" class="text-xs text-slate-300 space-y-2 h-32 overflow-hidden scroll-smooth"></div>
-                                <div class="mt-4 border-t border-white/5 pt-3"><div class="w-full bg-white/5 h-1 rounded-full overflow-hidden"><div id="term-progress-bar" class="h-full bg-violet-500 w-0 transition-all duration-300"></div></div></div>
-                            </div>
+                    <div id="ai-terminal-overlay" class="absolute inset-0 z-50 bg-[#000]/90 backdrop-blur-md hidden flex flex-col items-center justify-center font-mono">
+                        <div class="w-full max-w-md p-6 rounded-xl border border-white/10 bg-white/5 shadow-2xl relative overflow-hidden">
+                            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-violet-500 to-transparent animate-scan opacity-70"></div>
+                            <div class="flex items-center gap-3 mb-6 border-b border-white/5 pb-4"><div class="w-2 h-2 rounded-full bg-slate-500"></div><div class="w-2 h-2 rounded-full bg-slate-500"></div><span class="ml-auto text-[10px] text-violet-400 font-bold tracking-widest">FLUX/KONTEXT ENGINE ACTIVATED...</span></div>
+                            <div id="terminal-content" class="text-xs text-slate-300 space-y-2 h-32 overflow-hidden scroll-smooth"></div>
+                            <div class="mt-4 border-t border-white/5 pt-3"><div class="w-full bg-white/5 h-1 rounded-full overflow-hidden"><div id="term-progress-bar" class="h-full bg-violet-500 w-0 transition-all duration-300"></div></div></div>
                         </div>
-                        
-                        <div id="placeholder-state" class="text-center p-24 border border-dashed border-violet-500/50 rounded-2xl bg-white/[0.01] hover:bg-white/[0.02] transition-all duration-500 animate-float backdrop-blur-sm">
-                            <div class="w-20 h-20 bg-gradient-to-tr from-slate-800 to-slate-700 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner border border-white/5"><svg class="w-10 h-10 text-violet-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l-1.586-1.586a2 2 0 00-2.828 0L6 18H4a2 2 0 01-2-2V6a2 2 0 01-2-2V6a2 2 0 012-2h16a2 2 0 012 2v8a2 2 0 01-2 2h-2m-4-4l-3 3m0 0l-3-3m3 3V4"></path></svg></div>
-                            <!-- EDITED: CHANGE TEXT HERE -->
-                            <h3 class="text-2xl font-bold text-violet-500 tracking-tight mb-2">PHỤC HỒI ẢNH</h3>
-                            <p class="text-xs text-slate-500 font-medium uppercase tracking-widest">Kéo thả hoặc Dán ảnh vào đây</p>
-                        </div>
+                    </div>
+                    
+                    <!-- PLACEHOLDER (FIXED: RESPONSIVE PADDING) -->
+                    <div id="placeholder-state" class="text-center p-10 sm:p-24 border border-dashed border-violet-500/50 rounded-2xl bg-white/[0.01] hover:bg-white/[0.02] transition-all duration-500 animate-float backdrop-blur-sm mx-4 sm:mx-0">
+                        <div class="w-20 h-20 bg-gradient-to-tr from-slate-800 to-slate-700 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner border border-white/5"><svg class="w-10 h-10 text-violet-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l-1.586-1.586a2 2 0 00-2.828 0L6 18H4a2 2 0 01-2-2V6a2 2 0 01-2-2V6a2 2 0 012-2h16a2 2 0 012 2v8a2 2 0 01-2 2h-2m-4-4l-3 3m0 0l-3-3m3 3V4"></path></svg></div>
+                        <h3 class="text-xl sm:text-2xl font-bold text-violet-500 tracking-tight mb-2">PHỤC HỒI ẢNH</h3>
+                        <p class="text-xs text-slate-500 font-medium uppercase tracking-widest">Kéo thả hoặc Dán ảnh vào đây</p>
                     </div>
                 </div>
             </div>
         </main>
     </div>
 
-    <!-- NEW: RECHARGE MODAL -->
-    <div id="recharge-modal" class="fixed inset-0 z-[110] bg-black/90 backdrop-blur-md hidden flex items-center justify-center modal-fade-in">
-        <div class="w-[350px] bg-[#0a0a0f] border border-red-500/30 rounded-2xl shadow-[0_0_50px_rgba(239,68,68,0.2)] p-6 text-center relative overflow-hidden">
+    <!-- NEW: RECHARGE MODAL (FIXED: RESPONSIVE WIDTH) -->
+    <div id="recharge-modal" class="fixed inset-0 z-[110] bg-black/90 backdrop-blur-md hidden flex items-center justify-center modal-fade-in p-4">
+        <div class="w-full max-w-[350px] bg-[#0a0a0f] border border-red-500/30 rounded-2xl shadow-[0_0_50px_rgba(239,68,68,0.2)] p-6 text-center relative overflow-hidden">
             <div class="absolute top-0 left-0 w-full h-1 bg-red-500"></div>
             <div class="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-red-500/20">
                 <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
@@ -1035,7 +911,6 @@
             <h3 class="text-xl font-bold text-white mb-2 uppercase">HẾT CREDIT SỬ DỤNG!</h3>
             <p class="text-xs text-slate-400 mb-6">Bạn đã dùng hết lượt tạo ảnh miễn phí. Mỗi lần tạo ảnh tốn <span class="text-red-400 font-bold">20 Credit</span>.</p>
             
-            <!-- BẢNG GIÁ QUY ĐỔI (MỚI THÊM VÀO ĐÂY) -->
             <div class="grid grid-cols-3 gap-2 mb-4">
                 <div class="flex flex-col items-center justify-center p-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors cursor-default">
                     <span class="text-xs font-bold text-slate-300">100K</span>
@@ -1071,11 +946,9 @@
                             GỬI ZALO <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
                         </a>
                     </div>
-                    <p class="text-[8px] text-slate-500 mt-1 italic text-center">*Click gửi để mở Zalo chat với Admin</p>
                 </div>
             </div>
 
-            <!-- NEW: REDEEM CODE INPUT -->
             <div class="mb-4">
                 <div class="flex gap-2">
                     <input type="text" id="recharge-input" class="pro-input w-full py-2.5 text-center font-mono uppercase text-violet-300 border-violet-500/30 bg-violet-500/10" placeholder="NHẬP MÃ NẠP (V35-...)">
@@ -1090,146 +963,13 @@
         </div>
     </div>
 
-    <!-- NEW: ADMIN MODAL WITH API CONFIG & LICENSE GENERATOR -->
-    <div id="admin-modal" class="fixed inset-0 z-[10002] bg-black/90 backdrop-blur-md hidden flex items-center justify-center modal-fade-in overflow-y-auto">
-        <div class="w-[450px] glass-panel rounded-xl border border-white/10 shadow-2xl p-6 relative my-10">
-            <button id="close-admin" class="absolute top-4 right-4 text-slate-400 hover:text-white"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
-            
-            <!-- ADMIN LOGIN STATE -->
-            <div id="admin-login-view">
-                <div class="mb-6 text-center">
-                    <h2 class="text-lg font-bold text-slate-200 tracking-widest mb-1">QUẢN TRỊ HỆ THỐNG</h2>
-                    <p class="text-[10px] text-slate-500">Vui lòng đăng nhập quyền Admin để cấu hình API</p>
-                </div>
-                <div class="space-y-4">
-                    <input type="password" id="admin-password" class="pro-input w-full py-3 text-center tracking-widest" placeholder="Nhập mật khẩu quản trị">
-                    <button id="btn-admin-login" class="w-full py-3 bg-violet-600 hover:bg-violet-500 text-white rounded text-xs font-bold transition-colors shadow-lg">ĐĂNG NHẬP ADMIN</button>
-                </div>
-            </div>
-
-            <!-- ADMIN DASHBOARD STATE -->
-            <div id="admin-dashboard-view" class="hidden">
-                 <div class="flex justify-between items-center mb-6 border-b border-white/5 pb-4">
-                    <h2 class="text-sm font-bold text-green-400 tracking-widest">DASHBOARD V35</h2>
-                    <span class="text-[9px] bg-green-500/20 text-green-400 px-2 py-1 rounded">ADMIN ACCESS GRANTED</span>
-                </div>
-                
-                <div class="space-y-4">
-                    <!-- Credits Management -->
-                    <div class="bg-white/5 p-3 rounded border border-white/10 flex justify-between items-center">
-                        <div>
-                            <label class="text-[9px] font-bold text-slate-500 uppercase block mb-1">SỐ DƯ HIỆN TẠI</label>
-                            <div class="text-xl font-mono font-bold text-yellow-400" id="admin-current-credits">0</div>
-                        </div>
-                        <div class="flex flex-col gap-1">
-                             <button class="add-credit-btn px-3 py-1.5 bg-green-600 hover:bg-green-500 text-white text-[9px] font-bold rounded" data-amount="100">+100 CR</button>
-                             <button class="add-credit-btn px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-[9px] font-bold rounded" data-amount="500">+500 CR</button>
-                             <button class="add-credit-btn px-3 py-1.5 bg-red-600 hover:bg-red-500 text-white text-[9px] font-bold rounded" data-amount="-20">-20 CR (Test)</button>
-                        </div>
-                    </div>
-                    
-                    <div class="bg-white/5 p-3 rounded border border-white/10">
-                        <label class="text-[9px] font-bold text-slate-500 uppercase block mb-1">DEVICE ID (Máy hiện tại)</label>
-                        <div class="text-[10px] font-mono text-violet-300 break-all" id="admin-device-id">---</div>
-                    </div>
-
-                    <!-- NEW: LICENSE GENERATOR SECTION -->
-                    <div class="pt-4 mt-2 border-t border-white/5">
-                        <h3 class="text-xs font-bold text-yellow-500 tracking-widest mb-3 uppercase flex items-center gap-2">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path></svg>
-                            🛠 CÔNG CỤ TẠO MÃ KÍCH HOẠT (V2 - CHỐNG SPAM)
-                        </h3>
-                        
-                        <div class="space-y-3 bg-white/5 p-3 rounded-lg border border-white/10">
-                            <div>
-                                <label class="text-[9px] font-bold text-slate-400 uppercase mb-1 block">Mã Khách Hàng (Từ Email)</label>
-                                <div class="flex gap-2">
-                                    <input type="text" id="gen-customer-email" class="pro-input w-full py-2" placeholder="Nhập Email khách hàng...">
-                                    <input type="text" id="gen-customer-hash" class="pro-input w-24 py-2 font-mono text-center text-slate-500" readonly placeholder="HASH ID">
-                                </div>
-                            </div>
-
-                            <div>
-                                <label class="text-[9px] font-bold text-slate-400 uppercase mb-1 block">Gói Credits</label>
-                                <div class="grid grid-cols-3 gap-2">
-                                    <button class="gen-pkg-btn py-1.5 rounded border border-white/10 bg-white/5 hover:bg-violet-500 hover:text-white text-[9px] font-bold transition-all text-slate-300" data-val="100">100 CR</button>
-                                    <button class="gen-pkg-btn py-1.5 rounded border border-white/10 bg-white/5 hover:bg-violet-500 hover:text-white text-[9px] font-bold transition-all text-slate-300" data-val="200">200 CR</button>
-                                    <button class="gen-pkg-btn py-1.5 rounded border border-white/10 bg-white/5 hover:bg-violet-500 hover:text-white text-[9px] font-bold transition-all text-slate-300" data-val="500">500 CR</button>
-                                </div>
-                                <input type="hidden" id="gen-selected-credit" value="">
-                            </div>
-
-                            <button id="btn-generate-key" class="w-full py-2 bg-yellow-600 hover:bg-yellow-500 text-white rounded text-xs font-bold transition-colors shadow-lg flex items-center justify-center gap-2">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                                TẠO MÃ (GENERATE)
-                            </button>
-
-                            <div id="gen-result-container" class="hidden animate-fade-in mt-2 pt-2 border-t border-white/10">
-                                <label class="text-[9px] font-bold text-green-400 uppercase mb-1 block">Mã Kích Hoạt (Click để copy)</label>
-                                <div class="relative group">
-                                    <input type="text" id="gen-result-key" class="pro-input w-full py-2.5 font-mono text-center text-yellow-400 font-bold border-yellow-500/30 bg-yellow-500/10 cursor-pointer text-xs tracking-wider" readonly>
-                                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none opacity-50">
-                                        <svg class="w-4 h-4 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- API CONFIGURATION SECTION -->
-                    <div class="pt-4 mt-2 border-t border-white/5">
-                        <h3 class="text-xs font-bold text-violet-400 tracking-widest mb-3 uppercase">CẤU HÌNH API & TÀI KHOẢN</h3>
-                        
-                        <div class="space-y-3">
-                            <div>
-                                <label class="text-[10px] font-bold text-slate-400 uppercase mb-1 block">IP Thiết Bị</label>
-                                <input type="text" id="display-ip-address" class="pro-input w-full py-2 bg-white/5 border-violet-500/20 text-violet-300 font-mono tracking-widest text-center" readonly value="Đang quét IP...">
-                            </div>
-
-                            <div>
-                                <label class="text-[10px] font-bold text-slate-400 uppercase mb-1 block">Tên người dùng (Tùy chọn)</label>
-                                <input type="text" id="modal-username" class="pro-input w-full py-2" placeholder="Ví dụ: Studio V35">
-                            </div>
-
-                            <div>
-                                <label class="text-[10px] font-bold text-slate-400 uppercase mb-1 block">Nhà cung cấp (Provider)</label>
-                                <div class="grid grid-cols-2 gap-2 mb-2">
-                                    <button class="py-2 rounded border border-white/10 bg-white/5 hover:bg-white/10 text-[10px] font-bold transition-all text-slate-300" id="btn-provider-google">GOOGLE (Default)</button>
-                                    <button class="py-2 rounded border border-violet-500/30 bg-violet-500/10 hover:bg-violet-500/20 text-[10px] font-bold transition-all text-violet-300 shadow-[0_0_10px_rgba(139,92,246,0.1)]" id="btn-provider-comet">COMET API (Proxy)</button>
-                                </div>
-                            </div>
-
-                            <div>
-                                <label class="text-[10px] font-bold text-slate-400 uppercase mb-1 block">API Key (Lưu vào trình duyệt)</label>
-                                <input type="password" id="modal-api-key" class="pro-input w-full py-2 text-center tracking-widest font-mono text-violet-300" placeholder="sk-...">
-                                <div class="flex justify-end mt-1"><button id="toggle-show-key" class="text-[9px] text-slate-500 hover:text-slate-300">Hiện/Ẩn</button></div>
-                            </div>
-
-                            <div id="base-url-section" class="hidden">
-                                <label class="text-[10px] font-bold text-slate-400 uppercase mb-1 block">Base URL (Endpoint)</label>
-                                <input type="text" id="modal-base-url" class="pro-input w-full py-2 font-mono text-[10px]" value="https://generativelanguage.googleapis.com">
-                                <p class="text-[9px] text-slate-500 mt-1 italic" id="url-hint">Mặc định: https://generativelanguage.googleapis.com</p>
-                            </div>
-
-                            <div class="pt-2 flex flex-col gap-2">
-                                <button id="btn-save-login" class="w-full py-2 bg-violet-600 hover:bg-violet-500 text-white rounded text-xs font-bold transition-colors shadow-lg">LƯU CẤU HÌNH</button>
-                                <button id="btn-logout" class="w-full py-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 rounded text-xs font-bold transition-colors hidden">ĐĂNG XUẤT / RESET</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const apiKey = ""; 
 
-            // === HỆ THỐNG MÃ HÓA BẢO MẬT (NEW) ===
+            // === HỆ THỐNG MÃ HÓA BẢO MẬT ===
             const SimpleSec = {
                 _key: "V35_SECURE_KEY_SALT", 
-                // Mã hóa chuỗi (Simple Obfuscation)
                 encrypt: function(text) {
                     if(!text) return '';
                     try {
@@ -1237,14 +977,13 @@
                         for(let i = 0; i < text.length; i++) {
                             result += String.fromCharCode(text.charCodeAt(i) ^ this._key.charCodeAt(i % this._key.length));
                         }
-                        return btoa(result); // Chuyển sang Base64
+                        return btoa(result);
                     } catch(e) { return text; }
                 },
-                // Giải mã chuỗi
                 decrypt: function(encoded) {
                     if(!encoded) return '';
                     try {
-                        let text = atob(encoded); // Giải Base64
+                        let text = atob(encoded);
                         let result = '';
                         for(let i = 0; i < text.length; i++) {
                             result += String.fromCharCode(text.charCodeAt(i) ^ this._key.charCodeAt(i % this._key.length));
@@ -1254,19 +993,16 @@
                 }
             };
             
-            // === USER & CREDIT SYSTEM (DEVICE ID BASED - KHÔNG TRÙNG WIFI) ===
+            // === USER & CREDIT SYSTEM (DEVICE ID BASED) ===
             const UserSystem = {
                 deviceId: null,
                 credits: 0,
                 ipAddress: null, 
                 
                 async init() {
-                    // 1. TẠO ID MÁY DUY NHẤT (DEVICE SIGNATURE)
-                    // ID này sẽ lưu vào máy người dùng, đảm bảo khác biệt dù chung Wifi
                     try {
                         let storedId = localStorage.getItem('v35_unique_device_id');
                         if (!storedId) {
-                            // Tạo ID ngẫu nhiên: V35-XXXXXX
                             const randomPart = Math.random().toString(36).substring(2, 8).toUpperCase();
                             storedId = `ID-${randomPart}`;
                             localStorage.setItem('v35_unique_device_id', storedId);
@@ -1277,10 +1013,7 @@
                         this.deviceId = "GUEST-" + Math.floor(Math.random()*1000);
                     }
                     
-                    // 2. Lấy IP Mạng (Chỉ để hiển thị vị trí mạng)
                     await this.fetchIP();
-                    
-                    // 3. Load Credits theo ID MÁY (Không theo IP mạng nữa)
                     this.loadCredits();
                     this.updateUI();
                 },
@@ -1293,29 +1026,23 @@
                         
                         const gateIpDisplay = document.getElementById('gate-ip-display');
                         const gateLoader = document.getElementById('gate-loading-spinner');
-                        const adminIpDisplay = document.getElementById('display-ip-address');
                         const gateBtn = document.getElementById('gate-submit');
                         const gateStatus = document.getElementById('gate-status');
                         
-                        // NEW: UPDATE TOP BAR IP
                         const topBarIp = document.getElementById('top-bar-ip');
                         if (topBarIp) topBarIp.textContent = `IP: ${data.ip}`;
 
-                        // Update base template cho Zalo Msg (Lưu lại để dùng khi chọn gói)
                         const zaloMsg = document.getElementById('zalo-msg-content');
                         if (zaloMsg) {
                             zaloMsg.dataset.ipInfo = `IP: ${data.ip} - Máy: ${this.deviceId}`;
                         }
 
                         if (gateIpDisplay) {
-                            // HIỂN THỊ KẾT HỢP: IP MẠNG + ID MÁY RIÊNG
-                            // Ví dụ: 14.162.x.x | ID-A1B2C3
                             gateIpDisplay.innerHTML = `<span class="text-slate-400 text-xs">${data.ip}</span> <span class="text-white mx-1">|</span> <span class="text-yellow-400 font-bold">${this.deviceId}</span>`; 
                             gateIpDisplay.classList.remove('shimmer-text');
                             
                             if(gateLoader) gateLoader.style.display = 'none';
                             
-                            // Enable Login Button
                             if(gateBtn) {
                                 gateBtn.disabled = false;
                                 gateBtn.classList.remove('opacity-50', 'cursor-not-allowed');
@@ -1324,19 +1051,13 @@
                             }
                         }
 
-                        if(adminIpDisplay) {
-                             adminIpDisplay.value = `${data.ip} (Device: ${this.deviceId})`;
-                        }
-
                         return data.ip;
                     } catch (e) {
                         console.error("IP Fetch Error", e);
                         this.ipAddress = "Offline";
-                        // Vẫn cho hiện ID máy kể cả khi không có mạng
                         const gateIpDisplay = document.getElementById('gate-ip-display');
                         if (gateIpDisplay) gateIpDisplay.textContent = `Offline | ${this.deviceId}`;
                         
-                        // NEW: UPDATE TOP BAR IP FAIL STATE
                         const topBarIp = document.getElementById('top-bar-ip');
                         if (topBarIp) topBarIp.textContent = `IP: Offline`;
 
@@ -1345,15 +1066,12 @@
                 },
 
                 loadCredits() {
-                    // QUAN TRỌNG: Key lưu trữ dựa trên DEVICE ID, không phải IP
-                    // Đảm bảo mỗi máy riêng biệt dù chung Wifi
                     const key = `v35_credits_${this.deviceId}`;
                     const savedCredits = localStorage.getItem(key);
                     
                     if (savedCredits === null) {
-                        this.credits = 20; // 20 Credit Free cho MÁY MỚI này
+                        this.credits = 20;
                         this.save();
-                        console.log(`New Device ${this.deviceId} initialized with 20 credits`);
                     } else {
                         this.credits = parseInt(savedCredits);
                     }
@@ -1389,10 +1107,6 @@
                 updateUI() {
                     const el = document.getElementById('credit-count');
                     if (el) el.textContent = this.credits;
-                    const adminCredit = document.getElementById('admin-current-credits');
-                    if (adminCredit) adminCredit.textContent = this.credits;
-                    const adminDevId = document.getElementById('admin-device-id');
-                    if(adminDevId) adminDevId.textContent = `${this.ipAddress || '...'} | ${this.deviceId}`;
                 }
             };
 
@@ -1415,7 +1129,7 @@
                 userSettings: {
                     username: '',
                     apiKey: '',
-                    provider: 'google', // 'google' | 'comet' | 'custom'
+                    provider: 'google', 
                     baseUrl: 'https://generativelanguage.googleapis.com'
                 }
             };
@@ -1445,20 +1159,15 @@
             const gateScreen = document.getElementById('security-gate');
             const gateSubmit = document.getElementById('gate-submit');
             const gateStatus = document.getElementById('gate-status');
-            const gateAdminKey = document.getElementById('gate-admin-key');
             
             try {
-                // LOAD MÃ HÓA
                 const savedSettings = localStorage.getItem('v35_user_settings');
                 if(savedSettings) {
-                    // Thử giải mã, nếu không được (do bản cũ) thì parse thường
                     try {
                         const decrypted = SimpleSec.decrypt(savedSettings);
-                        // Nếu giải mã ra chuỗi JSON hợp lệ
                         if(decrypted && decrypted.startsWith('{')) {
                             state.userSettings = JSON.parse(decrypted);
                         } else {
-                            // Bản cũ chưa mã hóa
                             state.userSettings = JSON.parse(savedSettings);
                         }
                     } catch(e) {
@@ -1471,13 +1180,13 @@
                 if(!UserSystem.ipAddress) return showToast("Chưa tìm thấy IP, vui lòng đợi...", "error");
                 
                 gateStatus.textContent = `Đang xác thực IP: ${UserSystem.ipAddress}...`;
-                gateStatus.className = "mt-6 text-[10px] text-blue-400 font-bold animate-pulse";
+                gateStatus.className = "mt-6 text-[10px] text-blue-400 font-bold animate-pulse text-center";
                 gateSubmit.disabled = true;
                 gateSubmit.classList.add('opacity-70');
 
                 setTimeout(() => {
                     gateStatus.textContent = "Đăng nhập thành công!";
-                    gateStatus.className = "mt-6 text-[10px] text-green-400 font-bold";
+                    gateStatus.className = "mt-6 text-[10px] text-green-400 font-bold text-center";
                     
                     updateLoginUI();
 
@@ -1491,250 +1200,21 @@
 
             gateSubmit.addEventListener('click', loginByIP);
             
-            if(gateAdminKey) gateAdminKey.addEventListener('click', (e) => {
-                e.stopPropagation();
-                adminModal.classList.remove('hidden');
-                adminLoginView.classList.remove('hidden');
-                adminDashView.classList.add('hidden');
-                adminPassInput.value = '';
-                adminPassInput.focus();
-            });
-
-            // === ADMIN MODAL LOGIC ===
-            const btnOpenAdmin = document.getElementById('btn-login-modal');
-            const adminModal = document.getElementById('admin-modal');
-            const closeAdminBtn = document.getElementById('close-admin');
-            const btnAdminLogin = document.getElementById('btn-admin-login');
-            const adminPassInput = document.getElementById('admin-password');
-            const adminLoginView = document.getElementById('admin-login-view');
-            const adminDashView = document.getElementById('admin-dashboard-view');
-            const btnSaveLogin = document.getElementById('btn-save-login');
-            const btnLogout = document.getElementById('btn-logout');
-            
-            const modalUser = document.getElementById('modal-username');
-            const modalKey = document.getElementById('modal-api-key');
-            const modalBaseUrl = document.getElementById('modal-base-url');
-            const btnProvGoogle = document.getElementById('btn-provider-google');
-            const btnProvComet = document.getElementById('btn-provider-comet');
-            const baseUrlSection = document.getElementById('base-url-section');
-            const loginDot = document.getElementById('login-status-dot');
-            const urlHint = document.getElementById('url-hint');
-            const displayIp = document.getElementById('display-ip-address');
-
             function updateLoginUI() {
-                if(state.userSettings.apiKey) {
-                    if(loginDot) {
-                        loginDot.classList.remove('bg-slate-600');
-                        loginDot.classList.add('bg-green-500', 'shadow-[0_0_8px_#22c55e]');
-                    }
-                    if(btnLogout) btnLogout.classList.remove('hidden');
-                    if(btnOpenAdmin) btnOpenAdmin.title = `Admin: ${state.userSettings.provider.toUpperCase()}`;
-                } else {
-                    if(loginDot) {
-                        loginDot.classList.remove('bg-green-500', 'shadow-[0_0_8px_#22c55e]');
-                        loginDot.classList.add('bg-slate-600');
-                    }
-                    if(btnLogout) btnLogout.classList.add('hidden');
-                    if(btnOpenAdmin) btnOpenAdmin.title = "Admin / Cấu hình";
-                }
             }
             if(state.userSettings.apiKey) updateLoginUI();
-
-            if(btnOpenAdmin) btnOpenAdmin.addEventListener('click', () => {
-                adminModal.classList.remove('hidden');
-                adminLoginView.classList.remove('hidden');
-                adminDashView.classList.add('hidden');
-                adminPassInput.value = '';
-                adminPassInput.focus();
-            });
-
-            if(closeAdminBtn) closeAdminBtn.addEventListener('click', () => adminModal.classList.add('hidden'));
-
-            if(btnAdminLogin) btnAdminLogin.onclick = () => {
-                const pass = adminPassInput.value.trim();
-                // BẢO MẬT: SO SÁNH HASH (BASE64) THAY VÌ TEXT THUẦN
-                // "ccdnacyme@1985" -> "Y2NkbmFjeW1lQDE5ODU="
-                if(btoa(pass) === "Y2NkbmFjeW1lQDE5ODU=") {
-                    showToast("Đăng nhập Admin thành công!", "success");
-                    adminLoginView.classList.add('hidden');
-                    adminDashView.classList.remove('hidden');
-                    UserSystem.updateUI();
-                    
-                    modalUser.value = state.userSettings.username || '';
-                    modalKey.value = state.userSettings.apiKey || '';
-                    modalBaseUrl.value = state.userSettings.baseUrl || 'https://generativelanguage.googleapis.com';
-                    
-                    if(UserSystem.ipAddress) {
-                        displayIp.value = UserSystem.ipAddress;
-                    }
-                    setProviderUI(state.userSettings.provider);
-
-                } else {
-                    showToast("Mật khẩu không đúng!", "error");
-                    adminPassInput.classList.add('border-red-500', 'text-red-500');
-                    setTimeout(() => adminPassInput.classList.remove('border-red-500', 'text-red-500'), 2000);
-                }
-            };
-
-            function setProviderUI(provider) {
-                if(provider === 'comet') {
-                    btnProvComet.classList.add('bg-violet-500', 'text-white', 'border-transparent');
-                    btnProvComet.classList.remove('bg-violet-500/10', 'text-violet-300');
-                    btnProvGoogle.classList.remove('bg-blue-500', 'text-white');
-                    btnProvGoogle.classList.add('bg-white/5', 'text-slate-300');
-                    baseUrlSection.classList.remove('hidden');
-                    if(modalBaseUrl.value === 'https://generativelanguage.googleapis.com') {
-                        modalBaseUrl.value = 'https://api.cometapi.com'; 
-                    }
-                    urlHint.textContent = "Endpoint CometAPI (VD: https://api.cometapi.com)";
-                } else {
-                    btnProvGoogle.classList.add('bg-blue-500', 'text-white');
-                    btnProvGoogle.classList.remove('bg-white/5', 'text-slate-300');
-                    btnProvComet.classList.remove('bg-violet-500', 'text-white');
-                    btnProvComet.classList.add('bg-violet-500/10', 'text-violet-300');
-                    baseUrlSection.classList.add('hidden');
-                    modalBaseUrl.value = 'https://generativelanguage.googleapis.com';
-                }
-            }
-
-            if(btnProvGoogle) btnProvGoogle.addEventListener('click', () => { state.userSettings.provider = 'google'; setProviderUI('google'); });
-            if(btnProvComet) btnProvComet.addEventListener('click', () => { state.userSettings.provider = 'comet'; setProviderUI('comet'); });
-
-            if(btnSaveLogin) btnSaveLogin.addEventListener('click', () => {
-                state.userSettings.username = modalUser.value.trim();
-                state.userSettings.apiKey = modalKey.value.trim();
-                state.userSettings.baseUrl = modalBaseUrl.value.trim().replace(/\/$/, '');
-                
-                // LƯU CÓ MÃ HÓA
-                try { 
-                    const dataStr = JSON.stringify(state.userSettings);
-                    const encrypted = SimpleSec.encrypt(dataStr);
-                    localStorage.setItem('v35_user_settings', encrypted); 
-                } catch(e){}
-
-                updateLoginUI();
-                showToast(`Đã lưu cấu hình (Mã hóa): ${state.userSettings.provider.toUpperCase()}`, "success");
-            });
-
-            if(btnLogout) btnLogout.addEventListener('click', () => {
-                state.userSettings = { username: '', apiKey: '', provider: 'google', baseUrl: 'https://generativelanguage.googleapis.com' };
-                try { localStorage.removeItem('v35_user_settings'); } catch(e){}
-                modalUser.value = ''; modalKey.value = '';
-                
-                gateScreen.style.display = 'flex';
-                gateScreen.classList.remove('animate-fade-out');
-                gateSubmit.disabled = true; // Wait for IP again
-                gateSubmit.classList.add('opacity-70');
-                gateStatus.textContent = "Hệ thống tự động quét lại IP...";
-                gateStatus.className = "mt-6 text-[10px] text-slate-500 h-4 transition-colors";
-
-                setProviderUI('google');
-                updateLoginUI();
-                adminModal.classList.add('hidden');
-                UserSystem.fetchIP(); // Refetch IP
-                showToast("Đã đăng xuất & Khóa màn hình!", "info");
-            });
-
-            document.getElementById('toggle-show-key').addEventListener('click', (e) => {
-                e.preventDefault();
-                modalKey.type = modalKey.type === 'password' ? 'text' : 'password';
-            });
             
-            // === NEW: LICENSE KEY GENERATOR LOGIC ===
-            const pkgBtns = document.querySelectorAll('.gen-pkg-btn');
-            const selectedCreditInput = document.getElementById('gen-selected-credit');
-            const btnGenerate = document.getElementById('btn-generate-key');
-            const inputEmail = document.getElementById('gen-customer-email');
-            const inputHash = document.getElementById('gen-customer-hash');
-            const resultContainer = document.getElementById('gen-result-container');
-            const resultKey = document.getElementById('gen-result-key');
-
-            // Auto-Hash Email to Customer ID
-            if(inputEmail && inputHash) {
-                inputEmail.addEventListener('input', (e) => {
-                    const val = e.target.value.trim();
-                    if(val) {
-                        // Create a simple hash from email
-                        let hash = 0;
-                        for (let i = 0; i < val.length; i++) {
-                            const char = val.charCodeAt(i);
-                            hash = ((hash << 5) - hash) + char;
-                            hash = hash & hash; // Convert to 32bit integer
-                        }
-                        const hexHash = Math.abs(hash).toString(16).toUpperCase().substring(0, 8);
-                        inputHash.value = hexHash;
-                    } else {
-                        inputHash.value = "HASH ID";
-                    }
-                });
-            }
-
-            // Package Selection
-            pkgBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    pkgBtns.forEach(b => {
-                        b.classList.remove('bg-violet-500', 'text-white', 'border-violet-500');
-                        b.classList.add('bg-white/5', 'text-slate-300', 'border-white/10');
-                    });
-                    btn.classList.remove('bg-white/5', 'text-slate-300', 'border-white/10');
-                    btn.classList.add('bg-violet-500', 'text-white', 'border-violet-500');
-                    selectedCreditInput.value = btn.dataset.val;
-                });
-            });
-
-            // Generate Key
-            if(btnGenerate) {
-                btnGenerate.addEventListener('click', () => {
-                    const email = inputEmail.value.trim();
-                    const hash = inputHash.value;
-                    let credits = selectedCreditInput.value;
-                    
-                    if(!email) return showToast("Vui lòng nhập Email khách hàng!", "error");
-                    if(!credits) { credits = "100"; } // Default
-
-                    const rand = Math.random().toString(36).substring(2, 6).toUpperCase();
-                    const timestamp = Date.now().toString(36).substring(4, 8).toUpperCase();
-                    
-                    // Format: V35-{CREDITS}-{HASH}-{RANDOM}-{TIME}
-                    const key = `V35-${credits}-${hash}-${rand}-${timestamp}`;
-                    
-                    resultKey.value = key;
-                    resultContainer.classList.remove('hidden');
-                    showToast(`Đã tạo mã ${credits} Credits thành công!`, "success");
-                });
-            }
-
-            // Copy Key
-            if(resultKey) {
-                resultKey.addEventListener('click', () => {
-                    // Use execCommand for iframe compatibility
-                    const textArea = document.createElement("textarea");
-                    textArea.value = resultKey.value;
-                    textArea.style.position = "fixed"; // Prevent scrolling
-                    document.body.appendChild(textArea);
-                    textArea.focus();
-                    textArea.select();
-                    
-                    try {
-                        document.execCommand('copy');
-                        showToast("Đã copy Mã Kích Hoạt!", "success");
-                    } catch (err) {
-                        console.error('Fallback copy failed', err);
-                        showToast("Lỗi copy: " + err, "error");
-                    }
-                    
-                    document.body.removeChild(textArea);
-                    resultKey.select();
-                });
-            }
-            
-            // Helper to get effective API Key and URL
             const getApiConfig = () => {
                 const manualKey = document.getElementById('user-api-key')?.value.trim();
-                const key = manualKey || state.userSettings.apiKey || apiKey;
-                const base = state.userSettings.baseUrl || "https://generativelanguage.googleapis.com";
-                const isComet = state.userSettings.provider === 'comet';
-                return { key, base, isComet };
+                const activeProvider = state.userSettings.provider || window.API_PROVIDER || 'google';
+                let key = manualKey || state.userSettings.apiKey;
+                if (!key) {
+                    if (activeProvider === 'comet') key = window.COMET_API_KEY;
+                    else key = window.GEMINI_API_KEY || apiKey;
+                }
+                const base = state.userSettings.baseUrl || (activeProvider === 'comet' ? "https://api.cometapi.com" : "https://generativelanguage.googleapis.com");
+                const isComet = activeProvider === 'comet';
+                return { key: key || "", base, isComet };
             };
             
             const resizeImage = (base64Str, maxWidth = 1536) => {
@@ -1810,15 +1290,10 @@
                 redeemBtn.addEventListener('click', () => {
                      const code = redeemInput.value.trim();
                      if(!code) return showToast("Vui lòng nhập mã!", "error");
-                     
-                     // Check format V35-CREDIT-HASH-RAND-TIME
                      const parts = code.split('-');
                      if(parts.length !== 5 || parts[0] !== 'V35') return showToast("Mã không hợp lệ!", "error");
-                     
-                     // Check if used (simulated)
                      const usedCodes = JSON.parse(localStorage.getItem('v35_used_codes') || '[]');
                      if(usedCodes.includes(code)) return showToast("Mã này đã được sử dụng!", "error");
-                     
                      const credits = parseInt(parts[1]);
                      if(isNaN(credits)) return showToast("Lỗi định dạng tín dụng!", "error");
                      
@@ -1832,62 +1307,48 @@
                 });
             }
 
-            // === ZALO AUTO MESSAGE LOGIC (UPDATED WITH AUTO IP) ===
+            // === ZALO AUTO MESSAGE LOGIC ===
             const btnSendZalo = document.getElementById('btn-send-zalo');
             const zaloMsgContent = document.getElementById('zalo-msg-content');
             const pkgSelectBtns = document.querySelectorAll('.pkg-select-btn');
 
-            // Function to update message with IP and amount
             const updateZaloMsg = (amount) => {
                 if(!zaloMsgContent) return;
-                // Lấy thông tin IP/ID đã lưu hoặc lấy trực tiếp
                 const ipInfo = zaloMsgContent.dataset.ipInfo || `IP: ${UserSystem.ipAddress} - ID: ${UserSystem.deviceId}`;
                 zaloMsgContent.value = `Đã CK ${amount}. ${ipInfo}. Xin mã kích hoạt Studio V35.`;
             };
 
-            // Event listeners for package buttons
             pkgSelectBtns.forEach(btn => {
                 btn.addEventListener('click', () => {
-                    // Visual updates for buttons
                     pkgSelectBtns.forEach(b => {
                         b.classList.remove('bg-blue-600', 'text-white', 'border-blue-500');
                         b.classList.add('bg-white/5', 'text-slate-300', 'border-white/10');
                     });
                     btn.classList.remove('bg-white/5', 'text-slate-300', 'border-white/10');
                     btn.classList.add('bg-blue-600', 'text-white', 'border-blue-500');
-                    
-                    // Update content
                     updateZaloMsg(btn.dataset.amount);
                 });
             });
 
             if(btnSendZalo && zaloMsgContent) {
                 btnSendZalo.addEventListener('click', (e) => {
-                    // Copy content to clipboard before opening link
                     const msg = zaloMsgContent.value.trim();
                     if(msg) {
-                        // Use execCommand for iframe compatibility
                         const textArea = document.createElement("textarea");
                         textArea.value = msg;
-                        textArea.style.position = "fixed"; // Prevent scrolling
+                        textArea.style.position = "fixed"; 
                         document.body.appendChild(textArea);
                         textArea.focus();
                         textArea.select();
-                        
                         try {
                             document.execCommand('copy');
                             showToast("Đã copy nội dung! Hãy dán vào Zalo.", "success");
-                        } catch (err) {
-                            console.error('Fallback copy failed', err);
-                            // Don't block the link opening if copy fails, just log it
-                        }
-                        
+                        } catch (err) {}
                         document.body.removeChild(textArea);
                     } else {
                         showToast("Vui lòng chọn gói chuyển khoản trước!", "warning");
-                        e.preventDefault(); // Prevent opening link if empty
+                        e.preventDefault();
                     }
-                    // Link continues to open in new tab
                 });
             }
 
@@ -1924,7 +1385,6 @@
                     const btn = document.getElementById('process-image');
                     const container = document.getElementById('kontext-module-container');
 
-                    // Reset Classes
                     container.classList.remove('flux-active', 'real-active', 'ancient-active', 'replica-active');
                     btn.classList.remove('btn-flux-modern', 'btn-real-modern', 'btn-ancient-modern', 'btn-gold-modern');
                     
@@ -2081,21 +1541,12 @@
                 const imgOrg = document.getElementById('img-original');
                 const imgMod = document.getElementById('img-modified');
                 if (imgOrg && imgMod && state.restoredObj) {
-                    if (window.innerWidth <= 768) {
-                         // MOBILE FIX: CSS Handles layout now
-                         imgMod.style.width = "100%";
-                         imgMod.style.height = "100%";
-                         imgMod.style.maxWidth = "100%";
-                         imgMod.style.objectFit = "contain";
-                    } else {
-                        // DESKTOP: Keep original logic
-                        const width = imgOrg.offsetWidth;
-                        const height = imgOrg.offsetHeight;
-                        if(width > 0 && height > 0) {
-                            imgMod.style.width = width + "px";
-                            imgMod.style.height = height + "px";
-                            imgMod.style.maxWidth = "none"; 
-                        }
+                    const width = imgOrg.offsetWidth;
+                    const height = imgOrg.offsetHeight;
+                    if(width > 0 && height > 0) {
+                        imgMod.style.width = width + "px";
+                        imgMod.style.height = height + "px";
+                        imgMod.style.maxWidth = "none"; 
                     }
                 }
             };
@@ -2498,8 +1949,6 @@
                         imgModWrapper.style.width = '0%'; sliderHandle.style.left = '0%';
                         showToast(`Đã tải ảnh: ${img.width}x${img.height} (${state.aspectRatioType.toUpperCase()})`, "success");
 
-                        // === MOBILE SMART BAR UPDATE ===
-                        // Tự động chuyển nút Tải ảnh -> Auto Scan ngay khi ảnh lên hình
                         const mUpload = document.getElementById('mob-btn-upload');
                         const mScan = document.getElementById('mob-btn-scan');
                         const mStatus = document.getElementById('mobile-status-text');
@@ -2971,7 +2420,7 @@
                 btnMobDown.addEventListener('touchstart', (e) => { e.preventDefault(); if(!btnMobDown.disabled) handleDownload(); });
             }
 
-            // === MOBILE SMART BAR LOGIC (NEW) ===
+            // === MOBILE SMART BAR LOGIC ===
             const mobBar = document.getElementById('mobile-action-bar');
             const mobBtnUpload = document.getElementById('mob-btn-upload');
             const mobBtnScan = document.getElementById('mob-btn-scan');
@@ -2979,38 +2428,32 @@
             const mobBtnReset = document.getElementById('mob-btn-reset');
             const mobStatus = document.getElementById('mobile-status-text');
 
-            // 1. Initial State
             if(mobBar) {
                 setTimeout(() => {
                     mobBar.classList.remove('translate-y-24', 'opacity-0');
                 }, 1000);
             }
 
-            // 2. Proxy Events
             if(mobBtnUpload) mobBtnUpload.onclick = () => document.getElementById('image-upload').click();
             
             if(mobBtnScan) mobBtnScan.onclick = () => {
                 document.getElementById('btn-auto-pilot').click();
-                // UI Switch to Generate
                 mobBtnScan.classList.add('hidden');
                 mobBtnRun.classList.remove('hidden');
                 mobBtnRun.innerHTML = `<svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> SCANNING...`;
                 
-                // Watch for scan complete (Simulated by checking prompt text change or toast)
-                // In real implementation, we hook into the async function, but here we estimate
                 setTimeout(() => {
                     mobBtnRun.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> CHẠY NGAY`;
                     mobStatus.textContent = "READY TO GENERATE";
                     mobStatus.classList.add('text-emerald-400');
                     showToast("Đã Scan xong! Bấm 'CHẠY' để tạo ảnh.", "success");
-                }, 3000); // Rough estimate of scan time
+                }, 3000); 
             };
 
             if(mobBtnRun) mobBtnRun.onclick = () => {
                 document.getElementById('process-image').click();
                 mobBtnRun.disabled = true;
                 
-                // === UPDATE HERE: BETTER LOADING VISUAL ON MOBILE ===
                 mobBtnRun.className = "flex-1 py-3.5 bg-amber-600 border border-amber-500/30 rounded-xl text-white font-bold text-[10px] tracking-widest flex flex-col items-center justify-center gap-1 shadow-[0_0_15px_rgba(245,158,11,0.3)] animate-pulse transition-all cursor-not-allowed";
                 mobBtnRun.innerHTML = `
                     <svg class="w-5 h-5 animate-spin text-white" fill="none" viewBox="0 0 24 24">
@@ -3023,14 +2466,12 @@
                 mobStatus.textContent = "AI ĐANG XỬ LÝ (Vui lòng đợi)...";
                 mobStatus.className = "text-[8px] font-mono tracking-widest text-amber-400 font-bold animate-pulse";
                 
-                // Re-enable handled in process-image logic usually, but let's watch for completion
                 const checkInterval = setInterval(() => {
                     const mainBtn = document.getElementById('process-image');
                     if(!mainBtn.disabled) {
                         clearInterval(checkInterval);
                         mobBtnRun.disabled = false;
                         
-                        // Reset style to original Green/Teal style but indicating complete/retry
                         mobBtnRun.className = "flex-1 py-3.5 bg-gradient-to-b from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 border border-emerald-500/30 rounded-xl text-white font-bold text-[10px] tracking-widest flex flex-col items-center justify-center gap-1 shadow-[0_0_15px_rgba(16,185,129,0.3)] active:scale-95 transition-all";
                         mobBtnRun.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg> <span>LÀM LẠI</span>`;
                         
@@ -3043,9 +2484,7 @@
             if(mobBtnReset) mobBtnReset.onclick = () => window.location.reload();
 
             // 3. Hook into Load Image to switch buttons
-            const originalLoadImg = loadImg; // Save ref
-            // Note: We can't overwrite const, but we defined loadImg as const. 
-            // In the fileInput listener, we can inject logic.
+            const originalLoadImg = loadImg; 
             if(fileInput) fileInput.addEventListener('change', (e) => {
                  if (e.target.files.length > 0) {
                      mobBtnUpload.classList.add('hidden');
