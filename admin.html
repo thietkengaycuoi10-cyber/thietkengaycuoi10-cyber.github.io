@@ -3,159 +3,450 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>V35 ADMIN – API KEY MANAGER</title>
+<title>V35 ADMIN – SYSTEM MANAGER</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
-body { background:#050505; color:#e5e7eb; font-family:'Plus Jakarta Sans',sans-serif }
-.glass { background:rgba(20,20,25,.95); border:1px solid rgba(255,255,255,.08); backdrop-filter:blur(20px) }
-.pro-input { background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.1); color:#fff }
-.pro-input:focus { outline:none; border-color:#8b5cf6; background:rgba(139,92,246,.15) }
+    body { 
+        background-color: #050505;
+        background-image: radial-gradient(ellipse at 50% 0%, #1a1b26 0%, #050505 60%);
+        color: #e5e7eb; 
+        font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .glass { 
+        background: rgba(20, 20, 25, 0.7); 
+        border: 1px solid rgba(255, 255, 255, 0.08); 
+        backdrop-filter: blur(24px); 
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+    .card-section {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        transition: all 0.3s ease;
+    }
+    .card-section:hover {
+        background: rgba(255, 255, 255, 0.04);
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+    .pro-input { 
+        background: rgba(0, 0, 0, 0.3); 
+        border: 1px solid rgba(255, 255, 255, 0.1); 
+        color: #fff;
+        transition: all 0.2s;
+    }
+    .pro-input:focus { 
+        outline: none; 
+        border-color: #8b5cf6; 
+        background: rgba(139, 92, 246, 0.1); 
+        box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.1);
+    }
+    /* Select styling fix */
+    select.pro-input option { background: #141419; color: #fff; padding: 10px; }
+    
+    /* Animation cho mã code mới */
+    @keyframes highlight {
+        0% { background-color: rgba(139, 92, 246, 0.5); transform: scale(1.02); }
+        100% { background-color: rgba(0, 0, 0, 0.3); transform: scale(1); }
+    }
+    .new-code { animation: highlight 1s ease-out; }
+    
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #555; }
 </style>
 </head>
 
-<body class="min-h-screen flex items-center justify-center">
+<body class="min-h-screen flex items-center justify-center p-4">
 
-<div class="w-full max-w-md p-6 rounded-2xl glass shadow-2xl">
+<!-- Mở rộng chiều rộng container để chứa 2 cột -->
+<div class="w-full max-w-5xl rounded-3xl glass relative overflow-hidden">
+    
+    <!-- Background Glow -->
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-32 bg-violet-600/20 blur-[80px] rounded-full pointer-events-none"></div>
 
-<!-- LOGIN ADMIN -->
-<div id="loginBox" class="space-y-4">
-<h1 class="text-center text-xl font-bold">ADMIN V35</h1>
-<input id="adminPass" type="password" placeholder="Mật khẩu admin"
- class="pro-input w-full px-4 py-3 rounded-xl text-center font-mono">
-<button onclick="adminLogin()"
- class="w-full py-3 bg-gradient-to-r from-violet-600 to-blue-600 rounded-xl font-bold">
-ĐĂNG NHẬP
-</button>
-<p id="loginStatus" class="text-center text-xs text-red-500"></p>
-</div>
+    <div class="p-6 md:p-8 relative z-10">
 
-<!-- DASHBOARD -->
-<div id="dashboard" class="hidden space-y-5">
+        <!-- LOGIN SCREEN -->
+        <div id="loginBox" class="max-w-sm mx-auto space-y-8 py-10">
+            <div class="text-center space-y-2">
+                <div class="w-16 h-16 bg-gradient-to-tr from-violet-600 to-blue-600 rounded-2xl mx-auto flex items-center justify-center shadow-lg shadow-violet-500/30 mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                    </svg>
+                </div>
+                <h1 class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">ADMIN CONTROL</h1>
+                <p class="text-sm text-gray-500">Hệ thống quản lý V35</p>
+            </div>
+            
+            <div class="space-y-4">
+                <input id="adminPass" type="password" placeholder="Mật khẩu admin"
+                    class="pro-input w-full px-4 py-3.5 rounded-xl text-center font-mono placeholder-gray-600 text-lg tracking-widest">
+                
+                <button onclick="adminLogin()"
+                    class="w-full py-3.5 bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-500 hover:to-blue-500 rounded-xl font-bold text-white transition-all active:scale-[0.98] shadow-lg shadow-violet-900/20">
+                    ĐĂNG NHẬP
+                </button>
+                <p id="loginStatus" class="text-center text-xs text-red-400 font-medium min-h-[20px]"></p>
+            </div>
+        </div>
 
-<h2 class="text-center font-bold text-lg">QUẢN LÝ API KEY</h2>
+        <!-- DASHBOARD SCREEN -->
+        <div id="dashboard" class="hidden space-y-6 animate-fade-in">
 
-<div class="bg-black/40 p-3 rounded-lg text-xs">
-<b>Device ID:</b>
-<span id="deviceId" class="text-green-400 font-mono"></span>
-</div>
+            <!-- Header -->
+            <div class="flex items-center justify-between pb-4 border-b border-white/5">
+                <div>
+                    <h2 class="font-bold text-lg text-white">Bảng Điều Khiển Admin</h2>
+                    <p class="text-xs text-gray-400">Quản lý API Key & Tạo Mã Nạp Tiền</p>
+                </div>
+                <div class="text-right">
+                    <button onclick="logout()" class="px-3 py-1 bg-red-500/10 hover:bg-red-500/20 rounded-lg border border-red-500/20 text-xs font-bold text-red-400">
+                        Đăng Xuất
+                    </button>
+                </div>
+            </div>
 
-<button onclick="createUserKey()"
- class="w-full py-2 bg-green-600/20 border border-green-500/30 rounded-xl text-green-400 text-xs font-bold">
-TẠO API KEY CHO KHÁCH
-</button>
+            <!-- MAIN GRID -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                
+                <!-- CỘT 1: CẤU HÌNH API & USER (ĐÃ SỬA: Thêm nút Tìm Kiếm) -->
+                <div class="space-y-4">
+                    <div class="flex items-center gap-2 text-sm font-semibold text-gray-300 uppercase tracking-wide">
+                        <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        1. Quản Lý Khách Hàng (Tìm & Cấp Credit)
+                    </div>
 
-<input id="userKey" class="pro-input w-full px-3 py-2 rounded-xl text-xs font-mono"
- placeholder="V35-USER-XXXX">
+                    <div class="card-section p-5 rounded-2xl glass space-y-4 h-full">
+                        
+                        <!-- User Key Manager (ĐÃ CẬP NHẬT GIAO DIỆN TÌM KIẾM) -->
+                        <div class="space-y-1.5">
+                            <label class="text-[11px] text-yellow-500 font-bold ml-1 uppercase tracking-wider">▼ Nhập ID khách gửi vào đây (Search/Edit)</label>
+                            <div class="flex gap-2">
+                                <input id="userKey" class="pro-input flex-1 px-3 py-2.5 rounded-xl text-xs font-mono text-yellow-300 font-bold border-yellow-500/30 focus:border-yellow-500" placeholder="Ví dụ: ID-V0HE9F">
+                                
+                                <!-- Nút TÌM KIẾM (MỚI) -->
+                                <button onclick="searchUserKey()" class="px-3 py-2 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 rounded-xl text-blue-400 transition-colors group relative" title="Tải dữ liệu ID này">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                                    <span class="absolute -top-8 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-[9px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Tải Dữ Liệu</span>
+                                </button>
 
-<div class="space-y-2">
-<label class="text-[10px] text-slate-400">GOOGLE GEMINI API KEY</label>
-<input id="geminiKey" class="pro-input w-full px-3 py-2 rounded-xl text-xs font-mono text-blue-400"
- placeholder="AIza...">
-</div>
+                                <!-- Nút TẠO MỚI (CŨ) -->
+                                <button onclick="createUserKey()" class="px-3 py-2 bg-green-500/10 hover:bg-green-500/20 border border-green-500/20 rounded-xl text-green-400 transition-colors" title="Tạo ID ngẫu nhiên mới">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                                </button>
+                            </div>
+                            <p id="searchMsg" class="text-[10px] h-3 text-blue-400 pl-1 italic"></p>
+                        </div>
 
-<div class="space-y-2">
-<label class="text-[10px] text-slate-400">COMET API KEY</label>
-<input id="cometKey" class="pro-input w-full px-3 py-2 rounded-xl text-xs font-mono text-green-400"
- placeholder="sk-...">
-</div>
+                        <!-- Manual Credit Input -->
+                        <div class="space-y-1.5 pt-2 border-t border-white/5">
+                            <label class="text-[11px] text-gray-400 font-medium ml-1">SET CREDIT THỦ CÔNG (CẤP TIỀN)</label>
+                            <div class="relative">
+                                <input id="manualCredit" type="number" class="pro-input w-full px-3 py-2.5 rounded-xl text-xs font-mono text-white font-bold pl-10" placeholder="0">
+                                <span class="absolute left-3 top-2.5 text-gray-500 font-bold text-xs">CR:</span>
+                            </div>
+                        </div>
 
-<div class="space-y-2">
-<label class="text-[10px] text-slate-400">NẠP CREDIT CHO KHÁCH</label>
-<input id="credit" type="number"
- class="pro-input w-full px-3 py-2 rounded-xl text-xs font-mono text-yellow-400"
- placeholder="Ví dụ: 100">
-</div>
+                        <!-- Provider Select -->
+                        <div class="space-y-1.5">
+                            <label class="text-[11px] text-gray-400 font-medium ml-1">NHÀ CUNG CẤP API</label>
+                            <select id="provider" class="pro-input w-full px-3 py-2.5 rounded-xl text-xs font-mono text-gray-300 cursor-pointer">
+                                <option value="gemini">Google Gemini AI</option>
+                                <option value="comet">Comet Service</option>
+                            </select>
+                        </div>
 
+                        <!-- API Keys Input -->
+                        <div class="space-y-3">
+                            <div class="space-y-1.5">
+                                <label class="text-[11px] text-blue-400 font-bold ml-1">GEMINI KEY</label>
+                                <input id="geminiKey" class="pro-input w-full px-3 py-2.5 rounded-xl text-xs font-mono text-blue-300 border-blue-500/20 focus:border-blue-500/50 focus:bg-blue-500/10" placeholder="AIzaSy...">
+                            </div>
 
-<button onclick="saveUser()"
- class="w-full py-3 bg-white/10 hover:bg-white/20 rounded-xl text-xs font-bold">
-LƯU & ĐỒNG BỘ
-</button>
+                            <div class="space-y-1.5">
+                                <label class="text-[11px] text-emerald-400 font-bold ml-1">COMET KEY</label>
+                                <input id="cometKey" class="pro-input w-full px-3 py-2.5 rounded-xl text-xs font-mono text-emerald-300 border-emerald-500/20 focus:border-emerald-500/50 focus:bg-emerald-500/10" placeholder="sk-...">
+                            </div>
+                        </div>
 
-<button onclick="logout()"
- class="w-full py-2 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400 text-xs font-bold">
-ĐĂNG XUẤT
-</button>
+                        <div class="pt-2">
+                             <p id="saveStatus" class="text-center text-xs font-medium min-h-[16px] mb-2"></p>
+                             <button onclick="saveUser()" class="w-full py-3 bg-blue-600 hover:bg-blue-500 rounded-xl font-bold text-white shadow-lg active:scale-[0.98] transition-all text-xs">
+                                LƯU CẤU HÌNH & CẤP CREDIT
+                            </button>
+                        </div>
+                    </div>
+                </div>
 
-</div>
+                <!-- CỘT 2: TẠO MÃ NẠP TIỀN (VOUCHER) - GIỮ NGUYÊN -->
+                <div class="space-y-4">
+                     <div class="flex items-center gap-2 text-sm font-semibold text-gray-300 uppercase tracking-wide">
+                        <svg class="w-4 h-4 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        2. Tạo Mã Nạp Tiền (Voucher)
+                    </div>
+
+                    <div class="card-section p-5 rounded-2xl glass space-y-4 border border-white/5 bg-white/[0.02]">
+                        <label class="text-xs font-bold text-gray-400 uppercase tracking-wider">Chọn Mệnh Giá Credit</label>
+                        
+                        <div class="grid grid-cols-3 gap-2">
+                            <button onclick="setAmount(80)" class="py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-bold text-slate-300 transition-all hover:border-violet-500/50">80 CR (100K)</button>
+                            <button onclick="setAmount(200)" class="py-2 rounded-xl bg-violet-600/20 hover:bg-violet-600/30 border border-violet-500/50 text-xs font-bold text-violet-200 transition-all">200 CR (200K)</button>
+                            <button onclick="setAmount(500)" class="py-2 rounded-xl bg-blue-600/10 hover:bg-blue-600/20 border border-blue-500/30 text-xs font-bold text-blue-200 transition-all">500 CR (500K)</button>
+                        </div>
+
+                        <div class="relative">
+                            <input id="customAmount" type="number" placeholder="Hoặc nhập số tùy ý..." 
+                                class="pro-input w-full px-4 py-3 rounded-xl font-mono text-sm">
+                            <span class="absolute right-4 top-3 text-xs text-gray-500 font-bold">CREDITS</span>
+                        </div>
+
+                        <button onclick="generateCode()" 
+                            class="w-full py-3 bg-gradient-to-r from-violet-600 to-purple-600 rounded-xl font-bold text-white shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2 text-xs">
+                            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                            TẠO MÃ CODE NGAY
+                        </button>
+
+                        <!-- KẾT QUẢ -->
+                        <div id="resultBox" class="hidden animate-fade-in pt-2 border-t border-white/5">
+                            <label class="text-[10px] font-bold text-green-400 uppercase tracking-wider ml-1">Mã vừa tạo:</label>
+                            <div class="relative mt-1 group">
+                                <input id="generatedCode" readonly 
+                                    class="w-full bg-black/50 border border-green-500/50 rounded-xl py-3 px-4 text-center font-mono text-sm font-bold text-white tracking-widest cursor-pointer hover:bg-green-500/10 transition-colors"
+                                    onclick="copyCode()">
+                                <div class="absolute right-3 top-1/2 -translate-y-1/2 px-2 py-1 bg-green-500 rounded text-[9px] font-bold text-black pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity">COPY</div>
+                            </div>
+                            <p id="copyStatus" class="text-center text-[10px] text-green-400 mt-1 h-3"></p>
+                        </div>
+
+                        <!-- Lịch sử -->
+                         <div class="pt-2">
+                            <div class="flex justify-between items-center mb-2">
+                                <label class="text-[10px] font-bold text-gray-500 uppercase">Lịch sử gần đây</label>
+                                <button onclick="clearHistory()" class="text-[9px] text-red-400 hover:text-red-300">Xóa</button>
+                            </div>
+                            <div id="historyList" class="flex-1 overflow-y-auto space-y-1.5 pr-1 custom-scrollbar max-h-[150px]"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
 // ===== ADMIN CONFIG =====
-const ADMIN_PASS_HASH = btoa("admin123");
+const ADMIN_PASS = "admin123";
 
 // ===== SECURITY =====
 const Sec = {
- key:"V35_SEC",
- enc(t){return btoa([...t].map((c,i)=>String.fromCharCode(c.charCodeAt(0)^this.key.charCodeAt(i%this.key.length))).join(""))},
- dec(t){let s=atob(t);return [...s].map((c,i)=>String.fromCharCode(c.charCodeAt(0)^this.key.charCodeAt(i%this.key.length))).join("")}
+    key: "V35_SEC",
+    enc(t) { return btoa([...t].map((c, i) => String.fromCharCode(c.charCodeAt(0) ^ this.key.charCodeAt(i % this.key.length))).join("")) },
+    dec(t) { try { return [...atob(t)].map((c, i) => String.fromCharCode(c.charCodeAt(0) ^ this.key.charCodeAt(i % this.key.length))).join("") } catch (e) { return null; } }
 };
 
-// ===== DEVICE ID =====
-function getDeviceId(){
- let id=localStorage.getItem("v35_device_id");
- if(!id){id="V35-"+crypto.randomUUID();localStorage.setItem("v35_device_id",id)}
- return id;
+// ===== DOM ELEMENTS =====
+const els = {
+    loginBox: document.getElementById('loginBox'),
+    dashboard: document.getElementById('dashboard'),
+    adminPass: document.getElementById('adminPass'),
+    loginStatus: document.getElementById('loginStatus'),
+    // API Config Elements
+    userKey: document.getElementById('userKey'),
+    searchMsg: document.getElementById('searchMsg'), // Mới
+    provider: document.getElementById('provider'),
+    geminiKey: document.getElementById('geminiKey'),
+    cometKey: document.getElementById('cometKey'),
+    manualCredit: document.getElementById('manualCredit'),
+    saveStatus: document.getElementById('saveStatus'),
+    // Voucher Elements
+    customAmount: document.getElementById('customAmount'),
+    resultBox: document.getElementById('resultBox'),
+    generatedCode: document.getElementById('generatedCode'),
+    copyStatus: document.getElementById('copyStatus'),
+    historyList: document.getElementById('historyList')
+};
+
+// ===== LOGIN LOGIC =====
+function adminLogin() {
+    if (els.adminPass.value.trim() === ADMIN_PASS) {
+        sessionStorage.setItem("v35_admin_logged", "true");
+        showDash();
+    } else {
+        els.loginStatus.innerText = "Sai mật khẩu!";
+        setTimeout(() => els.loginStatus.innerText = "", 2000);
+    }
 }
 
-// ===== LOGIN =====
-function adminLogin(){
- if(btoa(adminPass.value)===ADMIN_PASS_HASH){
-  sessionStorage.setItem("v35_admin","1");
-  showDash();
- } else loginStatus.innerText="Sai mật khẩu!";
+function showDash() {
+    els.loginBox.style.display = "none";
+    els.dashboard.classList.remove("hidden");
+    loadActiveUser();
+    renderHistory();
 }
 
-// ===== DASH =====
-function showDash(){
- loginBox.style.display="none";
- dashboard.classList.remove("hidden");
- deviceId.innerText=getDeviceId();
+if (sessionStorage.getItem("v35_admin_logged") === "true") showDash();
+
+function logout() {
+    sessionStorage.removeItem("v35_admin_logged");
+    location.reload();
 }
 
-if(sessionStorage.getItem("v35_admin")==="1") showDash();
+// ===== CONFIG LOGIC (UPDATED: SEARCH & LOAD SPECIFIC ID) =====
 
-// ===== USER KEY =====
-function createUserKey(){
- userKey.value="V35-USER-"+Math.random().toString(36).substr(2,8).toUpperCase();
+function createUserKey() {
+    els.userKey.value = "V35-USER-" + Math.random().toString(36).substr(2, 8).toUpperCase();
+    searchUserKey(); // Tự động load dữ liệu rỗng cho key mới
 }
 
-// ===== SAVE =====
+// Hàm tìm kiếm và tải dữ liệu cho ID cụ thể
+function searchUserKey() {
+    const id = els.userKey.value.trim();
+    if(!id) {
+        els.searchMsg.innerText = "Vui lòng nhập ID để tìm.";
+        return;
+    }
 
- function saveUser(){
- if(!userKey.value) return alert("Chưa có USER KEY");
+    // Tìm trong localStorage với prefix
+    const storageKey = "v35_user_" + id;
+    const savedData = localStorage.getItem(storageKey);
 
- const data={
-  deviceId:getDeviceId(),
-  userKey:userKey.value,
-  geminiKey:geminiKey.value,
-  cometKey:cometKey.value,
-  provider:provider.value,
-  credit: Number(credit.value || 0)
- };
-
- localStorage.setItem(
-  "v35_user_"+userKey.value,
-  Sec.enc(JSON.stringify(data))
- );
-
- localStorage.setItem(
-  "v35_active_user",
-  Sec.enc(JSON.stringify(data))
- );
-
- alert("Đã nạp credit & index.html đọc được!");
+    if (savedData) {
+        try {
+            const data = JSON.parse(Sec.dec(savedData));
+            if(data) {
+                els.geminiKey.value = data.geminiKey || "";
+                els.cometKey.value = data.cometKey || "";
+                els.provider.value = data.provider || "gemini";
+                els.manualCredit.value = data.credit || 0;
+                els.searchMsg.innerHTML = `<span class="text-green-400">Đã tìm thấy: Credit hiện tại ${data.credit || 0}</span>`;
+                els.saveStatus.innerHTML = "";
+            }
+        } catch(e) { 
+            console.error(e);
+            els.searchMsg.innerText = "Lỗi đọc dữ liệu.";
+        }
+    } else {
+        // Nếu không thấy thì xóa trắng các ô để nhập mới
+        els.geminiKey.value = "";
+        els.cometKey.value = "";
+        els.manualCredit.value = 0;
+        els.searchMsg.innerText = "ID mới (Chưa có dữ liệu), hãy nhập và Lưu.";
+    }
 }
 
-
-// ===== LOGOUT =====
-function logout(){
- sessionStorage.clear(); location.reload();
+// Load user active (mặc định khi vào dashboard)
+function loadActiveUser() {
+    const savedData = localStorage.getItem("v35_active_user");
+    if(savedData) {
+        try {
+            const data = JSON.parse(Sec.dec(savedData));
+            if(data && data.userKey) {
+                els.userKey.value = data.userKey;
+                searchUserKey(); // Gọi hàm search để điền dữ liệu
+            }
+        } catch(e) {}
+    }
 }
+
+function saveUser() {
+    const targetId = els.userKey.value.trim();
+    if (!targetId) {
+        els.saveStatus.innerHTML = "<span class='text-red-400'>❌ Lỗi: Chưa nhập ID Khách Hàng</span>";
+        return;
+    }
+
+    const data = {
+        deviceId: "ADMIN-DEVICE", // Admin override
+        userKey: targetId,
+        geminiKey: els.geminiKey.value,
+        cometKey: els.cometKey.value,
+        provider: els.provider.value,
+        credit: Number(els.manualCredit.value || 0),
+        updatedAt: new Date().toISOString()
+    };
+    
+    // Save User Cụ Thể
+    const encryptedData = Sec.enc(JSON.stringify(data));
+    localStorage.setItem("v35_user_" + targetId, encryptedData);
+    
+    // Set Active User (để lần sau vào lại nhớ ID này)
+    localStorage.setItem("v35_active_user", encryptedData);
+
+    els.saveStatus.innerHTML = "<span class='text-green-400'>✅ Đã lưu cấu hình & Credit cho " + targetId + "</span>";
+    els.searchMsg.innerText = "";
+    setTimeout(() => els.saveStatus.innerHTML = "", 3000);
+}
+
+// ===== VOUCHER LOGIC (RIGHT COLUMN) - GIỮ NGUYÊN =====
+function setAmount(val) { els.customAmount.value = val; }
+
+function generateCode() {
+    const amount = parseInt(els.customAmount.value);
+    if (!amount || amount <= 0) return alert("Nhập số Credit hợp lệ!");
+
+    const prefix = "V35";
+    const creditPart = amount.toString();
+    const hashPart = Math.random().toString(36).substring(2, 6).toUpperCase(); 
+    const randPart = Math.random().toString(36).substring(2, 6).toUpperCase(); 
+    const timePart = Date.now().toString().slice(-4); 
+    const finalCode = `${prefix}-${creditPart}-${hashPart}-${randPart}-${timePart}`;
+
+    els.resultBox.classList.remove("hidden");
+    els.generatedCode.value = finalCode;
+    els.generatedCode.classList.remove('new-code');
+    void els.generatedCode.offsetWidth;
+    els.generatedCode.classList.add('new-code');
+
+    saveToHistory(finalCode, amount);
+}
+
+function copyCode() {
+    const code = els.generatedCode.value;
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(code).then(onCopySuccess).catch(() => useFallbackCopy(code));
+    } else {
+        useFallbackCopy(code);
+    }
+}
+function useFallbackCopy(code) {
+    els.generatedCode.select();
+    document.execCommand('copy');
+    onCopySuccess();
+}
+function onCopySuccess() {
+    els.copyStatus.innerText = "Đã copy!";
+    setTimeout(() => els.copyStatus.innerText = "", 2000);
+}
+
+function saveToHistory(code, amount) {
+    let history = JSON.parse(localStorage.getItem('v35_code_history') || '[]');
+    history.unshift({ code, amount, time: new Date().toLocaleTimeString('vi-VN') });
+    if(history.length > 20) history.pop();
+    localStorage.setItem('v35_code_history', JSON.stringify(history));
+    renderHistory();
+}
+
+function renderHistory() {
+    let history = JSON.parse(localStorage.getItem('v35_code_history') || '[]');
+    els.historyList.innerHTML = history.length ? history.map(item => `
+        <div class="flex items-center justify-between p-2 rounded bg-white/5 border border-white/5 hover:bg-white/10 transition-colors group">
+            <div class="text-[10px] text-gray-400">${item.time}</div>
+            <div class="text-[10px] font-mono font-bold text-violet-300 select-all">${item.code}</div>
+            <div class="text-[10px] font-bold text-yellow-400">+${item.amount}</div>
+        </div>
+    `).join('') : '<div class="text-center text-gray-600 text-[10px] py-4">Trống</div>';
+}
+function clearHistory() {
+    if(confirm("Xóa lịch sử?")) { localStorage.removeItem('v35_code_history'); renderHistory(); }
+}
+
+els.adminPass.addEventListener("keypress", function(e) { if (e.key === "Enter") adminLogin(); });
+
 </script>
-
 </body>
 </html>
