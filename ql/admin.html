@@ -113,29 +113,47 @@
             <!-- MAIN GRID -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 
-                <!-- CỘT 1: CẤU HÌNH API & USER (ĐÃ KHÔI PHỤC) -->
+                <!-- CỘT 1: CẤU HÌNH API & USER (ĐÃ SỬA: Thêm nút Tìm Kiếm) -->
                 <div class="space-y-4">
                     <div class="flex items-center gap-2 text-sm font-semibold text-gray-300 uppercase tracking-wide">
                         <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                        1. Cấu Hình Hệ Thống (API Keys)
+                        1. Quản Lý Khách Hàng (Tìm & Cấp Credit)
                     </div>
 
                     <div class="card-section p-5 rounded-2xl glass space-y-4 h-full">
                         
-                        <!-- User Key Manager -->
+                        <!-- User Key Manager (ĐÃ CẬP NHẬT GIAO DIỆN TÌM KIẾM) -->
                         <div class="space-y-1.5">
-                            <label class="text-[11px] text-gray-400 font-medium ml-1">USER KEY (MÃ KHÁCH HÀNG)</label>
+                            <label class="text-[11px] text-yellow-500 font-bold ml-1 uppercase tracking-wider">▼ Nhập ID khách gửi vào đây (Search/Edit)</label>
                             <div class="flex gap-2">
-                                <input id="userKey" class="pro-input flex-1 px-3 py-2.5 rounded-xl text-xs font-mono text-yellow-300" placeholder="V35-USER-XXXX">
-                                <button onclick="createUserKey()" class="px-3 py-2 bg-green-500/10 hover:bg-green-500/20 border border-green-500/20 rounded-xl text-green-400 transition-colors" title="Tạo mã mới">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                                <input id="userKey" class="pro-input flex-1 px-3 py-2.5 rounded-xl text-xs font-mono text-yellow-300 font-bold border-yellow-500/30 focus:border-yellow-500" placeholder="Ví dụ: ID-V0HE9F">
+                                
+                                <!-- Nút TÌM KIẾM (MỚI) -->
+                                <button onclick="searchUserKey()" class="px-3 py-2 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 rounded-xl text-blue-400 transition-colors group relative" title="Tải dữ liệu ID này">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                                    <span class="absolute -top-8 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-[9px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Tải Dữ Liệu</span>
                                 </button>
+
+                                <!-- Nút TẠO MỚI (CŨ) -->
+                                <button onclick="createUserKey()" class="px-3 py-2 bg-green-500/10 hover:bg-green-500/20 border border-green-500/20 rounded-xl text-green-400 transition-colors" title="Tạo ID ngẫu nhiên mới">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                                </button>
+                            </div>
+                            <p id="searchMsg" class="text-[10px] h-3 text-blue-400 pl-1 italic"></p>
+                        </div>
+
+                        <!-- Manual Credit Input -->
+                        <div class="space-y-1.5 pt-2 border-t border-white/5">
+                            <label class="text-[11px] text-gray-400 font-medium ml-1">SET CREDIT THỦ CÔNG (CẤP TIỀN)</label>
+                            <div class="relative">
+                                <input id="manualCredit" type="number" class="pro-input w-full px-3 py-2.5 rounded-xl text-xs font-mono text-white font-bold pl-10" placeholder="0">
+                                <span class="absolute left-3 top-2.5 text-gray-500 font-bold text-xs">CR:</span>
                             </div>
                         </div>
 
                         <!-- Provider Select -->
                         <div class="space-y-1.5">
-                            <label class="text-[11px] text-gray-400 font-medium ml-1">NHÀ CUNG CẤP API MẶC ĐỊNH</label>
+                            <label class="text-[11px] text-gray-400 font-medium ml-1">NHÀ CUNG CẤP API</label>
                             <select id="provider" class="pro-input w-full px-3 py-2.5 rounded-xl text-xs font-mono text-gray-300 cursor-pointer">
                                 <option value="gemini">Google Gemini AI</option>
                                 <option value="comet">Comet Service</option>
@@ -143,34 +161,28 @@
                         </div>
 
                         <!-- API Keys Input -->
-                        <div class="space-y-3 pt-2 border-t border-white/5">
+                        <div class="space-y-3">
                             <div class="space-y-1.5">
-                                <label class="text-[11px] text-blue-400 font-bold ml-1">GOOGLE GEMINI KEY</label>
+                                <label class="text-[11px] text-blue-400 font-bold ml-1">GEMINI KEY</label>
                                 <input id="geminiKey" class="pro-input w-full px-3 py-2.5 rounded-xl text-xs font-mono text-blue-300 border-blue-500/20 focus:border-blue-500/50 focus:bg-blue-500/10" placeholder="AIzaSy...">
                             </div>
 
                             <div class="space-y-1.5">
-                                <label class="text-[11px] text-emerald-400 font-bold ml-1">COMET API KEY</label>
+                                <label class="text-[11px] text-emerald-400 font-bold ml-1">COMET KEY</label>
                                 <input id="cometKey" class="pro-input w-full px-3 py-2.5 rounded-xl text-xs font-mono text-emerald-300 border-emerald-500/20 focus:border-emerald-500/50 focus:bg-emerald-500/10" placeholder="sk-...">
                             </div>
-                        </div>
-                        
-                        <!-- Manual Credit Input (Optional) -->
-                        <div class="space-y-1.5">
-                            <label class="text-[11px] text-gray-400 font-medium ml-1">SET CREDIT THỦ CÔNG (Nếu cần)</label>
-                            <input id="manualCredit" type="number" class="pro-input w-full px-3 py-2.5 rounded-xl text-xs font-mono text-white font-bold" placeholder="0">
                         </div>
 
                         <div class="pt-2">
                              <p id="saveStatus" class="text-center text-xs font-medium min-h-[16px] mb-2"></p>
                              <button onclick="saveUser()" class="w-full py-3 bg-blue-600 hover:bg-blue-500 rounded-xl font-bold text-white shadow-lg active:scale-[0.98] transition-all text-xs">
-                                LƯU CẤU HÌNH API & USER
+                                LƯU CẤU HÌNH & CẤP CREDIT
                             </button>
                         </div>
                     </div>
                 </div>
 
-                <!-- CỘT 2: TẠO MÃ NẠP TIỀN (VOUCHER) -->
+                <!-- CỘT 2: TẠO MÃ NẠP TIỀN (VOUCHER) - GIỮ NGUYÊN -->
                 <div class="space-y-4">
                      <div class="flex items-center gap-2 text-sm font-semibold text-gray-300 uppercase tracking-wide">
                         <svg class="w-4 h-4 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -230,7 +242,7 @@
 // ===== ADMIN CONFIG =====
 const ADMIN_PASS = "admin123";
 
-// ===== SECURITY (KHỚP VỚI INDEX.HTML) =====
+// ===== SECURITY =====
 const Sec = {
     key: "V35_SEC",
     enc(t) { return btoa([...t].map((c, i) => String.fromCharCode(c.charCodeAt(0) ^ this.key.charCodeAt(i % this.key.length))).join("")) },
@@ -245,12 +257,12 @@ const els = {
     loginStatus: document.getElementById('loginStatus'),
     // API Config Elements
     userKey: document.getElementById('userKey'),
+    searchMsg: document.getElementById('searchMsg'), // Mới
     provider: document.getElementById('provider'),
     geminiKey: document.getElementById('geminiKey'),
     cometKey: document.getElementById('cometKey'),
     manualCredit: document.getElementById('manualCredit'),
     saveStatus: document.getElementById('saveStatus'),
-    deviceId: document.createElement('span'), // Virtual element for compatibility
     // Voucher Elements
     customAmount: document.getElementById('customAmount'),
     resultBox: document.getElementById('resultBox'),
@@ -284,35 +296,73 @@ function logout() {
     location.reload();
 }
 
-// ===== CONFIG LOGIC (LEFT COLUMN) =====
+// ===== CONFIG LOGIC (UPDATED: SEARCH & LOAD SPECIFIC ID) =====
+
 function createUserKey() {
     els.userKey.value = "V35-USER-" + Math.random().toString(36).substr(2, 8).toUpperCase();
+    searchUserKey(); // Tự động load dữ liệu rỗng cho key mới
 }
 
+// Hàm tìm kiếm và tải dữ liệu cho ID cụ thể
+function searchUserKey() {
+    const id = els.userKey.value.trim();
+    if(!id) {
+        els.searchMsg.innerText = "Vui lòng nhập ID để tìm.";
+        return;
+    }
+
+    // Tìm trong localStorage với prefix
+    const storageKey = "v35_user_" + id;
+    const savedData = localStorage.getItem(storageKey);
+
+    if (savedData) {
+        try {
+            const data = JSON.parse(Sec.dec(savedData));
+            if(data) {
+                els.geminiKey.value = data.geminiKey || "";
+                els.cometKey.value = data.cometKey || "";
+                els.provider.value = data.provider || "gemini";
+                els.manualCredit.value = data.credit || 0;
+                els.searchMsg.innerHTML = `<span class="text-green-400">Đã tìm thấy: Credit hiện tại ${data.credit || 0}</span>`;
+                els.saveStatus.innerHTML = "";
+            }
+        } catch(e) { 
+            console.error(e);
+            els.searchMsg.innerText = "Lỗi đọc dữ liệu.";
+        }
+    } else {
+        // Nếu không thấy thì xóa trắng các ô để nhập mới
+        els.geminiKey.value = "";
+        els.cometKey.value = "";
+        els.manualCredit.value = 0;
+        els.searchMsg.innerText = "ID mới (Chưa có dữ liệu), hãy nhập và Lưu.";
+    }
+}
+
+// Load user active (mặc định khi vào dashboard)
 function loadActiveUser() {
     const savedData = localStorage.getItem("v35_active_user");
     if(savedData) {
         try {
             const data = JSON.parse(Sec.dec(savedData));
-            if(data) {
-                els.userKey.value = data.userKey || "";
-                els.geminiKey.value = data.geminiKey || "";
-                els.cometKey.value = data.cometKey || "";
-                els.provider.value = data.provider || "gemini";
-                els.manualCredit.value = data.credit || 0;
+            if(data && data.userKey) {
+                els.userKey.value = data.userKey;
+                searchUserKey(); // Gọi hàm search để điền dữ liệu
             }
         } catch(e) {}
     }
 }
 
 function saveUser() {
-    if (!els.userKey.value) {
-        els.saveStatus.innerHTML = "<span class='text-red-400'>❌ Lỗi: Chưa có USER KEY</span>";
+    const targetId = els.userKey.value.trim();
+    if (!targetId) {
+        els.saveStatus.innerHTML = "<span class='text-red-400'>❌ Lỗi: Chưa nhập ID Khách Hàng</span>";
         return;
     }
+
     const data = {
-        deviceId: "ADMIN-DEVICE",
-        userKey: els.userKey.value,
+        deviceId: "ADMIN-DEVICE", // Admin override
+        userKey: targetId,
         geminiKey: els.geminiKey.value,
         cometKey: els.cometKey.value,
         provider: els.provider.value,
@@ -320,16 +370,19 @@ function saveUser() {
         updatedAt: new Date().toISOString()
     };
     
-    // Save for sync
+    // Save User Cụ Thể
     const encryptedData = Sec.enc(JSON.stringify(data));
-    localStorage.setItem("v35_user_" + els.userKey.value, encryptedData);
+    localStorage.setItem("v35_user_" + targetId, encryptedData);
+    
+    // Set Active User (để lần sau vào lại nhớ ID này)
     localStorage.setItem("v35_active_user", encryptedData);
 
-    els.saveStatus.innerHTML = "<span class='text-green-400'>✅ Đã lưu cấu hình thành công!</span>";
+    els.saveStatus.innerHTML = "<span class='text-green-400'>✅ Đã lưu cấu hình & Credit cho " + targetId + "</span>";
+    els.searchMsg.innerText = "";
     setTimeout(() => els.saveStatus.innerHTML = "", 3000);
 }
 
-// ===== VOUCHER LOGIC (RIGHT COLUMN) =====
+// ===== VOUCHER LOGIC (RIGHT COLUMN) - GIỮ NGUYÊN =====
 function setAmount(val) { els.customAmount.value = val; }
 
 function generateCode() {
