@@ -113,28 +113,27 @@
             <!-- MAIN GRID -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 
-                <!-- CỘT 1: CẤU HÌNH API & USER (ĐÃ SỬA: Thêm nút Tìm Kiếm) -->
+                <!-- CỘT 1: QUẢN LÝ KHÁCH HÀNG (SỬA TRỰC TIẾP ID) -->
                 <div class="space-y-4">
                     <div class="flex items-center gap-2 text-sm font-semibold text-gray-300 uppercase tracking-wide">
                         <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                        1. Quản Lý Khách Hàng (Tìm & Cấp Credit)
+                        1. Quản Lý Khách Hàng (Sửa Trực Tiếp ID)
                     </div>
 
-                    <div class="card-section p-5 rounded-2xl glass space-y-4 h-full">
+                    <div class="card-section p-5 rounded-2xl glass space-y-4 h-full relative">
+                        <!-- Label chú thích rõ ràng -->
+                        <div class="absolute top-2 right-2 px-2 py-0.5 rounded bg-blue-500/10 border border-blue-500/20 text-[9px] text-blue-400 font-bold">Chỉ Sửa ID Đang Chọn</div>
                         
-                        <!-- User Key Manager (ĐÃ CẬP NHẬT GIAO DIỆN TÌM KIẾM) -->
+                        <!-- User Key Manager -->
                         <div class="space-y-1.5">
                             <label class="text-[11px] text-yellow-500 font-bold ml-1 uppercase tracking-wider">▼ Nhập ID khách gửi vào đây (Search/Edit)</label>
                             <div class="flex gap-2">
                                 <input id="userKey" class="pro-input flex-1 px-3 py-2.5 rounded-xl text-xs font-mono text-yellow-300 font-bold border-yellow-500/30 focus:border-yellow-500" placeholder="Ví dụ: ID-V0HE9F">
                                 
-                                <!-- Nút TÌM KIẾM (MỚI) -->
                                 <button onclick="searchUserKey()" class="px-3 py-2 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 rounded-xl text-blue-400 transition-colors group relative" title="Tải dữ liệu ID này">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                                    <span class="absolute -top-8 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-[9px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Tải Dữ Liệu</span>
                                 </button>
 
-                                <!-- Nút TẠO MỚI (CŨ) -->
                                 <button onclick="createUserKey()" class="px-3 py-2 bg-green-500/10 hover:bg-green-500/20 border border-green-500/20 rounded-xl text-green-400 transition-colors" title="Tạo ID ngẫu nhiên mới">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                                 </button>
@@ -142,16 +141,15 @@
                             <p id="searchMsg" class="text-[10px] h-3 text-blue-400 pl-1 italic"></p>
                         </div>
 
-                        <!-- Manual Credit Input -->
+                        <!-- Manual Credit Input (Cột 1) -->
                         <div class="space-y-1.5 pt-2 border-t border-white/5">
-                            <label class="text-[11px] text-gray-400 font-medium ml-1">SET CREDIT THỦ CÔNG (CẤP TIỀN)</label>
+                            <label class="text-[11px] text-gray-400 font-medium ml-1">SET CREDIT TRỰC TIẾP CHO ID NÀY</label>
                             <div class="relative">
                                 <input id="manualCredit" type="number" class="pro-input w-full px-3 py-2.5 rounded-xl text-xs font-mono text-white font-bold pl-10" placeholder="0">
                                 <span class="absolute left-3 top-2.5 text-gray-500 font-bold text-xs">CR:</span>
                             </div>
                         </div>
 
-                        <!-- Provider Select -->
                         <div class="space-y-1.5">
                             <label class="text-[11px] text-gray-400 font-medium ml-1">NHÀ CUNG CẤP API</label>
                             <select id="provider" class="pro-input w-full px-3 py-2.5 rounded-xl text-xs font-mono text-gray-300 cursor-pointer">
@@ -160,7 +158,6 @@
                             </select>
                         </div>
 
-                        <!-- API Keys Input -->
                         <div class="space-y-3">
                             <div class="space-y-1.5">
                                 <label class="text-[11px] text-blue-400 font-bold ml-1">GEMINI KEY</label>
@@ -176,31 +173,35 @@
                         <div class="pt-2">
                              <p id="saveStatus" class="text-center text-xs font-medium min-h-[16px] mb-2"></p>
                              <button onclick="saveUser()" class="w-full py-3 bg-blue-600 hover:bg-blue-500 rounded-xl font-bold text-white shadow-lg active:scale-[0.98] transition-all text-xs">
-                                LƯU CẤU HÌNH & CẤP CREDIT
+                                LƯU CẤU HÌNH & CẤP CREDIT CHO ID TRÊN
                             </button>
                         </div>
                     </div>
                 </div>
 
-                <!-- CỘT 2: TẠO MÃ NẠP TIỀN (VOUCHER) - GIỮ NGUYÊN -->
+                <!-- CỘT 2: TẠO MÃ VOUCHER (ĐỘC LẬP) -->
                 <div class="space-y-4">
                      <div class="flex items-center gap-2 text-sm font-semibold text-gray-300 uppercase tracking-wide">
                         <svg class="w-4 h-4 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        2. Tạo Mã Nạp Tiền (Voucher)
+                        2. Tạo Mã Nạp Tiền (Voucher Code)
                     </div>
 
-                    <div class="card-section p-5 rounded-2xl glass space-y-4 border border-white/5 bg-white/[0.02]">
-                        <label class="text-xs font-bold text-gray-400 uppercase tracking-wider">Chọn Mệnh Giá Credit</label>
+                    <div class="card-section p-5 rounded-2xl glass space-y-4 border border-white/5 bg-white/[0.02] relative">
+                        <div class="absolute top-2 right-2 px-2 py-0.5 rounded bg-yellow-500/10 border border-yellow-500/20 text-[9px] text-yellow-400 font-bold">Mã Dùng Cho Mọi Khách</div>
+
+                        <label class="text-xs font-bold text-gray-400 uppercase tracking-wider">Chọn Mệnh Giá (Sẽ tạo code)</label>
                         
+                        <!-- Nút bấm chọn mệnh giá - Đã kiểm tra kỹ onclick -->
                         <div class="grid grid-cols-3 gap-2">
                             <button onclick="setAmount(80)" class="py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-bold text-slate-300 transition-all hover:border-violet-500/50">80 CR (100K)</button>
                             <button onclick="setAmount(200)" class="py-2 rounded-xl bg-violet-600/20 hover:bg-violet-600/30 border border-violet-500/50 text-xs font-bold text-violet-200 transition-all">200 CR (200K)</button>
                             <button onclick="setAmount(500)" class="py-2 rounded-xl bg-blue-600/10 hover:bg-blue-600/20 border border-blue-500/30 text-xs font-bold text-blue-200 transition-all">500 CR (500K)</button>
                         </div>
 
+                        <!-- Ô nhập mệnh giá tùy chỉnh (Cột 2) -->
                         <div class="relative">
                             <input id="customAmount" type="number" placeholder="Hoặc nhập số tùy ý..." 
-                                class="pro-input w-full px-4 py-3 rounded-xl font-mono text-sm">
+                                class="pro-input w-full px-4 py-3 rounded-xl font-mono text-sm border-2 focus:border-violet-500 transition-colors">
                             <span class="absolute right-4 top-3 text-xs text-gray-500 font-bold">CREDITS</span>
                         </div>
 
@@ -210,7 +211,7 @@
                             TẠO MÃ CODE NGAY
                         </button>
 
-                        <!-- KẾT QUẢ -->
+                        <!-- KẾT QUẢ VÀ XÁC NHẬN MỆNH GIÁ -->
                         <div id="resultBox" class="hidden animate-fade-in pt-2 border-t border-white/5">
                             <label class="text-[10px] font-bold text-green-400 uppercase tracking-wider ml-1">Mã vừa tạo:</label>
                             <div class="relative mt-1 group">
@@ -220,6 +221,8 @@
                                 <div class="absolute right-3 top-1/2 -translate-y-1/2 px-2 py-1 bg-green-500 rounded text-[9px] font-bold text-black pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity">COPY</div>
                             </div>
                             <p id="copyStatus" class="text-center text-[10px] text-green-400 mt-1 h-3"></p>
+                            <!-- DÒNG XÁC NHẬN QUAN TRỌNG -->
+                            <p id="codeValueConfirm" class="text-center text-[11px] text-yellow-300 font-mono font-bold mt-2 bg-yellow-500/10 py-1 rounded border border-yellow-500/20"></p>
                         </div>
 
                         <!-- Lịch sử -->
@@ -255,19 +258,20 @@ const els = {
     dashboard: document.getElementById('dashboard'),
     adminPass: document.getElementById('adminPass'),
     loginStatus: document.getElementById('loginStatus'),
-    // API Config Elements
+    // API Config Elements (Col 1)
     userKey: document.getElementById('userKey'),
-    searchMsg: document.getElementById('searchMsg'), // Mới
+    searchMsg: document.getElementById('searchMsg'), 
     provider: document.getElementById('provider'),
     geminiKey: document.getElementById('geminiKey'),
     cometKey: document.getElementById('cometKey'),
     manualCredit: document.getElementById('manualCredit'),
     saveStatus: document.getElementById('saveStatus'),
-    // Voucher Elements
+    // Voucher Elements (Col 2)
     customAmount: document.getElementById('customAmount'),
     resultBox: document.getElementById('resultBox'),
     generatedCode: document.getElementById('generatedCode'),
     copyStatus: document.getElementById('copyStatus'),
+    codeValueConfirm: document.getElementById('codeValueConfirm'), // New element
     historyList: document.getElementById('historyList')
 };
 
@@ -296,14 +300,13 @@ function logout() {
     location.reload();
 }
 
-// ===== CONFIG LOGIC (UPDATED: SEARCH & LOAD SPECIFIC ID) =====
+// ===== CONFIG LOGIC (COL 1) =====
 
 function createUserKey() {
     els.userKey.value = "V35-USER-" + Math.random().toString(36).substr(2, 8).toUpperCase();
-    searchUserKey(); // Tự động load dữ liệu rỗng cho key mới
+    searchUserKey(); 
 }
 
-// Hàm tìm kiếm và tải dữ liệu cho ID cụ thể
 function searchUserKey() {
     const id = els.userKey.value.trim();
     if(!id) {
@@ -311,7 +314,11 @@ function searchUserKey() {
         return;
     }
 
-    // Tìm trong localStorage với prefix
+    // Reset inputs first to avoid confusion
+    els.geminiKey.value = "";
+    els.cometKey.value = "";
+    els.manualCredit.value = 0;
+
     const storageKey = "v35_user_" + id;
     const savedData = localStorage.getItem(storageKey);
 
@@ -331,15 +338,10 @@ function searchUserKey() {
             els.searchMsg.innerText = "Lỗi đọc dữ liệu.";
         }
     } else {
-        // Nếu không thấy thì xóa trắng các ô để nhập mới
-        els.geminiKey.value = "";
-        els.cometKey.value = "";
-        els.manualCredit.value = 0;
         els.searchMsg.innerText = "ID mới (Chưa có dữ liệu), hãy nhập và Lưu.";
     }
 }
 
-// Load user active (mặc định khi vào dashboard)
 function loadActiveUser() {
     const savedData = localStorage.getItem("v35_active_user");
     if(savedData) {
@@ -347,7 +349,7 @@ function loadActiveUser() {
             const data = JSON.parse(Sec.dec(savedData));
             if(data && data.userKey) {
                 els.userKey.value = data.userKey;
-                searchUserKey(); // Gọi hàm search để điền dữ liệu
+                searchUserKey(); 
             }
         } catch(e) {}
     }
@@ -361,7 +363,7 @@ function saveUser() {
     }
 
     const data = {
-        deviceId: "ADMIN-DEVICE", // Admin override
+        deviceId: "ADMIN-DEVICE", 
         userKey: targetId,
         geminiKey: els.geminiKey.value,
         cometKey: els.cometKey.value,
@@ -370,11 +372,8 @@ function saveUser() {
         updatedAt: new Date().toISOString()
     };
     
-    // Save User Cụ Thể
     const encryptedData = Sec.enc(JSON.stringify(data));
     localStorage.setItem("v35_user_" + targetId, encryptedData);
-    
-    // Set Active User (để lần sau vào lại nhớ ID này)
     localStorage.setItem("v35_active_user", encryptedData);
 
     els.saveStatus.innerHTML = "<span class='text-green-400'>✅ Đã lưu cấu hình & Credit cho " + targetId + "</span>";
@@ -382,12 +381,17 @@ function saveUser() {
     setTimeout(() => els.saveStatus.innerHTML = "", 3000);
 }
 
-// ===== VOUCHER LOGIC (RIGHT COLUMN) - GIỮ NGUYÊN =====
-function setAmount(val) { els.customAmount.value = val; }
+// ===== VOUCHER LOGIC (COL 2) =====
+function setAmount(val) { 
+    els.customAmount.value = val;
+    // Highlight effect on customAmount to show it changed
+    els.customAmount.classList.add('border-violet-500', 'bg-violet-500/10');
+    setTimeout(() => els.customAmount.classList.remove('border-violet-500', 'bg-violet-500/10'), 300);
+}
 
 function generateCode() {
     const amount = parseInt(els.customAmount.value);
-    if (!amount || amount <= 0) return alert("Nhập số Credit hợp lệ!");
+    if (!amount || amount <= 0) return alert("Vui lòng chọn hoặc nhập số Credit ở Cột 2!");
 
     const prefix = "V35";
     const creditPart = amount.toString();
@@ -401,6 +405,9 @@ function generateCode() {
     els.generatedCode.classList.remove('new-code');
     void els.generatedCode.offsetWidth;
     els.generatedCode.classList.add('new-code');
+
+    // HIỂN THỊ XÁC NHẬN MỆNH GIÁ (QUAN TRỌNG)
+    els.codeValueConfirm.innerText = `XÁC NHẬN: Mã này có giá trị ${amount} CREDITS`;
 
     saveToHistory(finalCode, amount);
 }
