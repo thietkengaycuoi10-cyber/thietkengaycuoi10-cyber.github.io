@@ -135,6 +135,13 @@
                 border-right: none;
             }
         }
+        
+        /* Highlight for selected package */
+        .pkg-card.selected {
+            background-color: rgba(59, 130, 246, 0.2); /* blue-600/20 */
+            border-color: #3b82f6;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+        }
     </style>
 </head>
 
@@ -690,7 +697,7 @@
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                     TẠO ẢNH (FLUX KONTEXT)
                 </button>
-                <button id="reset-button" class="w-full py-2 bg-white/5 hover:bg-white/10 text-slate-400 text-[10px] font-bold tracking-widest rounded transition-colors border border-white/5">LÀM MỚI</button>
+                <button id="reset-button" class="w-full py-2 bg-white/5 hover:bg-white/10 text-slate-400 text-[10px] font-bold tracking-widest rounded transition-colors border border-white/5">LÀM MỚI (RESET)</button>
             </div>
         </aside>
 
@@ -803,59 +810,85 @@
         </main>
     </div>
 
-    <!-- RECHARGE MODAL -->
+    <!-- RECHARGE MODAL REDESIGNED -->
     <div id="recharge-modal" class="fixed inset-0 z-[110] bg-black/90 backdrop-blur-md hidden flex items-center justify-center modal-fade-in p-4">
         <div class="w-full max-w-[350px] bg-[#0a0a0f] border border-red-500/30 rounded-2xl shadow-[0_0_50px_rgba(239,68,68,0.2)] p-6 text-center relative overflow-hidden">
             <div class="absolute top-0 left-0 w-full h-1 bg-red-500"></div>
-            <div class="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-red-500/20">
-                <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+            
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-bold text-white uppercase flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                    HẾT CREDIT
+                </h3>
+                <button id="close-recharge" class="text-slate-500 hover:text-white transition-colors p-1"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
             </div>
-            <h3 class="text-xl font-bold text-white mb-2 uppercase">HẾT CREDIT SỬ DỤNG!</h3>
-            <p class="text-xs text-slate-400 mb-6">Bạn đã dùng hết lượt tạo ảnh miễn phí. Mỗi lần tạo ảnh tốn <span class="text-red-400 font-bold">20 Credit</span>.</p>
-            <div class="grid grid-cols-3 gap-2 mb-4">
-                <div class="flex flex-col items-center justify-center p-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors cursor-default">
-                    <span class="text-xs font-bold text-slate-300">100K</span>
-                    <span class="text-[10px] font-mono font-bold text-yellow-500">= 80 CR</span>
+            
+            <p class="text-[11px] text-slate-400 mb-4 text-left">Tài khoản hết lượt tạo ảnh. Vui lòng nạp thêm để tiếp tục sử dụng tính năng cao cấp.</p>
+
+            <div class="bg-white/5 rounded-lg p-3 mb-4 border border-white/10 text-left">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-[9px] font-bold text-slate-500 uppercase">THÔNG TIN CHUYỂN KHOẢN</span>
+                    <span class="text-[9px] font-bold text-yellow-500 bg-yellow-500/10 px-1.5 py-0.5 rounded">MB BANK</span>
                 </div>
-                <div class="flex flex-col items-center justify-center p-2 rounded-lg bg-violet-600/20 border border-violet-500/50 relative overflow-hidden cursor-default shadow-[0_0_10px_rgba(139,92,246,0.2)]">
-                    <div class="absolute top-0 right-0 bg-red-500 text-[6px] font-bold px-1.5 text-white rounded-bl">HOT</div>
-                    <span class="text-xs font-bold text-violet-300">200K</span>
-                    <span class="text-[10px] font-mono font-bold text-yellow-400">= 200 CR</span>
+                <div class="text-sm font-mono font-bold text-white tracking-wider break-all bg-black/30 p-2 rounded border border-white/5 mb-1">
+                    85543556868
                 </div>
-                <div class="flex flex-col items-center justify-center p-2 rounded-lg bg-blue-600/20 border border-blue-500/50 cursor-default hover:bg-blue-600/30 transition-colors">
-                    <span class="text-xs font-bold text-blue-300">500K</span>
-                    <span class="text-[10px] font-mono font-bold text-yellow-400">= 500 CR</span>
-                </div>
+                <div class="text-[10px] text-slate-400 font-bold uppercase text-right">HOANG QUANG CUONG</div>
             </div>
-            <div class="bg-white/5 rounded-lg p-4 mb-4 border border-white/10">
-                <p class="text-[10px] font-bold text-slate-500 uppercase mb-1">THÔNG TIN CHUYỂN KHOẢN</p>
-                <p class="text-sm font-mono font-bold text-yellow-400 tracking-wider mb-2 break-all">MB BANK - HOANG QUANG CUONG - 85543556868</p>
-                <div class="mt-3 pt-3 border-t border-white/10 text-left">
-                    <label class="text-[9px] font-bold text-slate-400 uppercase mb-1 block">CHỌN GÓI ĐÃ CHUYỂN KHOẢN</label>
-                    <div class="flex gap-2 mb-2">
-                        <button class="pkg-select-btn flex-1 py-1.5 rounded border border-white/10 bg-white/5 hover:bg-blue-600 hover:text-white text-[9px] font-bold transition-all text-slate-300" data-amount="100k">100K</button>
-                        <button class="pkg-select-btn flex-1 py-1.5 rounded border border-white/10 bg-white/5 hover:bg-blue-600 hover:text-white text-[9px] font-bold transition-all text-slate-300" data-amount="200k">200K</button>
-                        <button class="pkg-select-btn flex-1 py-1.5 rounded border border-white/10 bg-white/5 hover:bg-blue-600 hover:text-white text-[9px] font-bold transition-all text-slate-300" data-amount="500k">500K</button>
+
+            <div class="space-y-2 mb-4">
+                <label class="text-[9px] font-bold text-slate-400 uppercase block text-left mb-1">CHỌN GÓI NẠP (CLICK ĐỂ CHỌN)</label>
+                
+                <!-- Package 1 -->
+                <button class="pkg-card w-full flex items-center justify-between p-3 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all group relative overflow-hidden text-left" data-amount="100k" data-credits="80">
+                    <div>
+                        <div class="text-xs font-bold text-white group-hover:text-blue-300 transition-colors">GÓI CƠ BẢN: 100.000Đ</div>
+                        <div class="text-[10px] text-slate-400 font-mono">Nhận ngay <span class="text-yellow-400 font-bold">80 CREDITS</span></div>
                     </div>
-                    <label class="text-[9px] font-bold text-slate-400 uppercase mb-1 block">NỘI DUNG NHẮN ZALO (TỰ ĐỘNG)</label>
-                    <div class="relative group">
-                        <textarea id="zalo-msg-content" class="pro-input w-full p-2 h-16 resize-none text-[10px] bg-black/20 border-blue-500/30 text-blue-200" placeholder="Chọn gói để tạo nội dung tự động..." readonly></textarea>
-                        <a id="btn-send-zalo" href="https://zalo.me/0352803379" target="_blank" class="absolute bottom-2 right-2 px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white text-[9px] font-bold rounded flex items-center gap-1 transition-all shadow-lg hover:shadow-blue-500/50">
-                            GỬI ZALO <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
-                        </a>
+                    <div class="w-5 h-5 rounded-full border border-white/20 flex items-center justify-center pkg-check">
+                        <div class="w-2.5 h-2.5 rounded-full bg-blue-500 opacity-0 transition-opacity"></div>
                     </div>
-                </div>
-            </div>
-            <div class="mb-4">
-                <div class="flex gap-2">
-                    <input type="text" id="recharge-input" class="pro-input w-full py-2.5 text-center font-mono uppercase text-violet-300 border-violet-500/30 bg-violet-500/10" placeholder="NHẬP MÃ NẠP (V35-...)">
-                </div>
-                <button id="btn-submit-recharge" class="w-full mt-2 py-2.5 bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-500 hover:to-blue-500 text-white rounded-lg text-xs font-bold transition-all shadow-lg flex items-center justify-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                    NẠP NGAY
+                </button>
+
+                <!-- Package 2 -->
+                <button class="pkg-card w-full flex items-center justify-between p-3 rounded-lg bg-violet-500/10 border border-violet-500/30 hover:bg-violet-500/20 transition-all group relative overflow-hidden text-left selected" data-amount="200k" data-credits="200">
+                    <div class="absolute top-0 right-0 bg-red-500 text-[6px] font-bold px-1.5 py-0.5 text-white rounded-bl">HOT</div>
+                    <div>
+                        <div class="text-xs font-bold text-white group-hover:text-violet-300 transition-colors">GÓI PHỔ BIẾN: 200.000Đ</div>
+                        <div class="text-[10px] text-slate-400 font-mono">Nhận ngay <span class="text-yellow-400 font-bold">200 CREDITS</span></div>
+                    </div>
+                    <div class="w-5 h-5 rounded-full border border-violet-500 flex items-center justify-center pkg-check bg-violet-500">
+                        <div class="w-2.5 h-2.5 rounded-full bg-white opacity-100 transition-opacity"></div>
+                    </div>
+                </button>
+
+                <!-- Package 3 -->
+                <button class="pkg-card w-full flex items-center justify-between p-3 rounded-lg bg-blue-500/10 border border-blue-500/30 hover:bg-blue-500/20 transition-all group relative overflow-hidden text-left" data-amount="500k" data-credits="500">
+                    <div>
+                        <div class="text-xs font-bold text-white group-hover:text-blue-300 transition-colors">GÓI CAO CẤP: 500.000Đ</div>
+                        <div class="text-[10px] text-slate-400 font-mono">Nhận ngay <span class="text-yellow-400 font-bold">500 CREDITS</span></div>
+                    </div>
+                    <div class="w-5 h-5 rounded-full border border-white/20 flex items-center justify-center pkg-check">
+                        <div class="w-2.5 h-2.5 rounded-full bg-blue-500 opacity-0 transition-opacity"></div>
+                    </div>
                 </button>
             </div>
-            <button id="close-recharge" class="w-full py-2.5 bg-white/10 hover:bg-white/20 text-white rounded-lg text-xs font-bold transition-colors">ĐÓNG LẠI</button>
+
+            <div class="relative group mb-4">
+                 <label class="text-[9px] font-bold text-slate-400 uppercase block text-left mb-1">NỘI DUNG GỬI ZALO (TỰ ĐỘNG)</label>
+                <textarea id="zalo-msg-content" class="pro-input w-full p-2 h-14 resize-none text-[10px] bg-black/20 border-blue-500/30 text-blue-200 font-mono" readonly></textarea>
+                <a id="btn-send-zalo" href="#" target="_blank" class="w-full mt-2 py-2.5 bg-blue-600 hover:bg-blue-500 text-white text-[10px] font-bold rounded-lg flex items-center justify-center gap-1.5 transition-all shadow-lg hover:shadow-blue-500/50 uppercase tracking-wide">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                    XÁC NHẬN & GỬI ZALO
+                </a>
+            </div>
+
+            <div class="pt-3 border-t border-white/10">
+                <div class="flex gap-2">
+                    <input type="text" id="recharge-input" class="pro-input w-full py-2 text-center font-mono uppercase text-violet-300 border-violet-500/30 bg-violet-500/10 placeholder-violet-500/30" placeholder="NHẬP MÃ KÍCH HOẠT">
+                    <button id="btn-submit-recharge" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded font-bold text-[10px] transition-all whitespace-nowrap">KÍCH HOẠT</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -879,9 +912,7 @@
 
             const gateScreen = document.getElementById('security-gate'), gateSubmit = document.getElementById('gate-submit'), gateStatus = document.getElementById('gate-status');
             gateSubmit.addEventListener('click', () => { if(!UserSystem.ipAddress) return showToast("Chưa tìm thấy IP, vui lòng đợi...", "error"); gateStatus.textContent = `Đang xác thực IP: ${UserSystem.ipAddress}...`; gateStatus.className = "mt-6 text-[10px] text-blue-400 font-bold animate-pulse text-center"; gateSubmit.disabled = true; gateSubmit.classList.add('opacity-70'); setTimeout(() => { gateStatus.textContent = "Đăng nhập thành công!"; gateStatus.className = "mt-6 text-[10px] text-green-400 font-bold text-center"; setTimeout(() => { gateScreen.classList.add('animate-fade-out'); setTimeout(() => { gateScreen.style.display = 'none'; }, 500); showToast(`IP Đã Xác Thực: ${UserSystem.ipAddress}`, "smart"); }, 500); }, 1500); });
-            const getApiConfig = () => { const manualKey = document.getElementById('user-api-key')?.value.trim(); const activeProvider = state.userSettings.provider || window.API_PROVIDER || 'google'; let key = manualKey || state.userSettings.apiKey; if (!key) { if (activeProvider === 'comet') key = window.COMET_API_KEY; else key = window.GEMINI_API_KEY || apiKey; } const base = state.userSettings.baseUrl || (activeProvider === 'comet' ? "https://api.cometapi.com" : "https://generativelanguage.googleapis.com"); const isComet = activeProvider === 'comet'; return { key: key || "", base, isComet }; };
-            const resizeImage = (base64Str, maxWidth = 1536) => { return new Promise((resolve) => { const img = new Image(); img.src = base64Str; img.onload = () => { let width = img.width; let height = img.height; if (width > maxWidth || height > maxWidth) { if (width > height) { height *= maxWidth / width; width = maxWidth; } else { width *= maxWidth / height; height = maxWidth; } } else { resolve(base64Str); return; } const canvas = document.createElement('canvas'); canvas.width = width; canvas.height = height; const ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0, width, height); resolve(canvas.toDataURL('image/jpeg', 0.9)); }; }); };
-
+            
             const sidebar = document.getElementById('sidebar'), toggleSidebar = document.getElementById('toggle-sidebar-btn'), closeSidebar = document.getElementById('close-sidebar-mobile');
             if(toggleSidebar) toggleSidebar.onclick = () => sidebar.classList.remove('-translate-x-full');
             if(closeSidebar) closeSidebar.onclick = () => sidebar.classList.add('-translate-x-full');
@@ -898,7 +929,7 @@
             const loadImg = (file) => { if (!file || !file.type.startsWith('image/')) return showToast("Chỉ hỗ trợ file ảnh!", "error"); const reader = new FileReader(); reader.onload = (e) => { const img = new Image(); img.onload = () => { state.base64 = e.target.result; state.originalImg = img; state.restoredObj = null; const ar = img.width / img.height; if(ar > 1.1) state.aspectRatioType = 'landscape'; else if(ar < 0.9) state.aspectRatioType = 'portrait'; else state.aspectRatioType = 'square'; document.getElementById('img-original').src = state.base64; document.getElementById('comparison-view').style.display = 'flex'; document.getElementById('placeholder-state').style.display = 'none'; document.getElementById('download-trigger').disabled = true; document.getElementById('download-mobile').disabled = true; document.getElementById('img-modified-wrapper').style.width = '0%'; document.getElementById('slider-handle').style.left = '0%'; showToast(`Đã tải ảnh: ${img.width}x${img.height}`, "success"); const mUpload = document.getElementById('mob-btn-upload'), mScan = document.getElementById('mob-btn-scan'), mStatus = document.getElementById('mobile-status-text'); if(mUpload && mScan) { mUpload.classList.add('hidden'); mScan.classList.remove('hidden'); mStatus.textContent = "ẢNH ĐÃ SẴN SÀNG - BẤM SCAN"; mStatus.classList.remove('text-violet-400'); mStatus.classList.add('text-violet-400', 'font-bold', 'animate-pulse'); } }; img.src = e.target.result; }; reader.readAsDataURL(file); };
             const fileInput = document.getElementById('image-upload'); if(fileInput) fileInput.addEventListener('change', (e) => { if (e.target.files.length > 0) { loadImg(e.target.files[0]); e.target.value = ''; } });
             
-            // Auto-Pilot & Process (Simplified for brevity as logic is identical)
+            // Auto-Pilot & Process
             const btnAutoPilot = document.getElementById('btn-auto-pilot'), processBtn = document.getElementById('process-image');
             if(btnAutoPilot) btnAutoPilot.addEventListener('click', async () => { if(!state.base64) return showToast("Vui lòng tải ảnh trước!", "error"); const originalText = btnAutoPilot.innerHTML; btnAutoPilot.disabled = true; btnAutoPilot.innerHTML = `<span class="animate-pulse">AUTO-SCANNING...</span>`; try { /* Scan Logic here (mock) */ setTimeout(() => { showToast("Auto Scan Complete!", "success"); document.getElementById('content-prompt').classList.add('open'); btnAutoPilot.disabled = false; btnAutoPilot.innerHTML = originalText; }, 1500); } catch(e) { btnAutoPilot.disabled = false; btnAutoPilot.innerHTML = originalText; } });
 
@@ -925,6 +956,93 @@
                     showToast("Phục chế thành công!", "flux");
                 }, 3000);
             });
+            
+            // --- NEW RESET FUNCTIONALITY ---
+            const resetApp = () => {
+                state.base64 = null;
+                state.originalImg = null;
+                state.restoredObj = null;
+                
+                // Clear images
+                document.getElementById('img-original').src = '';
+                document.getElementById('img-modified').src = '';
+                
+                // Reset View
+                document.getElementById('comparison-view').style.display = 'none';
+                document.getElementById('placeholder-state').style.display = 'block';
+                document.getElementById('ai-terminal-overlay').classList.add('hidden');
+                
+                // Reset Buttons
+                document.getElementById('download-trigger').disabled = true;
+                document.getElementById('download-mobile').disabled = true;
+                if(processBtn) { processBtn.disabled = false; processBtn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg> TẠO ẢNH (FLUX KONTEXT)`; }
+                
+                // Reset Mobile View
+                const mUpload = document.getElementById('mob-btn-upload'), mScan = document.getElementById('mob-btn-scan'), mRun = document.getElementById('mob-btn-run'), mStatus = document.getElementById('mobile-status-text');
+                if(mUpload) mUpload.classList.remove('hidden');
+                if(mScan) mScan.classList.add('hidden');
+                if(mRun) mRun.classList.add('hidden');
+                if(mStatus) {
+                    mStatus.textContent = "WAITING FOR IMAGE";
+                    mStatus.classList.remove('text-violet-400', 'font-bold', 'animate-pulse');
+                    mStatus.classList.add('text-slate-500');
+                }
+                
+                // Reset File Input
+                const fileInput = document.getElementById('image-upload');
+                if(fileInput) fileInput.value = '';
+
+                showToast("Đã làm mới ứng dụng", "info");
+            };
+
+            const resetBtnSidebar = document.getElementById('reset-button');
+            const resetBtnMobile = document.getElementById('mob-btn-reset');
+            if(resetBtnSidebar) resetBtnSidebar.addEventListener('click', resetApp);
+            if(resetBtnMobile) resetBtnMobile.addEventListener('click', resetApp);
+
+            // --- RECHARGE LOGIC & ZALO ---
+            const pkgCards = document.querySelectorAll('.pkg-card');
+            const zaloMsg = document.getElementById('zalo-msg-content');
+            const zaloBtn = document.getElementById('btn-send-zalo');
+            
+            const updateZalo = (amount, credits) => {
+                // Ensure deviceId is loaded
+                const devId = UserSystem.deviceId || "Checking...";
+                const text = `Chào Admin, mình đã chuyển khoản gói ${amount} (${credits} Credits). \n- Mã máy: ${devId}\n- Nội dung chuyển khoản: ${devId}`;
+                
+                if(zaloMsg) zaloMsg.value = text;
+                // Encode for URL
+                if(zaloBtn) zaloBtn.href = `https://zalo.me/0352803379?text=${encodeURIComponent(text)}`;
+            };
+
+            pkgCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    // Remove selected from all
+                    pkgCards.forEach(c => {
+                        c.classList.remove('selected');
+                        c.querySelector('.pkg-check').style.borderColor = 'rgba(255,255,255,0.2)';
+                        c.querySelector('.pkg-check').style.backgroundColor = 'transparent';
+                        c.querySelector('.pkg-check div').classList.remove('opacity-100');
+                        c.querySelector('.pkg-check div').classList.add('opacity-0');
+                    });
+                    
+                    // Add selected to clicked
+                    card.classList.add('selected');
+                    card.querySelector('.pkg-check').style.borderColor = card.dataset.amount === '200k' ? '#8b5cf6' : '#3b82f6';
+                    card.querySelector('.pkg-check').style.backgroundColor = card.dataset.amount === '200k' ? '#8b5cf6' : 'transparent';
+                    card.querySelector('.pkg-check div').classList.remove('opacity-0');
+                    card.querySelector('.pkg-check div').classList.add('opacity-100');
+
+                    // Update Zalo
+                    updateZalo(card.dataset.amount, card.dataset.credits);
+                });
+            });
+
+            // Init Zalo with default selected
+            setTimeout(() => {
+                const defaultSel = document.querySelector('.pkg-card.selected');
+                if(defaultSel) updateZalo(defaultSel.dataset.amount, defaultSel.dataset.credits);
+            }, 1000);
 
             // Mobile specific Logic
             const mobBtnUpload = document.getElementById('mob-btn-upload'), mobBtnScan = document.getElementById('mob-btn-scan'), mobBtnRun = document.getElementById('mob-btn-run'), mobBar = document.getElementById('mobile-action-bar');
