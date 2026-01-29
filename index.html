@@ -1036,7 +1036,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             const apiKey = "";
             const SimpleSec={_key:"V35_SECURE_KEY_SALT",encrypt:function(t){if(!t)return"";try{let e="";for(let r=0;r<t.length;r++)e+=String.fromCharCode(t.charCodeAt(r)^this._key.charCodeAt(r%this._key.length));return btoa(e)}catch(r){return t}},decrypt:function(t){if(!t)return"";try{let e=atob(t),r="";for(let n=0;n<e.length;n++)r+=String.fromCharCode(e.charCodeAt(n)^this._key.charCodeAt(n%this._key.length));return r}catch(e){return t}}};
-            const UserSystem={deviceId:null,credits:0,ipAddress:null,async init(){try{let e=localStorage.getItem("v35_unique_device_id");e||(e="ID-"+Math.random().toString(36).substring(2,8).toUpperCase(),localStorage.setItem("v35_unique_device_id",e)),this.deviceId=e}catch(e){console.warn("Storage access denied"),this.deviceId="GUEST-"+Math.floor(1e3*Math.random())}await this.fetchIP(),this.loadCredits(),this.updateUI()},async fetchIP(){try{const e=await fetch(`https://api.ipify.org?format=json&t=${Date.now()}`),t=await e.json();this.ipAddress=t.ip;const r=document.getElementById("gate-ip-display"),n=document.getElementById("gate-loading-spinner"),o=document.getElementById("gate-submit"),a=document.getElementById("gate-status"),s=document.getElementById("top-bar-ip");if(s&&(s.textContent=`IP: ${t.ip}`),r&&(r.innerHTML=`<span class="text-slate-400 text-xs">${t.ip}</span> <span class="text-white mx-1">|</span> <span class="text-yellow-400 font-bold">${this.deviceId}</span>`,r.classList.remove("shimmer-text"),n&&(n.style.display="none"),o&&(o.disabled=!1,o.classList.remove("opacity-50","cursor-not-allowed"),a.textContent=`Device Verified: ${this.deviceId}`,a.classList.add("text-green-500"))),t.ip)return t.ip}catch(e){return console.error("IP Fetch Error",e),this.ipAddress="Offline",null}},loadCredits(){const e=`v35_credits_${this.deviceId}`,t=localStorage.getItem(e);null===t?(this.credits=20,this.save()):this.credits=parseInt(t)},setCredits(e){this.credits=e,this.save()},addCredits(e){this.credits+=e,this.save()},deductCredits(e){return this.credits>=e&&(this.credits-=e,this.save(),!0)},save(){try{const e=`v35_credits_${this.deviceId}`;localStorage.setItem(e,this.credits)}catch(e){}this.updateUI()},updateUI(){const e=document.getElementById("credit-count");e&&(e.textContent=this.credits)}};UserSystem.init();
+            const UserSystem={deviceId:null,credits:0,ipAddress:null,async init(){try{let e=localStorage.getItem("v35_unique_device_id");e||(e="ID-"+Math.random().toString(36).substring(2,8).toUpperCase(),localStorage.setItem("v35_unique_device_id",e)),this.deviceId=e}catch(e){console.warn("Storage access denied"),this.deviceId="GUEST-"+Math.floor(1e3*Math.random())}await this.fetchIP(),this.loadCredits(),this.updateUI()},async fetchIP(){try{const e=await fetch(`https://api.ipify.org?format=json&t=${Date.now()}`),t=await e.json();this.ipAddress=t.ip;const r=document.getElementById("gate-ip-display"),n=document.getElementById("gate-loading-spinner"),o=document.getElementById("gate-submit"),a=document.getElementById("gate-status"),s=document.getElementById("top-bar-ip");if(s&&(s.textContent=`IP: ${t.ip}`),r&&(r.innerHTML=`<span class="text-slate-400 text-xs">${t.ip}</span> <span class="text-white mx-1">|</span> <span class="text-yellow-400 font-bold">${this.deviceId}</span>`,r.classList.remove("shimmer-text"),n&&(n.style.display="none"),o&&(o.disabled=!1,o.classList.remove("opacity-50","cursor-not-allowed"),a.textContent=`Device Verified: ${this.deviceId}`,a.classList.add("text-green-500"))),t.ip)return t.ip}catch(e){return console.error("IP Fetch Error",e),this.ipAddress="Offline",null}},loadCredits(){const e=`v35_credits_${this.deviceId}`,t=localStorage.getItem(e);null===t?(this.credits=0,this.save()):this.credits=parseInt(t)},setCredits(e){this.credits=e,this.save()},addCredits(e){this.credits+=e,this.save()},deductCredits(e){return this.credits>=e&&(this.credits-=e,this.save(),!0)},save(){try{const e=`v35_credits_${this.deviceId}`;localStorage.setItem(e,this.credits)}catch(e){}this.updateUI()},updateUI(){const e=document.getElementById("credit-count");e&&(e.textContent=this.credits)}};UserSystem.init();
             
             let state = { base64: null, refBase64: null, restoredObj: null, originalImg: null, zoom: 1, rotation: 0, defaultPrompt: "Restore this photo, remove scratches, high quality, 8k", isLoupeActive: false, isReplicaMode: false, isFluxMode: true, currentSliderVal: 50, isComparing: false, aspectRatioType: null, userSettings: { username: '', apiKey: '', provider: 'google', baseUrl: 'https://generativelanguage.googleapis.com' } };
             const showToast = (message, type = 'info') => {
@@ -1277,18 +1277,47 @@
             // --- GIFT CODE LOGIC ---
             const handleApplyCode = (inputId) => {
                 const input = document.getElementById(inputId);
-                if(!input) return;
+                if (!input) return;
                 const val = input.value.trim().toUpperCase();
-                
-                if(!val) return showToast("Vui lòng nhập mã code!", "warning");
 
-                // Check for V35- prefix
-                if (val.startsWith('V35-')) {
-                    UserSystem.addCredits(5000); // Demo: Add 5000 credits
-                    showToast(`Kích hoạt thành công! +5000 Lượt Tạo`, "smart");
+                if (!val) return showToast("Vui lòng nhập mã code!", "warning");
+
+                // Check format: V35-AMOUNT-RANDOM-TIME
+                // Split string by dash '-'
+                const parts = val.split('-');
+                
+                if (parts.length === 4 && parts[0] === 'V35') {
+                    const amount = parseInt(parts[1]);
+                    
+                    // Basic validation
+                    if (isNaN(amount)) {
+                        showToast("Mã không hợp lệ (Lỗi giá trị)!", "error");
+                        return;
+                    }
+
+                    // Prevent code reuse (Client-side simple protection)
+                    const usedCodes = JSON.parse(localStorage.getItem('v35_used_codes') || '[]');
+                    if (usedCodes.includes(val)) {
+                        showToast("Mã này đã được sử dụng!", "error");
+                        return;
+                    }
+
+                    // Add credits
+                    UserSystem.addCredits(amount);
+                    
+                    // Save to used list
+                    usedCodes.push(val);
+                    localStorage.setItem('v35_used_codes', JSON.stringify(usedCodes));
+
+                    if (amount > 0) {
+                        showToast(`Kích hoạt thành công! +${amount} Credits`, "smart");
+                    } else {
+                        showToast(`Đã trừ ${Math.abs(amount)} Credits`, "warning");
+                    }
+                    
                     input.value = "";
                 } else {
-                    showToast("Mã không hợp lệ hoặc đã hết hạn!", "error");
+                    showToast("Mã không đúng định dạng hoặc sai!", "error");
                 }
             };
 
