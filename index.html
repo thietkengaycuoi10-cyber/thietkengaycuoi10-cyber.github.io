@@ -1534,13 +1534,16 @@
                         const headers = { 'Content-Type': 'application/json' };
                         if (isComet) headers['Authorization'] = `Bearer ${keyToUse}`;
 
+                        // Keep the prompt exactly as it was in the full version
+                        const promptText = "Analyze this image for restoration. DETECT VIETNAMESE MILITARY DETAILS SPECIFICALLY. Return ONLY JSON: { \"sceneContext\": \"wedding\"|\"funeral\"|\"casual\"|\"studio\"|\"outdoor\"|\"product\"|\"painting\"|\"ancient_portrait\", \"lightingCondition\": \"rembrandt\"|\"golden_hour\"|\"neon\"|\"soft_diffused\"|\"flat\"|\"overexposed\"|\"harsh_sun\", \"backgroundType\": \"plain\"|\"complex_outdoor\"|\"complex_indoor\", \"faceAngle\": \"front\"|\"side_left\"|\"side_right\"|\"tilted_up\"|\"tilted_down\", \"jawStructure\": \"defined\"|\"soft\"|\"round\"|\"square\", \"noseAngle\": \"straight\"|\"tilted\", \"mouthAngle\": \"straight\"|\"tilted\", \"eyeSymmetry\": \"even\"|\"uneven\", \"hasAsymmetry\": boolean, \"isNature\": boolean, \"isMilitary\": boolean, \"isGroupPhoto\": boolean, \"hasVisibleRankInsignia\": boolean, \"rankColor\": \"red\"|\"green\"|\"blue\"|\"none\", \"specificHat\": \"pith_helmet\"|\"soft_cap\"|\"kepi\"|\"bamboo_helmet\"|\"none\", \"gender\": \"male\"|\"female\", \"age\": number, \"damageType\": \"scratches\"|\"faded\"|\"sepia\"|\"severe_damage\"|\"none\", \"isOldPhoto\": boolean, \"isLowContrast\": boolean, \"isNoisy\": boolean, \"hasStrabismus\": boolean, \"hasDroopyEyelids\": boolean, \"hasClosedEyes\": boolean, \"hasDistinctiveImperfections\": boolean, \"hasMonolids\": boolean, \"hasBuckTeeth\": boolean, \"hasBlackenedTeeth\": boolean, \"needsBackgroundRestoration\": boolean, \"militaryBranch\": \"army\"|\"air_force\"|\"navy\"|\"border_guard\"|\"police\"|\"youth_volunteer\"|\"unknown\", \"uniformEra\": \"tran_thu\"|\"to_chau\"|\"k82\"|\"k94\"|\"camouflage\"|\"unknown\", \"rankLevel\": \"soldier\"|\"officer\"|\"unknown\", \"hasMedalSaoVang\": boolean, \"hasMedalKhangChien\": boolean, \"hasBadgeDoan\": boolean, \"isIDPhoto\": boolean, \"isHazy\": boolean }";
+
                         const response = await fetch(`${apiBase}/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${keyToUse}`, {
                             method: 'POST',
                             headers: headers,
                             body: JSON.stringify({
                                 contents: [{
                                     parts: [
-                                        { text: "Analyze this image for restoration. DETECT VIETNAMESE MILITARY DETAILS SPECIFICALLY. Return ONLY JSON: { \"sceneContext\": \"wedding\"|\"funeral\"|\"casual\"|\"studio\"|\"outdoor\"|\"product\"|\"painting\"|\"ancient_portrait\", \"lightingCondition\": \"rembrandt\"|\"golden_hour\"|\"neon\"|\"soft_diffused\"|\"flat\"|\"overexposed\"|\"harsh_sun\", \"backgroundType\": \"plain\"|\"complex_outdoor\"|\"complex_indoor\", \"faceAngle\": \"front\"|\"side_left\"|\"side_right\"|\"tilted_up\"|\"tilted_down\", \"jawStructure\": \"defined\"|\"soft\"|\"round\"|\"square\", \"noseAngle\": \"straight\"|\"tilted\", \"mouthAngle\": \"straight\"|\"tilted\", \"eyeSymmetry\": \"even\"|\"uneven\", \"hasAsymmetry\": boolean, \"isNature\": boolean, \"isMilitary\": boolean, \"isGroupPhoto\": boolean, \"hasVisibleRankInsignia\": boolean, \"rankColor\": \"red\"|\"green\"|\"blue\"|\"none\", \"specificHat\": \"pith_helmet\"|\"soft_cap\"|\"kepi\"|\"bamboo_helmet\"|\"none\", \"gender\": \"male\"|\"female\", \"age\": number, \"damageType\": \"scratches\"|\"faded\"|\"sepia\"|\"severe_damage\"|\"none\", \"isOldPhoto\": boolean, \"isLowContrast\": boolean, \"isNoisy\": boolean, \"hasStrabismus\": boolean, \"hasDroopyEyelids\": boolean, \"hasClosedEyes\": boolean, \"hasDistinctiveImperfections\": boolean, \"hasMonolids\": boolean, \"hasBuckTeeth\": boolean, \"hasBlackenedTeeth\": boolean, \"needsBackgroundRestoration\": boolean, \"militaryBranch\": \"army\"|\"air_force\"|\"navy\"|\"border_guard\"|\"police\"|\"youth_volunteer\"|\"unknown\", \"uniformEra\": \"tran_thu\"|\"to_chau\"|\"k82\"|\"k94\"|\"camouflage\"|\"unknown\", \"rankLevel\": \"soldier\"|\"officer\"|\"unknown\", \"hasMedalSaoVang\": boolean, \"hasMedalKhangChien\": boolean, \"hasBadgeDoan\": boolean, \"isIDPhoto\": boolean, \"isHazy\": boolean }" },
+                                        { text: promptText },
                                         { inlineData: { mimeType: "image/jpeg", data: resizedBase64.split(',')[1] } }
                                     ]
                                 }]
@@ -1552,7 +1555,9 @@
                             text = text.replace(/```json/g, '').replace(/```/g, '').trim();
                             const result = JSON.parse(text);
                             
-                            // 1. AUTO TICK CHECKBOXES based on analysis
+                            // --- AUTO-FILL UI LOGIC ---
+
+                            // 1. Gender & Age
                             const genderSelect = document.getElementById('gender-select');
                             if(genderSelect) {
                                 if(result.gender === 'male') genderSelect.value = 'male';
@@ -1561,25 +1566,203 @@
                             const ageInput = document.getElementById('age-input');
                             if(ageInput) ageInput.value = result.age || 30;
 
-                            // ... (Military detection logic same as before) ...
+                            // 2. Military Logic (Re-implemented full logic)
                             if (result.isMilitary) {
-                                document.getElementById('content-military')?.classList.add('open');
+                                const milContent = document.getElementById('content-military');
+                                const insigEl = document.getElementById('check-insignia-boost');
+                                if(milContent) milContent.classList.add('open');
+                                if(insigEl) insigEl.checked = true;
+                                
+                                const branchSelect = document.getElementById('mil-branch');
+                                const uniformSelect = document.getElementById('mil-uniform');
+                                const hatSelect = document.getElementById('hat-select');
+                                const rankSelect = document.getElementById('rank-select');
+
                                 showToast("🇻🇳 AUTO SCAN: Đã phát hiện Ảnh Quân Đội", "warning");
-                                // ... (set branch, uniform, etc.) ...
+                                document.getElementById('module-military').classList.add('military-highlight');
+                                setTimeout(() => document.getElementById('module-military').classList.remove('military-highlight'), 3000);
+
+                                if(branchSelect) {
+                                    if(result.militaryBranch === 'air_force') branchSelect.value = "vietnamese air force, blue collar tabs";
+                                    else if(result.militaryBranch === 'navy') branchSelect.value = "vietnamese navy, navy blue uniform, white striped collar";
+                                    else if(result.militaryBranch === 'border_guard') branchSelect.value = "vietnamese border guard, green collar tabs";
+                                    else if(result.militaryBranch === 'police') branchSelect.value = "vietnamese public security, green uniform, red collar tabs";
+                                    else if(result.militaryBranch === 'youth_volunteer') branchSelect.value = "vietnamese youth volunteer force, dark green uniform";
+                                    else branchSelect.value = "vietnamese army ground force, red collar tabs"; 
+                                }
+
+                                if(uniformSelect) {
+                                    if(result.uniformEra === 'tran_thu') uniformSelect.value = "wearing tran thu shirt, padded cotton jacket, viet minh era";
+                                    else if(result.uniformEra === 'to_chau') uniformSelect.value = "wearing to chau uniform, plain green fatigue, vietnam war era";
+                                    else if(result.uniformEra === 'k82') uniformSelect.value = "wearing K82 uniform, formal military tunic";
+                                    else if(result.uniformEra === 'camouflage') uniformSelect.value = "wearing camouflage special force uniform";
+                                }
+
+                                if(hatSelect) {
+                                    if(result.specificHat === 'pith_helmet') hatSelect.value = "wear vietnamese pith helmet, hard pith helmet, dark green color, rounded shape, red badge with yellow star";
+                                    else if(result.specificHat === 'soft_cap') hatSelect.value = "wear vietnamese soft cap, boonie hat, green fabric, red star badge";
+                                    else if(result.specificHat === 'kepi') hatSelect.value = "wear vietnamese officer kepi hat, mixed red and green color, gold chin strap, red badge with gold star";
+                                    else if(result.specificHat === 'bamboo_helmet') hatSelect.value = "wear vietnamese bamboo helmet, cloth covered";
+                                }
+
+                                if(rankSelect) {
+                                    if(result.rankLevel === 'soldier') rankSelect.value = "plain red collar tabs, soldier rank";
+                                    else if(result.rankLevel === 'officer') rankSelect.value = "red collar tabs with one star, officer rank";
+                                    else if(!result.hasVisibleRankInsignia) rankSelect.value = "no_rank_insignia";
+                                }
+
+                                if(result.hasMedalSaoVang) document.getElementById('check-sao-vang').checked = true;
+                                if(result.hasMedalKhangChien) document.getElementById('check-khang-chien').checked = true;
+                                if(result.hasBadgeDoan) document.getElementById('check-doan').checked = true;
                             }
 
-                            // ... (Other detections: eyes, teeth, lighting) ...
+                            // 3. Lighting & Exposure
+                            const colorGrading = document.getElementById('color-grading');
+                            if(colorGrading && result.lightingCondition) {
+                                if(result.lightingCondition === 'rembrandt') { colorGrading.value = "rembrandt_lighting"; }
+                                else if(result.lightingCondition === 'golden_hour') { colorGrading.value = "golden_hour_backlight"; }
+                                else if(result.lightingCondition === 'neon') { colorGrading.value = "neon_cyberpunk"; }
+                                else if(result.lightingCondition === 'overexposed' || result.lightingCondition === 'harsh_sun') {
+                                    document.getElementById('content-exposure').classList.add('open');
+                                    document.getElementById('check-qwen-exposure').checked = true;
+                                    showToast("☀️ Phát hiện CHÁY SÁNG: Auto kích hoạt Qwen Edit", "cyan");
+                                }
+                            }
 
-                            // 2. FORCE REPLICA MODE (SAO Y BẢN CHÍNH)
-                            // "bật chế độ sao y..."
+                            // 4. Group Mode
+                            if(result.isGroupPhoto) {
+                                const groupEl = document.getElementById('check-group-mode');
+                                if(groupEl) { groupEl.checked = true; showToast("👥 Auto bật: Group Photo Pro (GroundingDINO)", "warning"); }
+                            }
+
+                            // 5. ID Photo
+                            if (result.isIDPhoto) {
+                                document.getElementById('check-id-photo').checked = true;
+                                showToast("📸 Auto bật: Chế độ Ảnh thẻ (ID Photo)", "blue");
+                            }
+
+                            // 6. Hazy / Dehaze
+                            if (result.isHazy) {
+                                document.getElementById('check-dehaze').checked = true;
+                                showToast("🌫️ Phát hiện Sương mù: Auto bật Khử sương", "info");
+                                document.getElementById('container-dehaze')?.classList.add('contrast-highlight');
+                            }
+
+                            // 7. Damage Level
+                            const dmgSelect = document.getElementById('damage-level');
+                            if (dmgSelect) {
+                                if (result.damageType === 'severe_damage') dmgSelect.value = "fix torn, missing details";
+                                else if (result.damageType === 'scratches') dmgSelect.value = "fix scratches, mold";
+                                else dmgSelect.value = "fix slightly blurry";
+                            }
+
+                            // 8. Workflow Selection
+                            const workflowSelect = document.getElementById('kontext-workflow');
+                            const workflowDesc = document.getElementById('workflow-desc');
+                            
+                            if(workflowSelect) {
+                                workflowSelect.value = 'default'; // reset
+                                
+                                if (result.sceneContext === 'ancient_portrait' || result.sceneContext === 'painting') {
+                                    workflowSelect.value = "ancient_restore";
+                                    if(workflowDesc) workflowDesc.textContent = "🏯 Auto: ReActor + Dual ControlNet + 4x-UltraSharp";
+                                    showToast("🏯 Auto Detect: Tranh Cổ / Tượng -> Kích hoạt Ancient Restore Mode", "ancient");
+                                    document.getElementById('check-reactor').checked = true;
+                                    document.getElementById('check-dual-controlnet').checked = true;
+                                }
+                                else if (result.sceneContext === 'wedding') {
+                                    workflowSelect.value = "wedding_kontext_v2"; 
+                                    if(workflowDesc) workflowDesc.textContent = "👰 Auto: Wedding Kontext Full JSON (Trong trẻo)";
+                                    showToast("👰 Auto Detect: Ảnh Cưới -> Kích hoạt Wedding Kontext V2", "smart");
+                                } 
+                                else if (result.sceneContext === 'product') {
+                                    workflowSelect.value = "product_mode";
+                                    if(workflowDesc) workflowDesc.textContent = "🛍️ Auto: BiRefNet + IC-Light + ZenProduct LoRA";
+                                    showToast("🛍️ Auto Detect: Ảnh Sản Phẩm -> Kích hoạt E-commerce Mode", "smart");
+                                }
+                                else if (result.sceneContext === 'outdoor' || result.backgroundType === 'complex_outdoor') {
+                                    workflowSelect.value = "outdoor_mode";
+                                    if(workflowDesc) workflowDesc.textContent = "🏞️ Auto: IC-Light + PowerPaint + Florence2";
+                                    showToast("🏞️ Auto Detect: Nền Ngoài Cảnh -> Kích hoạt Outdoor Mode", "smart");
+                                }
+                                else if (result.damageType === 'severe_damage' || result.isNoisy) {
+                                    workflowSelect.value = "replica_pro";
+                                    if(workflowDesc) workflowDesc.textContent = "🧬 Auto: Replica Pro - Khóa cấu trúc cực đoan";
+                                    showToast("🧬 Auto Detect: Ảnh rất mờ/hỏng -> Kích hoạt REPLICA PRO", "warning");
+                                }
+                            }
+
+                            // 9. Noise / Blur Prepass
+                            if (result.isNoisy || result.damageType === 'severe_damage') {
+                                const blurCheck = document.getElementById('check-blur-prepass');
+                                if (blurCheck) {
+                                    blurCheck.checked = true;
+                                    showToast("💧 Phát hiện Nhiễu hạt: Auto bật Khử Nhiễu Sâu", "real");
+                                }
+                            }
+
+                            // 10. Contrast Fix
+                            if(result.isLowContrast || result.damageType === 'faded' || result.damageType === 'sepia') {
+                                const contrastCheck = document.getElementById('check-contrast-fix');
+                                if(contrastCheck) {
+                                    contrastCheck.checked = true;
+                                    showToast("🌓 Phát hiện ảnh mờ/nhạt: Auto bật Kontext Contrast", "flux");
+                                }
+                            }
+
+                            // 11. EYES & TEETH (Specific User Request)
+                            if(result.hasStrabismus) {
+                                document.getElementById('check-cross-eyed').checked = true;
+                                showToast("👁️ Phát hiện Mắt Lé: Auto tích 'Mắt Lé/Lác'", "warning");
+                                document.getElementById('module-identity').classList.add('open');
+                            }
+                            
+                            if(result.hasDroopyEyelids) {
+                                document.getElementById('check-ptosis').checked = true;
+                                showToast("👁️ Phát hiện Sụp Mí: Auto tích 'Mắt Sụp Mí'", "warning");
+                                document.getElementById('module-identity').classList.add('open');
+                            }
+                            
+                            if(result.hasClosedEyes) {
+                                document.getElementById('check-closed-eyes').checked = true;
+                                showToast("💤 Phát hiện Mắt Nhắm: Auto tích 'Mắt Nhắm'", "warning");
+                                document.getElementById('module-identity').classList.add('open');
+                            }
+
+                            if(result.hasMonolids) {
+                                document.getElementById('check-monolid').checked = true;
+                                document.getElementById('module-identity').classList.add('open');
+                            }
+
+                            if(result.hasDistinctiveImperfections) {
+                                document.getElementById('lock-imperfection').checked = true;
+                                showToast("🧬 Phát hiện nốt ruồi/sẹo: Auto bật Giữ Khuyết Điểm", "warning");
+                            }
+
+                            if(result.hasBuckTeeth) document.getElementById('check-buck-teeth').checked = true;
+                            if(result.hasBlackenedTeeth) document.getElementById('check-black-teeth').checked = true;
+
+                            // 12. FORCE REPLICA MODE (Required)
                             if (!state.isReplicaMode) {
                                 document.getElementById('mode-replica').click();
                                 showToast("💎 Auto Scan: Đã kích hoạt Chế độ Sao Y Bản Chính (Replica)", "warning");
                             }
                             
-                            // 3. GENERATE PROMPT
+                            // 13. GENERATE PROMPT
                             let smartPrompt = `Restore this ${result.sceneContext} photo. (high resolution:1.5), (masterpiece:1.4), (detailed background:1.3). `;
-                            // ... (Add prompt details) ...
+                            smartPrompt += "(hyper-realistic skin texture:1.6), (detailed skin pores:1.5), (rosy undertone:1.3), (natural beauty:1.2). ";
+                            
+                            // ... (Angle logic)
+                            if (result.faceAngle === 'side_left' || result.faceAngle === 'side_right' || result.faceAngle === 'tilted_up' || result.faceAngle === 'tilted_down') {
+                                smartPrompt += "(side profile:1.5), (looking away:1.2), (tilted head:1.3). ";
+                                if(result.faceAngle === 'side_left') smartPrompt += "(looking left:1.5), ";
+                                if(result.faceAngle === 'side_right') smartPrompt += "(looking right:1.5), ";
+                            }
+
+                            if (result.noseAngle === 'tilted' || result.faceAngle.includes('side')) smartPrompt += "(preserve nose angle:1.4), (tilted nose:1.2). ";
+                            if (result.mouthAngle === 'tilted') smartPrompt += "(preserve mouth angle:1.3). ";
+                            if (result.jawStructure) smartPrompt += `(preserve ${result.jawStructure} jawline:1.3). `;
+                            if (state.isFluxMode) smartPrompt += "(flux generation style:1.5), (controlnet union style:1.2), (high fidelity:1.5), (kontext lighting:1.4). ";
 
                             if(promptMain) promptMain.value = smartPrompt;
                             document.getElementById('content-prompt').classList.add('open');
