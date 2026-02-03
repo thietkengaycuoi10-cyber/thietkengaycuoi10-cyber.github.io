@@ -660,14 +660,13 @@
 
                 <div class="module-group" id="module-prompt">
                     <button id="toggle-prompt" class="w-full flex justify-between items-center module-header">
-                        <span class="text-[10px] font-bold text-slate-200 tracking-wide uppercase flex items-center gap-2">📝 PROMPT & API</span>
+                        <span class="text-[10px] font-bold text-slate-200 tracking-wide uppercase flex items-center gap-2">📝 TÙY CHỈNH PROMPT</span>
                         <svg class="w-3 h-3 text-slate-600 toggle-icon" id="icon-prompt" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
                     <div id="content-prompt" class="module-content">
                         <div class="module-inner">
                             <textarea id="prompt-main" rows="3" class="pro-input w-full p-2 resize-none text-[10px] font-mono save-input mb-2" data-key="promptMainValue" placeholder="System will automatically optimize for Flux..."></textarea>
                             <input type="text" id="prompt-negative" placeholder="Negative prompt..." class="pro-input w-full py-1.5 save-input mb-2" data-key="promptNegative">
-                            <input type="password" id="user-api-key" placeholder="Custom API Key (Optional)" class="pro-input w-full py-1.5 save-input" data-key="userApiKey">
                         </div>
                     </div>
                 </div>
@@ -1072,35 +1071,125 @@
             const loadImg = (file) => { if (!file || !file.type.startsWith('image/')) return showToast("Image files only!", "error"); const reader = new FileReader(); reader.onload = (e) => { const img = new Image(); img.onload = () => { state.base64 = e.target.result; state.originalImg = img; state.restoredObj = null; const ar = img.width / img.height; if(ar > 1.1) state.aspectRatioType = 'landscape'; else if(ar < 0.9) state.aspectRatioType = 'portrait'; else state.aspectRatioType = 'square'; document.getElementById('img-original').src = state.base64; document.getElementById('comparison-view').style.display = 'flex'; document.getElementById('placeholder-state').style.display = 'none'; document.getElementById('download-trigger').disabled = true; document.getElementById('download-mobile').disabled = true; document.getElementById('img-modified-wrapper').style.width = '0%'; document.getElementById('slider-handle').style.left = '0%'; showToast(`Image loaded: ${img.width}x${img.height}`, "success"); const mUpload = document.getElementById('mob-btn-upload'), mScan = document.getElementById('mob-btn-scan'), mStatus = document.getElementById('mobile-status-text'); if(mUpload && mScan) { mUpload.classList.add('hidden'); mScan.classList.remove('hidden'); mStatus.textContent = "IMAGE READY - PRESS SCAN"; mStatus.classList.remove('text-violet-400'); mStatus.classList.add('text-violet-400', 'font-bold', 'animate-pulse'); } }; img.src = e.target.result; }; reader.readAsDataURL(file); };
             const fileInput = document.getElementById('image-upload'); if(fileInput) fileInput.addEventListener('change', (e) => { if (e.target.files.length > 0) { loadImg(e.target.files[0]); e.target.value = ''; } });
             
-            // Auto-Pilot & Process
+            // Auto-Pilot & Process (INTELLIGENT SCAN WITH API)
             const btnAutoPilot = document.getElementById('btn-auto-pilot'), processBtn = document.getElementById('process-image');
+            
             if(btnAutoPilot) btnAutoPilot.addEventListener('click', async () => { 
-                if(!state.base64) return showToast("Please upload an image first!", "error"); 
+                if(!state.base64) return showToast("Vui lòng tải ảnh gốc!", "error"); 
+                
+                // Lấy API Key để Scan
+                const isComet = state.userSettings.provider === 'comet';
+                const apiKeyToUse = isComet ? state.userSettings.cometKey : state.userSettings.apiKey;
+                
+                if (!apiKeyToUse) return showToast("Chưa có API Key từ Admin. Vui lòng cấu hình!", "error");
+
                 const originalText = btnAutoPilot.innerHTML; 
                 btnAutoPilot.disabled = true; 
-                btnAutoPilot.innerHTML = `<span class="animate-pulse">AI ANALYZING PIXELS...</span>`; 
+                btnAutoPilot.innerHTML = `<span class="animate-pulse">SCANNING FEATURES...</span>`;
                 
-                try { 
-                    setTimeout(() => { 
-                        ['content-identity', 'content-subject', 'content-prompt'].forEach(id => { const mod = document.getElementById(id); const icon = document.getElementById(id.replace('content', 'icon')); if(mod) mod.classList.add('open'); if(icon) icon.style.transform = 'rotate(180deg)'; });
-                        const texMode = document.getElementById('texture-mode'); if(texMode) texMode.selectedIndex = 1; 
-                        const dmgSelect = document.getElementById('damage-level'); if(dmgSelect) dmgSelect.value = "fix scratches, mold"; 
-                        const asianCheck = document.getElementById('check-asian-identity'); if(asianCheck) asianCheck.checked = true;
-                        const antiFlip = document.getElementById('check-anti-flip'); if(antiFlip) antiFlip.checked = true;
-                        const lockEyes = document.getElementById('lock-eyes'); if(lockEyes) lockEyes.checked = true;
-                        const lockMouth = document.getElementById('lock-mouth'); if(lockMouth) lockMouth.checked = true;
-                        const crossEyed = document.getElementById('check-cross-eyed'); if(crossEyed) crossEyed.checked = false; 
+                try {
+                    // Open UI Modules for visual effect
+                    ['content-identity', 'content-subject', 'content-prompt'].forEach(id => { 
+                        const mod = document.getElementById(id); 
+                        const icon = document.getElementById(id.replace('content', 'icon')); 
+                        if(mod) mod.classList.add('open'); 
+                        if(icon) icon.style.transform = 'rotate(180deg)'; 
+                    });
 
+                    // Resize Image for Analysis
+                    const resizedBase64 = await resizeImage(state.base64, 800); // 800px is enough for analysis
+
+                    // Prepare Analysis Prompt
+                    const analysisPrompt = `You are a professional photo restoration expert. Analyze this image carefully.
+                    Return ONLY a JSON object with these boolean/string fields:
+                    {
+                        "isMilitary": boolean, // Is this a military uniform?
+                        "militaryBranch": "vietnamese army"|"police"|"unknown",
+                        "hasStrabismus": boolean, // Cross-eyed / eyes not aligned?
+                        "hasPtosis": boolean, // Droopy eyelids?
+                        "isClosedEyes": boolean, // Eyes closed?
+                        "isIDPhoto": boolean, // Passport/ID style?
+                        "isOldDamaged": boolean, // Sepia, scratches, blur?
+                        "gender": "male"|"female",
+                        "age": number
+                    }`;
+
+                    // Call API for Analysis
+                    const baseUrl = isComet ? 'https://api.cometapi.com' : 'https://generativelanguage.googleapis.com';
+                    const url = `${baseUrl}/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKeyToUse}`;
+                    
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            contents: [{ parts: [{ text: analysisPrompt }, { inlineData: { mimeType: "image/jpeg", data: resizedBase64.split(',')[1] } }] }]
+                        })
+                    });
+
+                    const data = await response.json();
+                    const resultText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                    
+                    if(resultText) {
+                        const cleanText = resultText.replace(/```json|```/g, '').trim();
+                        const analysis = JSON.parse(cleanText);
+                        
+                        console.log("Analysis Result:", analysis);
+
+                        // APPLY TO UI
+                        if (analysis.isMilitary) {
+                            showToast("Detected: Military Uniform", "warning");
+                            document.getElementById('content-military')?.classList.add('open');
+                            // Select basic defaults if generic
+                            const branchSel = document.getElementById('mil-branch');
+                            if(branchSel && analysis.militaryBranch === 'police') branchSel.value = 'vietnamese public security, green uniform, red collar tabs';
+                            else if(branchSel) branchSel.value = 'vietnamese army ground force, red collar tabs';
+                        }
+
+                        if (analysis.hasStrabismus) {
+                            document.getElementById('check-cross-eyed').checked = true;
+                            showToast("Detected: Cross-eyed (Preserved)", "smart");
+                        } else {
+                            document.getElementById('check-cross-eyed').checked = false;
+                        }
+
+                        if (analysis.hasPtosis) {
+                            document.getElementById('check-ptosis').checked = true;
+                            showToast("Detected: Ptosis (Preserved)", "smart");
+                        }
+
+                        if (analysis.isIDPhoto) {
+                            document.getElementById('check-id-photo').checked = true;
+                            showToast("Detected: ID Photo Mode", "smart");
+                        }
+
+                        if (analysis.isOldDamaged) {
+                            // Turn on Replica if very damaged
+                            if(!state.isReplicaMode) document.getElementById('mode-replica').click();
+                            showToast("Detected: Old/Damaged -> Replica Mode ON", "warning");
+                        }
+
+                        // Set Gender/Age
+                        const genderSel = document.getElementById('gender-select');
+                        if(genderSel && analysis.gender) genderSel.value = analysis.gender;
+                        const ageInput = document.getElementById('age-input');
+                        if(ageInput && analysis.age) ageInput.value = analysis.age;
+
+                        // Update Prompt Box with insights
                         const promptBox = document.getElementById('prompt-main');
                         if(promptBox) {
-                            const analysisText = "DETECTED FEATURES: Asian ethnicity, Vintage film grain, Minor blur/scratches.\nOPTIMIZED PROMPT: High quality restoration, realistic skin texture, sharp eyes, natural lighting, 8k resolution, Vietnamese cultural context preserved.\nACTIONS: Denoise, Sharpen, Face Enhancement.";
-                            promptBox.value = analysisText;
-                            promptBox.classList.add('ring-2', 'ring-violet-500'); setTimeout(() => promptBox.classList.remove('ring-2', 'ring-violet-500'), 1000);
+                            promptBox.value = `Restoration of ${analysis.gender}, age ${analysis.age}. ${analysis.isMilitary ? 'Military uniform context.' : ''} ${analysis.isOldDamaged ? 'Repair damages, remove scratches.' : ''} High fidelity, 8k resolution.`;
+                            promptBox.classList.add('ring-2', 'ring-violet-500'); 
+                            setTimeout(() => promptBox.classList.remove('ring-2', 'ring-violet-500'), 1000);
                         }
-                        showToast("Scan Complete: Analysis written to Prompt.", "success");
-                        btnAutoPilot.disabled = false; btnAutoPilot.innerHTML = originalText; 
-                    }, 1500); 
-                } catch(e) { btnAutoPilot.disabled = false; btnAutoPilot.innerHTML = originalText; } 
+                    }
+
+                } catch(e) { 
+                    console.error(e); 
+                    showToast("Scan Error: " + e.message, "error"); 
+                } finally {
+                    btnAutoPilot.disabled = false; 
+                    btnAutoPilot.innerHTML = originalText; 
+                }
             });
 
             if(processBtn) processBtn.addEventListener('click', async () => {
@@ -1130,6 +1219,10 @@
                     if(document.getElementById('check-asian-identity').checked) prompt += ", vietnamese facial features, asian skin tone";
                     if(document.getElementById('check-anti-flip').checked) prompt += ", preserve orientation";
                     if(document.getElementById('mil-branch').value) prompt += ", " + document.getElementById('mil-branch').value;
+                    
+                    // Add features based on checkboxes
+                    if(document.getElementById('check-cross-eyed').checked) prompt += ", strabismus, cross-eyed";
+                    if(document.getElementById('check-ptosis').checked) prompt += ", ptosis, droopy eyelids";
                     
                     const finalPrompt = `${prompt}. Negative: ${neg}. Restore old photo, remove scratches, high fidelity, 8k resolution.`;
 
