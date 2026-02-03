@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>ZALO: 0352803379 - STUDIO V35.75 (LINKED ADMIN)</title>
+    <title>ZALO: 0352803379 - STUDIO V35.75 (MOBILE OPTIMIZED)</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;700&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- COPYRIGHT PROTECTION SCRIPT -->
     <script>
-        // HỆ THỐNG BẢO VỆ BẢN QUYỀN - ANTI-THEFT SYSTEM
         (function() {
             document.addEventListener('contextmenu', function(e) { e.preventDefault(); return false; });
             document.onkeydown = function(e) {
@@ -170,6 +169,36 @@
                 </button>
             </div>
             <div class="mt-6 h-4 flex items-center justify-center"><p id="gate-status" class="text-[10px] text-slate-500 transition-colors animate-pulse text-center">Đang quét thông tin thiết bị...</p></div>
+        </div>
+    </div>
+    
+    <!-- SMART MOBILE ACTION BAR (Moved to Body for Stacking Context Safety) -->
+    <div id="mobile-action-bar" class="lg:hidden fixed bottom-8 left-4 right-4 z-[90] flex items-center justify-center pointer-events-none transition-all duration-500 translate-y-24 opacity-0">
+        <div class="bg-[#0f1016]/90 backdrop-blur-2xl border border-white/10 p-2 rounded-2xl shadow-[0_12px_40px_rgba(0,0,0,0.8)] flex gap-3 w-full max-w-sm pointer-events-auto ring-1 ring-white/5">
+            
+            <!-- 1. UPLOAD BUTTON -->
+            <button id="mob-btn-upload" class="flex-1 py-3.5 bg-slate-800/80 hover:bg-slate-700/80 border border-white/10 rounded-xl text-slate-200 font-bold text-[10px] tracking-widest flex flex-col items-center justify-center gap-1 active:scale-95 transition-all shadow-inner group">
+                <svg class="w-5 h-5 text-blue-400 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                <span>TẢI ẢNH</span>
+            </button>
+
+            <!-- 2. SCAN BUTTON -->
+            <button id="mob-btn-scan" class="hidden flex-1 py-3.5 bg-gradient-to-b from-violet-600 to-violet-700 hover:from-violet-500 hover:to-violet-600 border border-violet-500/30 rounded-xl text-white font-bold text-[10px] tracking-widest flex flex-col items-center justify-center gap-1 shadow-[0_0_20px_rgba(124,58,237,0.4)] animate-pulse active:scale-95 transition-all">
+                <svg class="w-5 h-5 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                <span>AUTO SCAN</span>
+            </button>
+
+            <!-- 3. GENERATE BUTTON -->
+            <button id="mob-btn-run" class="hidden flex-1 py-3.5 bg-gradient-to-b from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 border border-emerald-500/30 rounded-xl text-white font-bold text-[10px] tracking-widest flex flex-col items-center justify-center gap-1 shadow-[0_0_20px_rgba(16,185,129,0.4)] active:scale-95 transition-all">
+                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                <span>CHẠY NGAY</span>
+            </button>
+
+            <!-- Reset Small Btn -->
+            <button id="mob-btn-reset" class="w-12 flex flex-col items-center justify-center bg-white/10 hover:bg-red-500/20 text-slate-400 hover:text-red-400 rounded-xl border border-white/10 active:scale-95 transition-all" title="Làm mới">
+                <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                <span class="text-[8px] font-bold">RESET</span>
+            </button>
         </div>
     </div>
 
@@ -699,36 +728,6 @@
                 </button>
             </div>
             
-            <!-- SMART MOBILE ACTION BAR -->
-            <div id="mobile-action-bar" class="lg:hidden fixed bottom-6 left-4 right-4 z-40 flex items-center justify-center pointer-events-none transition-all duration-500 translate-y-24 opacity-0">
-                <div class="bg-[#0f1016]/90 backdrop-blur-2xl border border-white/10 p-2 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.6)] flex gap-3 w-full max-w-sm pointer-events-auto ring-1 ring-white/5">
-                    
-                    <!-- 1. UPLOAD BUTTON -->
-                    <button id="mob-btn-upload" class="flex-1 py-3.5 bg-slate-800/50 hover:bg-slate-700/50 border border-white/10 rounded-xl text-slate-200 font-bold text-[10px] tracking-widest flex flex-col items-center justify-center gap-1 active:scale-95 transition-all shadow-inner group">
-                        <svg class="w-5 h-5 text-blue-400 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-                        <span>TẢI ẢNH</span>
-                    </button>
-
-                    <!-- 2. SCAN BUTTON -->
-                    <button id="mob-btn-scan" class="hidden flex-1 py-3.5 bg-gradient-to-b from-violet-600 to-violet-700 hover:from-violet-500 hover:to-violet-600 border border-violet-500/30 rounded-xl text-white font-bold text-[10px] tracking-widest flex flex-col items-center justify-center gap-1 shadow-[0_0_15px_rgba(124,58,237,0.3)] animate-pulse active:scale-95 transition-all">
-                        <svg class="w-5 h-5 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                        <span>AUTO SCAN</span>
-                    </button>
-
-                    <!-- 3. GENERATE BUTTON -->
-                    <button id="mob-btn-run" class="hidden flex-1 py-3.5 bg-gradient-to-b from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 border border-emerald-500/30 rounded-xl text-white font-bold text-[10px] tracking-widest flex flex-col items-center justify-center gap-1 shadow-[0_0_15px_rgba(16,185,129,0.3)] active:scale-95 transition-all">
-                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                        <span>CHẠY NGAY</span>
-                    </button>
-
-                    <!-- Reset Small Btn -->
-                    <button id="mob-btn-reset" class="w-12 flex flex-col items-center justify-center bg-white/5 hover:bg-red-500/20 text-slate-400 hover:text-red-400 rounded-xl border border-white/10 active:scale-95 transition-all" title="Làm mới">
-                        <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                        <span class="text-[8px] font-bold">RESET</span>
-                    </button>
-                </div>
-            </div>
-
             <div class="absolute top-6 left-6 right-6 h-12 glass-panel rounded-lg flex items-center justify-between px-4 z-20 shadow-lg hidden sm:flex border border-white/5">
                 <div class="flex items-center gap-3">
                      <div class="text-[10px] text-slate-400 font-mono flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-violet-500"></span>ZOOM: <span id="zoom-level" class="text-white font-bold">100%</span></div>
@@ -794,6 +793,36 @@
                 </div>
             </div>
         </main>
+    </div>
+    
+    <!-- SMART MOBILE ACTION BAR (Moved outside main to fix stacking context issues) -->
+    <div id="mobile-action-bar" class="lg:hidden fixed bottom-8 left-4 right-4 z-[90] flex items-center justify-center pointer-events-none transition-all duration-500 translate-y-24 opacity-0">
+        <div class="bg-[#0f1016]/90 backdrop-blur-2xl border border-white/10 p-2 rounded-2xl shadow-[0_12px_40px_rgba(0,0,0,0.8)] flex gap-3 w-full max-w-sm pointer-events-auto ring-1 ring-white/5">
+            
+            <!-- 1. UPLOAD BUTTON -->
+            <button id="mob-btn-upload" class="flex-1 py-3.5 bg-slate-800/80 hover:bg-slate-700/80 border border-white/10 rounded-xl text-slate-200 font-bold text-[10px] tracking-widest flex flex-col items-center justify-center gap-1 active:scale-95 transition-all shadow-inner group">
+                <svg class="w-5 h-5 text-blue-400 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                <span>TẢI ẢNH</span>
+            </button>
+
+            <!-- 2. SCAN BUTTON -->
+            <button id="mob-btn-scan" class="hidden flex-1 py-3.5 bg-gradient-to-b from-violet-600 to-violet-700 hover:from-violet-500 hover:to-violet-600 border border-violet-500/30 rounded-xl text-white font-bold text-[10px] tracking-widest flex flex-col items-center justify-center gap-1 shadow-[0_0_20px_rgba(124,58,237,0.4)] animate-pulse active:scale-95 transition-all">
+                <svg class="w-5 h-5 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                <span>AUTO SCAN</span>
+            </button>
+
+            <!-- 3. GENERATE BUTTON -->
+            <button id="mob-btn-run" class="hidden flex-1 py-3.5 bg-gradient-to-b from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 border border-emerald-500/30 rounded-xl text-white font-bold text-[10px] tracking-widest flex flex-col items-center justify-center gap-1 shadow-[0_0_20px_rgba(16,185,129,0.4)] active:scale-95 transition-all">
+                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                <span>CHẠY NGAY</span>
+            </button>
+
+            <!-- Reset Small Btn -->
+            <button id="mob-btn-reset" class="w-12 flex flex-col items-center justify-center bg-white/10 hover:bg-red-500/20 text-slate-400 hover:text-red-400 rounded-xl border border-white/10 active:scale-95 transition-all" title="Làm mới">
+                <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                <span class="text-[8px] font-bold">RESET</span>
+            </button>
+        </div>
     </div>
 
     <!-- RECHARGE MODAL REDESIGNED (PRO PAYMENT) -->
@@ -928,37 +957,127 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // === USER & CREDIT SYSTEM ===
+            const apiKey = ""; 
+
+            // === HỆ THỐNG MÃ HÓA BẢO MẬT (NEW) ===
+            const SimpleSec = {
+                _key: "V35_SECURE_KEY_SALT", 
+                // Mã hóa chuỗi (Simple Obfuscation)
+                encrypt: function(text) {
+                    if(!text) return '';
+                    try {
+                        let result = '';
+                        for(let i = 0; i < text.length; i++) {
+                            result += String.fromCharCode(text.charCodeAt(i) ^ this._key.charCodeAt(i % this._key.length));
+                        }
+                        return btoa(result); // Chuyển sang Base64
+                    } catch(e) { return text; }
+                },
+                // Giải mã chuỗi
+                decrypt: function(encoded) {
+                    if(!encoded) return '';
+                    try {
+                        let text = atob(encoded); // Giải Base64
+                        let result = '';
+                        for(let i = 0; i < text.length; i++) {
+                            result += String.fromCharCode(text.charCodeAt(i) ^ this._key.charCodeAt(i % this._key.length));
+                        }
+                        return result;
+                    } catch(e) { return encoded; }
+                }
+            };
+
+            // === ADMIN SYNC SECURITY (LINKED FROM ADMIN.HTML) ===
+            const AdminSync = {
+                key: "V35_SEC", // Must match the key in admin.html
+                dec(t) {
+                    try {
+                        return [...atob(t)].map((c, i) => String.fromCharCode(c.charCodeAt(0) ^ this.key.charCodeAt(i % this.key.length))).join("")
+                    } catch (e) { return null }
+                }
+            };
+            
+            // === USER & CREDIT SYSTEM (DEVICE ID BASED - KHÔNG TRÙNG WIFI) ===
             const UserSystem = {
-                deviceId: null, credits: 0, ipAddress: null, 
+                deviceId: null,
+                credits: 0,
+                ipAddress: null, 
+                
                 async init() {
+                    // 1. TẠO ID MÁY DUY NHẤT (DEVICE SIGNATURE)
                     try {
                         let storedId = localStorage.getItem('v35_unique_device_id');
-                        if (!storedId) { storedId = `ID-${Math.random().toString(36).substring(2, 8).toUpperCase()}`; localStorage.setItem('v35_unique_device_id', storedId); }
+                        if (!storedId) {
+                            const randomPart = Math.random().toString(36).substring(2, 8).toUpperCase();
+                            storedId = `ID-${randomPart}`;
+                            localStorage.setItem('v35_unique_device_id', storedId);
+                        }
                         this.deviceId = storedId;
-                    } catch (e) { this.deviceId = "GUEST-" + Math.floor(Math.random()*1000); }
+                    } catch (e) {
+                        this.deviceId = "GUEST-" + Math.floor(Math.random()*1000);
+                    }
+                    
+                    // 2. Lấy IP Mạng
                     await this.fetchIP();
+                    
+                    // 3. Load Credits
                     this.loadCredits();
+
+                    // 4. SYNC WITH ADMIN CONFIG IF EXISTS
+                    try {
+                        const adminData = localStorage.getItem("v35_active_user");
+                        if (adminData) {
+                            const config = JSON.parse(AdminSync.dec(adminData));
+                            if (config && (config.geminiKey || config.cometKey)) {
+                                // AUTO LINK FROM ADMIN
+                                state.userSettings.username = "Linked: " + config.userKey;
+                                if (config.provider === 'comet') {
+                                    state.userSettings.provider = 'comet';
+                                    state.userSettings.apiKey = config.cometKey;
+                                    state.userSettings.baseUrl = "https://api.cometapi.com";
+                                } else {
+                                    state.userSettings.provider = 'google';
+                                    state.userSettings.apiKey = config.geminiKey;
+                                    state.userSettings.baseUrl = "https://generativelanguage.googleapis.com";
+                                }
+                                // Sync credits from admin if available to override default
+                                if(config.credit) this.credits = config.credit;
+                                
+                                console.log("🔗 Admin Config Linked Successfully:", config.userKey);
+                                showToast(`🔗 Đã đồng bộ cấu hình từ Admin: ${config.userKey}`, "success");
+                            }
+                        }
+                    } catch(e) { console.log("No admin sync found or error", e); }
+
                     this.updateUI();
                     initRechargeSystem(this.deviceId);
-                    updateMobileBtnState('upload');
+                    updateMobileBtnState('upload'); // Set Initial State
                 },
+
                 async fetchIP() {
                     try {
                         const response = await fetch(`https://api.ipify.org?format=json&t=${Date.now()}`);
                         const data = await response.json();
                         this.ipAddress = data.ip;
+                        
                         const gateIpDisplay = document.getElementById('gate-ip-display');
                         const gateLoader = document.getElementById('gate-loading-spinner');
                         const gateBtn = document.getElementById('gate-submit');
                         const gateStatus = document.getElementById('gate-status');
+                        
                         const topBarIp = document.getElementById('top-bar-ip');
                         if (topBarIp) topBarIp.textContent = `IP: ${data.ip}`;
+
                         if (gateIpDisplay) {
                             gateIpDisplay.innerHTML = `<span class="text-slate-400 text-xs">${data.ip}</span> <span class="text-white mx-1">|</span> <span class="text-yellow-400 font-bold">${this.deviceId}</span>`; 
                             gateIpDisplay.classList.remove('shimmer-text');
                             if(gateLoader) gateLoader.style.display = 'none';
-                            if(gateBtn) { gateBtn.disabled = false; gateBtn.classList.remove('opacity-50', 'cursor-not-allowed'); gateStatus.textContent = `Đã nhận diện thiết bị: ${this.deviceId}`; gateStatus.classList.add('text-green-500'); }
+                            if(gateBtn) {
+                                gateBtn.disabled = false;
+                                gateBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                                gateStatus.textContent = `Đã nhận diện thiết bị: ${this.deviceId}`;
+                                gateStatus.classList.add('text-green-500');
+                            }
                         }
                         return data.ip;
                     } catch (e) {
@@ -968,59 +1087,158 @@
                         return null;
                     }
                 },
+
                 loadCredits() {
                     const key = `v35_credits_${this.deviceId}`;
                     const savedCredits = localStorage.getItem(key);
-                    if (savedCredits === null) { this.credits = 20; this.save(); } else { this.credits = parseInt(savedCredits); }
+                    if (savedCredits === null) {
+                        this.credits = 20; 
+                        this.save();
+                    } else {
+                        this.credits = parseInt(savedCredits);
+                    }
                 },
-                addCredits(amount) { this.credits += amount; this.save(); },
-                deductCredits(amount) { if (this.credits >= amount) { this.credits -= amount; this.save(); return true; } return false; },
-                save() { try { localStorage.setItem(`v35_credits_${this.deviceId}`, this.credits); } catch(e) {} this.updateUI(); },
-                updateUI() { const el = document.getElementById('credit-count'); if (el) el.textContent = this.credits; }
+
+                setCredits(amount) {
+                    this.credits = amount;
+                    this.save();
+                },
+
+                addCredits(amount) {
+                    this.credits += amount;
+                    this.save();
+                },
+
+                deductCredits(amount) {
+                    if (this.credits >= amount) {
+                        this.credits -= amount;
+                        this.save();
+                        return true;
+                    }
+                    return false;
+                },
+
+                save() {
+                    try {
+                        const key = `v35_credits_${this.deviceId}`;
+                        localStorage.setItem(key, this.credits);
+                    } catch(e) {}
+                    this.updateUI();
+                },
+
+                updateUI() {
+                    const el = document.getElementById('credit-count');
+                    if (el) el.textContent = this.credits;
+                }
             };
 
-            // === RECHARGE LOGIC ===
+            // === NEW: PROFESSIONAL RECHARGE LOGIC ===
             function initRechargeSystem(deviceId) {
-                const pkgCards = document.querySelectorAll('.recharge-pkg-card'), qrImage = document.getElementById('vietqr-image'), contentDisplay = document.getElementById('qr-content-display');
+                const pkgCards = document.querySelectorAll('.recharge-pkg-card');
+                const qrImage = document.getElementById('vietqr-image');
+                const contentDisplay = document.getElementById('qr-content-display');
+
                 if(!qrImage) return;
+
+                const bankId = 'mbbank';
+                const accNo = '85543556868';
+                const accName = 'HOANG QUANG CUONG';
+                const template = 'compact'; 
+
                 const updateQR = (amount) => {
                     const content = `V35 ${deviceId}`; 
-                    qrImage.src = `https://img.vietqr.io/image/mbbank-85543556868-compact.png?amount=${amount}&addInfo=${encodeURIComponent(content)}&accountName=${encodeURIComponent('HOANG QUANG CUONG')}`;
+                    const url = `https://img.vietqr.io/image/${bankId}-${accNo}-${template}.png?amount=${amount}&addInfo=${encodeURIComponent(content)}&accountName=${encodeURIComponent(accName)}`;
+                    qrImage.src = url;
                     if(contentDisplay) contentDisplay.textContent = content;
                 };
+
                 updateQR(200000);
+
                 pkgCards.forEach(card => {
                     card.addEventListener('click', () => {
-                        pkgCards.forEach(c => { c.classList.remove('active', 'border-violet-500/50', 'bg-violet-900/10', 'ring-1', 'ring-violet-500/50'); c.classList.add('border-white/10', 'bg-white/5'); c.querySelector('.pkg-border').classList.remove('opacity-100', 'scale-100'); c.querySelector('.pkg-border').classList.add('opacity-0', 'scale-95'); });
-                        card.classList.remove('border-white/10', 'bg-white/5'); card.classList.add('active', 'border-violet-500/50', 'bg-violet-900/10', 'ring-1', 'ring-violet-500/50'); card.querySelector('.pkg-border').classList.remove('opacity-0', 'scale-95'); card.querySelector('.pkg-border').classList.add('opacity-100', 'scale-100');
-                        updateQR(card.dataset.amount);
+                        pkgCards.forEach(c => {
+                            c.classList.remove('active', 'border-violet-500/50', 'bg-violet-900/10', 'ring-1', 'ring-violet-500/50');
+                            c.classList.add('border-white/10', 'bg-white/5');
+                            c.querySelector('.pkg-border').classList.remove('opacity-100', 'scale-100');
+                            c.querySelector('.pkg-border').classList.add('opacity-0', 'scale-95');
+                        });
+                        
+                        card.classList.remove('border-white/10', 'bg-white/5');
+                        card.classList.add('active', 'border-violet-500/50', 'bg-violet-900/10', 'ring-1', 'ring-violet-500/50');
+                        card.querySelector('.pkg-border').classList.remove('opacity-0', 'scale-95');
+                        card.querySelector('.pkg-border').classList.add('opacity-100', 'scale-100');
+
+                        const amount = card.dataset.amount;
+                        updateQR(amount);
                     });
                 });
             }
 
-            // === MOBILE BUTTON STATE ===
+            // === NEW: MOBILE BUTTON STATE MANAGER ===
             const updateMobileBtnState = (state) => {
-                const upload = document.getElementById('mob-btn-upload'), scan = document.getElementById('mob-btn-scan'), run = document.getElementById('mob-btn-run'), status = document.getElementById('mobile-status-text');
-                if(upload) upload.classList.add('hidden'); if(scan) scan.classList.add('hidden'); if(run) run.classList.add('hidden');
+                const upload = document.getElementById('mob-btn-upload');
+                const scan = document.getElementById('mob-btn-scan');
+                const run = document.getElementById('mob-btn-run');
+                const status = document.getElementById('mobile-status-text');
+                
+                // Reset all first
+                if(upload) upload.classList.add('hidden');
+                if(scan) scan.classList.add('hidden');
+                if(run) run.classList.add('hidden');
                 
                 if (state === 'upload') {
                     if(upload) upload.classList.remove('hidden');
                     if(status) { status.textContent = "WAITING FOR IMAGE"; status.className = "text-[8px] text-slate-500 font-mono tracking-widest"; }
                 } else if (state === 'scan') {
-                    if(scan) { scan.classList.remove('hidden'); scan.disabled = false; scan.innerHTML = `<svg class="w-5 h-5 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg><span>AUTO SCAN</span>`; scan.className = "flex-1 py-3.5 bg-gradient-to-b from-violet-600 to-violet-700 hover:from-violet-500 hover:to-violet-600 border border-violet-500/30 rounded-xl text-white font-bold text-[10px] tracking-widest flex flex-col items-center justify-center gap-1 shadow-[0_0_15px_rgba(124,58,237,0.3)] animate-pulse active:scale-95 transition-all"; }
-                    if(status) { status.textContent = "IMAGE LOADED - PRESS SCAN"; status.className = "text-[8px] font-mono tracking-widest text-violet-400 font-bold animate-pulse"; }
+                    if(scan) {
+                        scan.classList.remove('hidden');
+                        scan.disabled = false;
+                        scan.innerHTML = `<svg class="w-5 h-5 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg><span>AUTO SCAN</span>`;
+                        scan.className = "flex-1 py-3.5 bg-gradient-to-b from-violet-600 to-violet-700 hover:from-violet-500 hover:to-violet-600 border border-violet-500/30 rounded-xl text-white font-bold text-[10px] tracking-widest flex flex-col items-center justify-center gap-1 shadow-[0_0_15px_rgba(124,58,237,0.3)] animate-pulse active:scale-95 transition-all";
+                    }
+                    if(status) {
+                        status.textContent = "IMAGE LOADED - PRESS SCAN";
+                        status.className = "text-[8px] font-mono tracking-widest text-violet-400 font-bold animate-pulse";
+                    }
                 } else if (state === 'scanning') {
-                    if(scan) { scan.classList.remove('hidden'); scan.disabled = true; scan.innerHTML = `<svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> SCANNING...`; }
+                    if(scan) {
+                        scan.classList.remove('hidden');
+                        scan.disabled = true;
+                        scan.innerHTML = `<svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> SCANNING...`;
+                    }
                     if(status) status.textContent = "AI ANALYZING...";
                 } else if (state === 'run') {
-                    if(run) { run.classList.remove('hidden'); run.disabled = false; run.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg><span>CHẠY NGAY</span>`; run.className = "flex-1 py-3.5 bg-gradient-to-b from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 border border-emerald-500/30 rounded-xl text-white font-bold text-[10px] tracking-widest flex flex-col items-center justify-center gap-1 shadow-[0_0_15px_rgba(16,185,129,0.3)] active:scale-95 transition-all"; }
-                    if(status) { status.textContent = "READY TO GENERATE"; status.className = "text-[8px] font-mono tracking-widest text-emerald-400 font-bold"; }
+                    if(run) {
+                        run.classList.remove('hidden');
+                        run.disabled = false;
+                        run.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg><span>CHẠY NGAY</span>`;
+                        run.className = "flex-1 py-3.5 bg-gradient-to-b from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 border border-emerald-500/30 rounded-xl text-white font-bold text-[10px] tracking-widest flex flex-col items-center justify-center gap-1 shadow-[0_0_15px_rgba(16,185,129,0.3)] active:scale-95 transition-all";
+                    }
+                    if(status) {
+                        status.textContent = "READY TO GENERATE";
+                        status.className = "text-[8px] font-mono tracking-widest text-emerald-400 font-bold";
+                    }
                 } else if (state === 'running') {
-                    if(run) { run.classList.remove('hidden'); run.disabled = true; run.innerHTML = `<svg class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg><span>PROCESSING...</span>`; run.className = "flex-1 py-3.5 bg-amber-600 border border-amber-500/30 rounded-xl text-white font-bold text-[10px] tracking-widest flex flex-col items-center justify-center gap-1 shadow-[0_0_15px_rgba(245,158,11,0.3)] animate-pulse transition-all cursor-not-allowed"; }
-                    if(status) { status.textContent = "AI RESTORING..."; status.className = "text-[8px] font-mono tracking-widest text-amber-400 font-bold animate-pulse"; }
+                    if(run) {
+                        run.classList.remove('hidden');
+                        run.disabled = true;
+                        run.innerHTML = `<svg class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg><span>PROCESSING...</span>`;
+                        run.className = "flex-1 py-3.5 bg-amber-600 border border-amber-500/30 rounded-xl text-white font-bold text-[10px] tracking-widest flex flex-col items-center justify-center gap-1 shadow-[0_0_15px_rgba(245,158,11,0.3)] animate-pulse transition-all cursor-not-allowed";
+                    }
+                    if(status) {
+                        status.textContent = "AI RESTORING...";
+                        status.className = "text-[8px] font-mono tracking-widest text-amber-400 font-bold animate-pulse";
+                    }
                 } else if (state === 'done') {
-                    if(run) { run.classList.remove('hidden'); run.disabled = false; run.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg><span>LÀM LẠI</span>`; }
-                    if(status) { status.textContent = "COMPLETED"; status.className = "text-[8px] font-mono tracking-widest text-emerald-400 font-bold"; }
+                    if(run) {
+                        run.classList.remove('hidden');
+                        run.disabled = false;
+                        run.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg><span>LÀM LẠI</span>`;
+                    }
+                    if(status) {
+                        status.textContent = "COMPLETED";
+                        status.className = "text-[8px] font-mono tracking-widest text-emerald-400 font-bold";
+                    }
                 }
             }
 
@@ -1145,7 +1363,8 @@
             const fileInput = document.getElementById('image-upload'); if(fileInput) fileInput.addEventListener('change', (e) => { if (e.target.files.length > 0) { loadImg(e.target.files[0]); e.target.value = ''; } });
             
             // Mobile Proxies
-            const mobBtnUpload = document.getElementById('mob-btn-upload'), mobBtnScan = document.getElementById('mob-btn-scan'), mobBtnRun = document.getElementById('mob-btn-run');
+            const mobBtnUpload = document.getElementById('mob-btn-upload'), mobBtnScan = document.getElementById('mob-btn-scan'), mobBtnRun = document.getElementById('mob-btn-run'), mobBar = document.getElementById('mobile-action-bar');
+            if(mobBar) setTimeout(() => mobBar.classList.remove('translate-y-24', 'opacity-0'), 1000);
             if(mobBtnUpload) mobBtnUpload.onclick = () => document.getElementById('image-upload').click();
             if(mobBtnScan) mobBtnScan.onclick = () => document.getElementById('btn-auto-pilot').click();
             if(mobBtnRun) mobBtnRun.onclick = () => document.getElementById('process-image').click();
