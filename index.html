@@ -1358,7 +1358,7 @@
             };
             
             const resizeImage = (base64Str, maxWidth = 1536) => {
-                return new Promise((resolve) => {
+                return new Promise((resolve, reject) => { // Added reject
                     const img = new Image();
                     img.src = base64Str;
                     img.onload = () => {
@@ -1372,6 +1372,7 @@
                         const ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0, width, height);
                         resolve(canvas.toDataURL('image/jpeg', 0.9));
                     };
+                    img.onerror = (err) => reject(new Error("Lỗi tải ảnh để Scan")); // Added handler
                 });
             };
 
@@ -1523,18 +1524,32 @@
                     btnAutoPilot.innerHTML = `<span class="animate-pulse">AUTO-SCAN V35.60 (AUTO-SIZE)...</span>`;
                     
                     const { key: keyToUse, base: apiBase, isComet } = getApiConfig();
+                    
+                    // Added Check
+                    if (!keyToUse) {
+                        showToast("Chưa có API Key! Vui lòng liên hệ Admin.", "error");
+                        btnAutoPilot.disabled = false;
+                        btnAutoPilot.innerHTML = originalText;
+                        return;
+                    }
 
                     try {
                         const resizedBase64 = await resizeImage(state.base64);
-                        const headers = { 'Content-Type': 'application/json' };
-                        if (isComet) headers['Authorization'] = `Bearer ${keyToUse}`;
+                        
+                        // Added Timeout
+                        const controller = new AbortController();
+                        const timeoutId = setTimeout(() => controller.abort(), 40000); // 40s timeout
 
                         // Keep the prompt exactly as it was in the full version
                         const promptText = "Analyze this image for restoration. DETECT VIETNAMESE MILITARY DETAILS SPECIFICALLY. Return ONLY JSON: { \"sceneContext\": \"wedding\"|\"funeral\"|\"casual\"|\"studio\"|\"outdoor\"|\"product\"|\"painting\"|\"ancient_portrait\", \"lightingCondition\": \"rembrandt\"|\"golden_hour\"|\"neon\"|\"soft_diffused\"|\"flat\"|\"overexposed\"|\"harsh_sun\", \"backgroundType\": \"plain\"|\"complex_outdoor\"|\"complex_indoor\", \"faceAngle\": \"front\"|\"side_left\"|\"side_right\"|\"tilted_up\"|\"tilted_down\", \"jawStructure\": \"defined\"|\"soft\"|\"round\"|\"square\", \"noseAngle\": \"straight\"|\"tilted\", \"mouthAngle\": \"straight\"|\"tilted\", \"eyeSymmetry\": \"even\"|\"uneven\", \"hasAsymmetry\": boolean, \"isNature\": boolean, \"isMilitary\": boolean, \"isGroupPhoto\": boolean, \"hasVisibleRankInsignia\": boolean, \"rankColor\": \"red\"|\"green\"|\"blue\"|\"none\", \"specificHat\": \"pith_helmet\"|\"soft_cap\"|\"kepi\"|\"bamboo_helmet\"|\"none\", \"gender\": \"male\"|\"female\", \"age\": number, \"damageType\": \"scratches\"|\"faded\"|\"sepia\"|\"severe_damage\"|\"none\", \"isOldPhoto\": boolean, \"isLowContrast\": boolean, \"isNoisy\": boolean, \"hasStrabismus\": boolean, \"hasDroopyEyelids\": boolean, \"hasClosedEyes\": boolean, \"hasDistinctiveImperfections\": boolean, \"hasMonolids\": boolean, \"hasBuckTeeth\": boolean, \"hasBlackenedTeeth\": boolean, \"needsBackgroundRestoration\": boolean, \"militaryBranch\": \"army\"|\"air_force\"|\"navy\"|\"border_guard\"|\"police\"|\"youth_volunteer\"|\"unknown\", \"uniformEra\": \"tran_thu\"|\"to_chau\"|\"k82\"|\"k94\"|\"camouflage\"|\"unknown\", \"rankLevel\": \"soldier\"|\"officer\"|\"unknown\", \"hasMedalSaoVang\": boolean, \"hasMedalKhangChien\": boolean, \"hasBadgeDoan\": boolean, \"isIDPhoto\": boolean, \"isHazy\": boolean }";
 
+                        const headers = { 'Content-Type': 'application/json' };
+                        if (isComet) headers['Authorization'] = `Bearer ${keyToUse}`;
+
                         const response = await fetch(`${apiBase}/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${keyToUse}`, {
                             method: 'POST',
                             headers: headers,
+                            signal: controller.signal, // Link signal
                             body: JSON.stringify({
                                 contents: [{
                                     parts: [
@@ -1544,6 +1559,7 @@
                                 }]
                             })
                         });
+                        clearTimeout(timeoutId); // Clear timeout on response
                         const data = await response.json();
                         let text = data.candidates?.[0]?.content?.parts?.[0]?.text;
                         if(text) {
