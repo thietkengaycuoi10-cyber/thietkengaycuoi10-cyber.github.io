@@ -169,9 +169,14 @@
                         </div>
                     </div>
 
-                    <div class="pt-4">
+                    <div class="pt-4 space-y-3">
                         <button onclick="saveUser()" class="btn-action w-full py-4 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 shadow-lg shadow-blue-500/25 border border-white/10">
                             LƯU CẤU HÌNH API
+                        </button>
+                        <!-- NÚT MỚI: TẠO MÃ NHÚNG -->
+                        <button onclick="exportEmbedCode()" class="btn-action w-full py-3 rounded-xl font-bold text-[11px] text-white bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/30 text-purple-300 flex items-center justify-center gap-2">
+                           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                           LẤY MÃ NHÚNG (CHO INDEX)
                         </button>
                         <p id="saveStatus" class="text-center text-[11px] mt-2 h-4"></p>
                     </div>
@@ -316,7 +321,7 @@ function logout() { sessionStorage.removeItem("v35_admin_logged"); location.relo
 // --- CONFIG API LOGIC (FIXED) ---
 function searchUserKey() {
     const id = els.userKey.value.trim();
-    // Nếu để trống, tìm cấu hình đang Active
+    // Nếu để trống, tìm cấu hình đang Active (thống nhất dùng v35_user_settings)
     const storageKey = id ? ("v35_user_" + id) : "v35_user_settings";
     
     els.geminiKey.value = ""; els.cometKey.value = ""; els.saveStatus.innerText = "";
@@ -330,9 +335,6 @@ function searchUserKey() {
             
             const data = JSON.parse(jsonStr);
             if(data) {
-                // FIX 2: MAP DỮ LIỆU ĐÚNG CHUẨN
-                // Main app lưu { apiKey: '...', provider: '...' }
-                // Admin hiển thị tách riêng để dễ quản lý
                 if(data.provider === 'comet') {
                     els.cometKey.value = data.apiKey || "";
                     els.provider.value = "comet";
@@ -340,7 +342,6 @@ function searchUserKey() {
                     els.geminiKey.value = data.apiKey || "";
                     els.provider.value = "google";
                 }
-                
                 showSuccess(els.searchMsg, `Đã tải Config: ${id || "ACTIVE SETTINGS"}`, true);
             }
         } catch(e) { 
@@ -353,19 +354,14 @@ function searchUserKey() {
 }
 
 function loadActiveUser() {
-    // Tự động load settings hiện tại
     searchUserKey();
 }
 
-function saveUser() {
-    const id = els.userKey.value.trim();
-    
+function getJsonToSave() {
     const prov = els.provider.value;
     const gKey = els.geminiKey.value.trim();
     const cKey = els.cometKey.value.trim();
     
-    // FIX 3: TẠO OBJECT CẤU TRÚC GIỐNG HỆT MAIN APP
-    // Main App mong đợi: { username, apiKey, provider, baseUrl }
     let finalApiKey = "";
     let finalBaseUrl = "https://generativelanguage.googleapis.com";
     
@@ -376,25 +372,47 @@ function saveUser() {
         finalApiKey = gKey;
     }
     
-    const dataToSave = {
+    return {
         username: "Admin Set",
         apiKey: finalApiKey,
-        provider: prov, // 'google' or 'comet'
+        provider: prov,
         baseUrl: finalBaseUrl
     };
+}
+
+function saveUser() {
+    const id = els.userKey.value.trim();
+    const dataToSave = getJsonToSave();
     
     // Mã hóa bằng key chuẩn
     const enc = Sec.enc(JSON.stringify(dataToSave));
     
-    // FIX 4: LƯU VÀO ĐÚNG KEY MÀ MAIN APP ĐỌC (v35_user_settings)
+    // Lưu vào v35_user_settings (Key chuẩn cho index.html)
     localStorage.setItem("v35_user_settings", enc);
     
-    // Nếu có nhập ID, lưu thêm bản backup cho ID đó
+    // Nếu có nhập ID, lưu thêm bản backup
     if(id) {
         localStorage.setItem("v35_user_" + id, enc);
     }
     
     showSuccess(els.saveStatus, "Đã lưu & Áp dụng cho trình duyệt này!");
+}
+
+// --- NEW FUNCTION: EXPORT EMBED CODE ---
+function exportEmbedCode() {
+    const dataToSave = getJsonToSave();
+    if (!dataToSave.apiKey) return alert("Chưa nhập API Key!");
+    
+    // Mã hóa
+    const enc = Sec.enc(JSON.stringify(dataToSave));
+    
+    // Copy vào clipboard
+    navigator.clipboard.writeText(enc).then(() => {
+        const msg = "ĐÃ COPY MÃ NHÚNG!\n\nBước tiếp theo:\n1. Mở file index.html\n2. Tìm dòng: const DEFAULT_ENCRYPTED_CONFIG = \"\";\n3. Dán mã này vào giữa dấu ngoặc kép.";
+        alert(msg);
+    }).catch(err => {
+        prompt("Copy mã dưới đây và dán vào index.html:", enc);
+    });
 }
 
 // --- VOUCHER LOGIC ---
