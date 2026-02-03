@@ -110,10 +110,24 @@
         .pay-tab:hover { color: #94a3b8; }
         .pay-tab.active { border-bottom-color: #3b82f6; color: #fff; font-weight: 700; }
         
-        /* NEW: COMPARISON LABELS */
+        /* NEW: COMPARISON LABELS & FRAME */
         .comp-label { position: absolute; bottom: 10px; padding: 4px 8px; background: rgba(0,0,0,0.6); color: white; font-size: 10px; font-weight: bold; border-radius: 4px; pointer-events: none; z-index: 25; backdrop-filter: blur(2px); border: 1px solid rgba(255,255,255,0.1); }
-        .comp-label.before { right: 10px; } /* Gốc nằm dưới, hiển thị bên phải khi thanh gạt sang trái hoặc khi chưa gạt hết */
-        .comp-label.after { left: 10px; } /* Kết quả nằm trên (trong wrapper), hiển thị bên trái */
+        .comp-label.before { right: 10px; } 
+        .comp-label.after { left: 10px; } 
+        
+        /* Mobile Image Frame */
+        .mobile-image-frame {
+            border: 1px solid rgba(139, 92, 246, 0.3); /* Violet border */
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            max-width: 95vw;
+            max-height: 70vh; /* Giới hạn chiều cao trên mobile */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
     </style>
 </head>
 
@@ -237,6 +251,7 @@
                     </div>
                 </div>
 
+                <!-- ... REPLICA MODE, MILITARY, CINEMATIC, EXPOSURE, REF UPLOAD, PROCESSING, SUBJECT, IDENTITY, PROMPT, LOGO (KEPT AS IS) ... -->
                 <!-- REPLICA MODE -->
                 <div class="relative group p-2 rounded-lg border border-yellow-500/30 bg-yellow-500/5 mb-3">
                     <div class="flex items-center gap-2">
@@ -258,6 +273,7 @@
                         <svg class="w-3 h-3 text-yellow-500 toggle-icon" id="icon-military" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
                     <div id="content-military" class="module-content">
+                        <!-- ... Military content ... -->
                         <div class="module-inner space-y-2">
                              <div class="space-y-1">
                                 <label class="section-label text-yellow-600/80">Quân chủng / Lực lượng</label>
@@ -711,7 +727,7 @@
                     <div id="scan-beam" class="scan-beam"></div>
                     
                     <div id="comparison-view" class="relative max-w-[95vw] max-h-[80vh] flex justify-center items-center" style="display:none;">
-                         <div id="comp-inner" class="relative shadow-2xl rounded overflow-hidden cursor-ew-resize group select-none border border-white/10 bg-black">
+                         <div id="comp-inner" class="relative shadow-2xl rounded overflow-hidden cursor-ew-resize group select-none border border-white/10 bg-black mobile-image-frame">
                               <img id="img-original" class="block max-h-[75vh] w-auto pointer-events-none select-none">
                               <!-- Modified Wrapper (Left Side) -->
                               <div id="img-modified-wrapper" class="absolute top-0 left-0 h-full w-[50%] overflow-hidden border-r border-white/50 bg-black/5">
@@ -1112,26 +1128,6 @@
             const toggleModule = (btnId, contentId, iconId) => { const btn = document.getElementById(btnId), content = document.getElementById(contentId), icon = document.getElementById(iconId); if(btn) btn.addEventListener('click', () => { if(content) content.classList.toggle('open'); if(icon && content) icon.style.transform = content.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)'; }); };
             ['processing','subject','identity','prompt','logo','military','cinematic','exposure'].forEach(id => toggleModule(`toggle-${id}`, `content-${id}`, `icon-${id}`));
 
-            // SIDEBAR TOGGLE & MOBILE BAR INTERACTION
-            const sidebar = document.getElementById('sidebar');
-            const mobileBar = document.getElementById('mobile-action-bar');
-
-            function openSidebar() {
-                sidebar.classList.remove('-translate-x-full');
-                if(mobileBar) mobileBar.classList.add('translate-y-24', 'opacity-0'); // Hide floating bar
-            }
-
-            function closeSidebar() {
-                sidebar.classList.add('-translate-x-full');
-                if(mobileBar) mobileBar.classList.remove('translate-y-24', 'opacity-0'); // Show floating bar
-            }
-
-            const toggleSidebarBtn = document.getElementById('toggle-sidebar-btn');
-            if(toggleSidebarBtn) toggleSidebarBtn.onclick = openSidebar;
-            
-            const closeSidebarMobileBtn = document.getElementById('close-sidebar-mobile');
-            if(closeSidebarMobileBtn) closeSidebarMobileBtn.onclick = closeSidebar;
-
             // REAL LOGIC RESTORATION
             const btnAutoPilot = document.getElementById('btn-auto-pilot'), processBtn = document.getElementById('process-image');
             
@@ -1211,6 +1207,19 @@
                         document.getElementById('prompt-main').value = smartPrompt;
                         document.getElementById('content-prompt').classList.add('open');
                         
+                        // AUTO MAPPING WORKFLOW (FIXED)
+                        const workflowSelect = document.getElementById('kontext-workflow');
+                        if (workflowSelect) {
+                            if(result.sceneContext === 'wedding') workflowSelect.value = 'wedding_kontext_v2';
+                            else if(result.sceneContext === 'ancient_portrait' || result.isOldPhoto) workflowSelect.value = 'ancient_restore';
+                            else if(result.sceneContext === 'outdoor') workflowSelect.value = 'outdoor_mode';
+                            else if(result.sceneContext === 'product') workflowSelect.value = 'product_mode';
+                            
+                            // Open workflow module to show selection
+                            document.getElementById('kontext-module-container').classList.add('ring-2', 'ring-violet-500');
+                            setTimeout(() => document.getElementById('kontext-module-container').classList.remove('ring-2', 'ring-violet-500'), 2000);
+                        }
+
                         // AUTO OPEN SIDEBAR TO SHOW RESULTS (MOBILE UX)
                         openSidebar();
                         updateMobileBtnState('run');
@@ -1254,6 +1263,8 @@
                             // === FIX: RESET SLIDER TO 50% FOR CLARITY ===
                             document.getElementById('img-modified-wrapper').style.width = '50%';
                             document.getElementById('slider-handle').style.left = '50%';
+                            document.getElementById('slider-handle').style.display = 'flex'; 
+                            document.querySelector('.comp-label.after').style.display = 'block';
                             
                             updateMobileBtnState('done');
                             showToast("Phục chế thành công!", "flux");
@@ -1261,11 +1272,19 @@
                         restoredImg.src = finalImgSrc;
                     } else { throw new Error("Không tạo được ảnh."); }
                 } catch(e) { console.error(e); showToast("Lỗi: " + e.message, "error"); updateMobileBtnState('run'); }
-                finally { processBtn.disabled = false; processBtn.innerHTML = "TẠO ẢNH (FLUX KONTEXT)"; document.getElementById('ai-terminal-overlay').classList.add('hidden'); document.getElementById('scan-beam').classList.remove('active'); }
+                finally { processBtn.disabled = false; processBtn.innerHTML = "TẠOẢNH (FLUX KONTEXT)"; document.getElementById('ai-terminal-overlay').classList.add('hidden'); document.getElementById('scan-beam').classList.remove('active'); }
             });
 
             // File Load & Mobile Logic
-            const loadImg = (file) => { if (!file || !file.type.startsWith('image/')) return showToast("Chỉ hỗ trợ file ảnh!", "error"); const reader = new FileReader(); reader.onload = (e) => { const img = new Image(); img.onload = () => { state.base64 = e.target.result; state.originalImg = img; state.restoredObj = null; const ar = img.width / img.height; if(ar > 1.1) state.aspectRatioType = 'landscape'; else if(ar < 0.9) state.aspectRatioType = 'portrait'; else state.aspectRatioType = 'square'; document.getElementById('img-original').src = state.base64; document.getElementById('comparison-view').style.display = 'flex'; document.getElementById('placeholder-state').style.display = 'none'; document.getElementById('download-trigger').disabled = true; document.getElementById('download-mobile').disabled = true; document.getElementById('img-modified-wrapper').style.width = '0%'; document.getElementById('slider-handle').style.left = '0%'; showToast(`Đã tải ảnh: ${img.width}x${img.height}`, "success"); updateMobileBtnState('scan'); }; img.src = e.target.result; }; reader.readAsDataURL(file); };
+            const loadImg = (file) => { if (!file || !file.type.startsWith('image/')) return showToast("Chỉ hỗ trợ file ảnh!", "error"); const reader = new FileReader(); reader.onload = (e) => { const img = new Image(); img.onload = () => { state.base64 = e.target.result; state.originalImg = img; state.restoredObj = null; const ar = img.width / img.height; if(ar > 1.1) state.aspectRatioType = 'landscape'; else if(ar < 0.9) state.aspectRatioType = 'portrait'; else state.aspectRatioType = 'square'; document.getElementById('img-original').src = state.base64; document.getElementById('comparison-view').style.display = 'flex'; document.getElementById('placeholder-state').style.display = 'none'; document.getElementById('download-trigger').disabled = true; document.getElementById('download-mobile').disabled = true; 
+            
+            // RESET TO PREVIEW MODE (HIDE SLIDER)
+            document.getElementById('img-modified-wrapper').style.width = '0%'; 
+            document.getElementById('slider-handle').style.left = '0%'; 
+            document.getElementById('slider-handle').style.display = 'none'; 
+            document.querySelector('.comp-label.after').style.display = 'none'; 
+            
+            showToast(`Đã tải ảnh: ${img.width}x${img.height}`, "success"); updateMobileBtnState('scan'); }; img.src = e.target.result; }; reader.readAsDataURL(file); };
             const fileInput = document.getElementById('image-upload'); if(fileInput) fileInput.addEventListener('change', (e) => { if (e.target.files.length > 0) { loadImg(e.target.files[0]); e.target.value = ''; } });
             
             // Mobile Proxies
