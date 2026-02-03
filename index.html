@@ -8,6 +8,76 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;700&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     
+    <!-- Firebase SDK (Cloud Sync Fix) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Lấy cấu hình giống Admin
+        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+        let currentUser = null;
+
+        // RULE 3: Đăng nhập ẩn danh để đọc/ghi Cloud
+        const initAuth = async () => {
+            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                await signInWithCustomToken(auth, __initial_auth_token);
+            } else {
+                await signInAnonymously(auth);
+            }
+        };
+
+        onAuthStateChanged(auth, (user) => {
+            currentUser = user;
+            if (user) console.log("Cloud Connected:", user.uid);
+        });
+
+        // HÀM KIỂM TRA MÃ CHẶT CHẼ (ONE-TIME ONLY)
+        window.redeemVoucherCloud = async (code) => {
+            if (!currentUser) await initAuth();
+            if (!currentUser) return { success: false, msg: "Lỗi kết nối máy chủ!" };
+
+            try {
+                // RULE 1: Truy vấn đúng đường dẫn Admin đã lưu
+                const voucherRef = doc(db, 'artifacts', appId, 'public', 'data', 'vouchers', code);
+                const snap = await getDoc(voucherRef);
+
+                // 1. Kiểm tra mã tồn tại
+                if (!snap.exists()) {
+                    return { success: false, msg: "Mã nạp không tồn tại!" };
+                }
+
+                const data = snap.data();
+
+                // 2. Kiểm tra mã đã dùng chưa (Quan trọng nhất)
+                if (data.isUsed === true) {
+                    return { success: false, msg: "Mã này đã được sử dụng trước đó!" };
+                }
+
+                // 3. Khóa mã ngay lập tức (Chống dùng lại ở máy khác)
+                await updateDoc(voucherRef, {
+                    isUsed: true,
+                    usedAt: serverTimestamp(),
+                    usedBy: currentUser.uid,
+                    usedDevice: localStorage.getItem('v35_unique_device_id') || 'unknown'
+                });
+
+                // 4. Trả về thành công
+                return { success: true, amount: data.amount };
+            } catch (e) {
+                console.error("Cloud Error:", e);
+                return { success: false, msg: "Lỗi xử lý giao dịch!" };
+            }
+        };
+
+        initAuth();
+    </script>
+
     <!-- COPYRIGHT PROTECTION SCRIPT -->
     <script>
         (function() {
@@ -20,8 +90,6 @@
                 if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false;
                 if (e.ctrlKey && e.keyCode == 'S'.charCodeAt(0)) { e.preventDefault(); return false; }
             };
-            console.log("%cDỪNG LẠI!", "color: red; font-size: 50px; font-weight: bold; text-shadow: 2px 2px #000;");
-            console.log("%cĐây là phần mềm có bản quyền của ZALO: 0352803379.", "color: white; background: red; font-size: 16px; padding: 10px; border-radius: 5px;");
         })();
     </script>
 
@@ -947,7 +1015,7 @@
 
                 <!-- Activation Section -->
                 <div class="w-full max-w-xs mt-4 md:mt-6 pt-4 md:pt-6 border-t border-white/5 z-10">
-                    <label class="text-[9px] font-bold text-slate-400 uppercase mb-2 block text-center">NHẬP MÃ KÍCH HOẠT (SAU KHI THANH TOÁN)</label>
+                    <label class="text-[9px] font-bold text-slate-400 uppercase mb-2 block text-center">NHẬP MÃ KÍCH HOẠT (CLOUD CHECK)</label>
                     <div class="flex gap-2">
                         <input type="text" id="recharge-input" class="pro-input flex-1 py-2 md:py-2.5 text-center font-mono uppercase text-violet-300 border-violet-500/30 bg-violet-500/5 placeholder-slate-600 text-xs md:text-sm" placeholder="NHẬP MÃ V35-...">
                         <button id="btn-submit-recharge" class="px-3 md:px-4 bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-500 hover:to-blue-500 text-white rounded-lg text-[10px] md:text-xs font-bold transition-all shadow-lg active:scale-95 whitespace-nowrap">
@@ -1670,32 +1738,29 @@
             
             // Redeem Code
             const redeemBtn = document.getElementById('btn-submit-recharge'), redeemInput = document.getElementById('recharge-input');
-            if(redeemBtn) redeemBtn.addEventListener('click', () => { 
-                const code = redeemInput.value.trim(); 
+            if(redeemBtn) redeemBtn.addEventListener('click', async () => { 
+                const code = redeemInput.value.trim().toUpperCase(); 
                 if(!code) return showToast("Vui lòng nhập mã!", "error"); 
 
-                // --- LOGIC MỚI: KIỂM TRA MÃ ĐÃ DÙNG CHƯA ---
-                const usedCodes = JSON.parse(localStorage.getItem('v35_used_codes') || '[]');
-                if (usedCodes.includes(code)) {
-                    return showToast("⛔ Mã này đã được sử dụng!", "error");
+                const btn = document.getElementById('btn-submit-recharge');
+                const oldText = btn.textContent;
+                btn.disabled = true;
+                btn.textContent = "CHECKING...";
+
+                // --- GỌI HÀM CLOUD (MỚI) ---
+                const result = await window.redeemVoucherCloud(code);
+
+                if (result.success) {
+                    UserSystem.addCredits(result.amount); 
+                    showToast(`Nạp thành công +${result.amount} Credits!`, "success"); 
+                    document.getElementById('recharge-modal').classList.add('hidden'); 
+                    redeemInput.value = ''; 
+                } else {
+                    showToast(result.msg, "error");
                 }
                 
-                const parts = code.split('-'); 
-                // Admin generates 5 parts: V35-Amount-PRO-Random-Time
-                if(parts.length !== 5 || parts[0] !== 'V35') return showToast("Mã không hợp lệ!", "error"); 
-                
-                const credits = parseInt(parts[1]); 
-                if(isNaN(credits)) return showToast("Lỗi định dạng tín dụng!", "error"); 
-                
-                UserSystem.addCredits(credits); 
-                
-                // --- LOGIC MỚI: LƯU MÃ ĐÃ DÙNG ---
-                usedCodes.push(code);
-                localStorage.setItem('v35_used_codes', JSON.stringify(usedCodes));
-
-                showToast(`Nạp thành công +${credits} Credits!`, "success"); 
-                document.getElementById('recharge-modal').classList.add('hidden'); 
-                redeemInput.value = ''; 
+                btn.disabled = false;
+                btn.textContent = oldText;
             });
             
             // FIX NULL ERROR: CHECK IF CLOSE BTN EXISTS
