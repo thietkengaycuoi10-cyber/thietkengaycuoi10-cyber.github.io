@@ -21,38 +21,59 @@
     const db = getFirestore(app);
     const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
 
-    let isAuthInitialized = false;
-
-    // Hàm khởi tạo xác thực tuân thủ RULE 3
+    // Hàm khởi tạo xác thực tuân thủ RULE 3 (Đã fix lỗi login)
     const initAuth = async () => {
         try {
             if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                await signInWithCustomToken(auth, __initial_auth_token);
+                try {
+                    // Cố gắng đăng nhập bằng Token hệ thống cấp
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } catch (tokenError) {
+                    console.warn("Token lỗi, chuyển sang đăng nhập Ẩn danh...", tokenError);
+                    // Nếu token lỗi, Force đăng nhập ẩn danh ngay lập tức
+                    await signInAnonymously(auth);
+                }
             } else {
                 await signInAnonymously(auth);
             }
-            isAuthInitialized = true;
         } catch (error) {
-            console.error("Auth Initialization Error:", error);
+            console.error("Lỗi khởi tạo Auth nghiêm trọng:", error);
         }
     };
+
+    // Theo dõi trạng thái để đảm bảo user luôn sẵn sàng
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            console.log("Admin System Connected: ", user.uid);
+        } else {
+            // Mất kết nối thì thử kết nối lại
+            initAuth();
+        }
+    });
 
     // Chạy init auth ngay khi tải trang
     initAuth();
 
     window.saveVoucherToCloud = async (code, amount) => {
-        // Đảm bảo đã login trước khi truy vấn
-        if (!auth.currentUser) {
-            await initAuth();
-        }
-        
-        // Guard operation
-        if (!auth.currentUser) {
-            console.error("No authenticated user found.");
-            return false;
-        }
-
         try {
+            // Đảm bảo đã login trước khi truy vấn
+            if (!auth.currentUser) {
+                await initAuth();
+            }
+            
+            // Chờ một chút để state được cập nhật nếu vừa login xong
+            if (!auth.currentUser) {
+                // Thử đợi thêm 1s nếu mạng chậm
+                await new Promise(r => setTimeout(r, 1000));
+            }
+
+            // Guard operation final check
+            if (!auth.currentUser) {
+                console.error("Mất kết nối Auth, không thể lưu.");
+                alert("Lỗi kết nối Server! Vui lòng tải lại trang.");
+                return false;
+            }
+
             // Lưu vào đường dẫn public tuân thủ RULE 1
             const voucherRef = doc(db, 'artifacts', appId, 'public', 'data', 'vouchers', code);
             await setDoc(voucherRef, {
@@ -65,7 +86,8 @@
             });
             return true;
         } catch (e) {
-            console.error("Lỗi lưu Cloud:", e);
+            console.error("Lỗi lưu Cloud chi tiết:", e);
+            alert("Lỗi lưu dữ liệu: " + e.message);
             return false;
         }
     };
@@ -201,7 +223,8 @@ async function generateCode() {
         document.getElementById('generatedCode').value = code;
         saveHistory(code, amount);
     } else {
-        alert("Lỗi kết nối Cloud hoặc Quyền hạn! Kiểm tra console.");
+        // Alert đã được xử lý bên trong saveVoucherToCloud để chi tiết hơn
+        console.error("Lỗi khi lưu");
     }
 
     btn.disabled = false;
