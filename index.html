@@ -115,18 +115,20 @@
         .comp-label.before { right: 10px; } 
         .comp-label.after { left: 10px; } 
         
-        /* Mobile Image Frame */
+        /* Mobile Image Frame (Cố định khung ảnh) */
         .mobile-image-frame {
-            border: 1px solid rgba(139, 92, 246, 0.3); /* Violet border */
-            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            border: 2px solid rgba(139, 92, 246, 0.5); /* Viền tím */
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
             background: #000;
-            border-radius: 12px;
+            border-radius: 16px;
             overflow: hidden;
-            max-width: 95vw;
-            max-height: 70vh; /* Giới hạn chiều cao trên mobile */
+            max-width: 90vw; /* Giới hạn chiều rộng 90% màn hình */
+            max-height: 65vh; /* Giới hạn chiều cao */
             display: flex;
             align-items: center;
             justify-content: center;
+            margin: 0 auto; /* Căn giữa */
+            position: relative;
         }
     </style>
 </head>
@@ -984,6 +986,20 @@
                 }
             };
 
+            // === SIDEBAR HELPERS (MOVED UP FOR SAFETY) ===
+            const sidebar = document.getElementById('sidebar');
+            const mobileBar = document.getElementById('mobile-action-bar');
+
+            function openSidebar() {
+                if(sidebar) sidebar.classList.remove('-translate-x-full');
+                if(mobileBar) mobileBar.classList.add('translate-y-24', 'opacity-0'); 
+            }
+
+            function closeSidebar() {
+                if(sidebar) sidebar.classList.add('-translate-x-full');
+                if(mobileBar) mobileBar.classList.remove('translate-y-24', 'opacity-0'); 
+            }
+
             // === NEW: PROFESSIONAL RECHARGE LOGIC ===
             function initRechargeSystem(deviceId) {
                 const pkgCards = document.querySelectorAll('.recharge-pkg-card');
@@ -1127,6 +1143,13 @@
 
             const toggleModule = (btnId, contentId, iconId) => { const btn = document.getElementById(btnId), content = document.getElementById(contentId), icon = document.getElementById(iconId); if(btn) btn.addEventListener('click', () => { if(content) content.classList.toggle('open'); if(icon && content) icon.style.transform = content.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)'; }); };
             ['processing','subject','identity','prompt','logo','military','cinematic','exposure'].forEach(id => toggleModule(`toggle-${id}`, `content-${id}`, `icon-${id}`));
+
+            // SIDEBAR TOGGLE & MOBILE BAR INTERACTION
+            const toggleSidebarBtn = document.getElementById('toggle-sidebar-btn');
+            if(toggleSidebarBtn) toggleSidebarBtn.onclick = openSidebar;
+            
+            const closeSidebarMobileBtn = document.getElementById('close-sidebar-mobile');
+            if(closeSidebarMobileBtn) closeSidebarMobileBtn.onclick = closeSidebar;
 
             // REAL LOGIC RESTORATION
             const btnAutoPilot = document.getElementById('btn-auto-pilot'), processBtn = document.getElementById('process-image');
@@ -1272,7 +1295,7 @@
                         restoredImg.src = finalImgSrc;
                     } else { throw new Error("Không tạo được ảnh."); }
                 } catch(e) { console.error(e); showToast("Lỗi: " + e.message, "error"); updateMobileBtnState('run'); }
-                finally { processBtn.disabled = false; processBtn.innerHTML = "TẠOẢNH (FLUX KONTEXT)"; document.getElementById('ai-terminal-overlay').classList.add('hidden'); document.getElementById('scan-beam').classList.remove('active'); }
+                finally { processBtn.disabled = false; processBtn.innerHTML = "TẠO ẢNH (FLUX KONTEXT)"; document.getElementById('ai-terminal-overlay').classList.add('hidden'); document.getElementById('scan-beam').classList.remove('active'); }
             });
 
             // File Load & Mobile Logic
