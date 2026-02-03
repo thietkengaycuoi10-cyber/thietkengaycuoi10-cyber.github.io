@@ -14,80 +14,113 @@
     import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
     import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-    // Khởi tạo các biến môi trường từ hệ thống
-    const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-    const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+    // --- CẤU HÌNH FIREBASE ---
+    // Nếu chạy trên Web Hosting riêng, hãy thay thế object rỗng {} bên dưới bằng config từ Firebase Console của bạn
+    // Ví dụ: const fallbackConfig = { apiKey: "AIza...", ... };
+    const fallbackConfig = {}; 
 
-    // Hàm khởi tạo xác thực tuân thủ RULE 3 (Đã fix lỗi login)
+    const envConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+    const firebaseConfig = Object.keys(envConfig).length > 0 ? envConfig : fallbackConfig;
+    
+    // Kiểm tra nhanh config
+    const isConfigValid = Object.keys(firebaseConfig).length > 0;
+    
+    // Khởi tạo biến toàn cục
+    let app, auth, db;
+    let appId = 'default-app-id';
+
+    if (isConfigValid) {
+        app = initializeApp(firebaseConfig);
+        auth = getAuth(app);
+        db = getFirestore(app);
+        appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+    } else {
+        console.warn("⚠️ Chưa có cấu hình Firebase! Chức năng Cloud sẽ không hoạt động.");
+    }
+
+    // Hàm cập nhật trạng thái UI
+    const updateStatusUI = (status, message) => {
+        const el = document.getElementById('connectionStatus');
+        const dot = document.getElementById('statusDot');
+        const text = document.getElementById('statusText');
+        if (!el) return;
+
+        if (status === 'connected') {
+            el.className = "text-xs px-3 py-1 rounded-full bg-green-500/10 text-green-400 border border-green-500/20 flex items-center gap-2";
+            dot.className = "w-2 h-2 rounded-full bg-green-400";
+            text.innerText = "Đã kết nối Cloud";
+        } else if (status === 'connecting') {
+            el.className = "text-xs px-3 py-1 rounded-full bg-yellow-500/10 text-yellow-400 border border-yellow-500/20 flex items-center gap-2";
+            dot.className = "w-2 h-2 rounded-full bg-yellow-400 animate-pulse";
+            text.innerText = "Đang kết nối...";
+        } else {
+            el.className = "text-xs px-3 py-1 rounded-full bg-red-500/10 text-red-400 border border-red-500/20 flex items-center gap-2";
+            dot.className = "w-2 h-2 rounded-full bg-red-400";
+            text.innerText = message || "Mất kết nối";
+        }
+    };
+
+    // Hàm khởi tạo Auth
     const initAuth = async () => {
+        if (!isConfigValid) {
+            updateStatusUI('error', 'Thiếu Config Firebase');
+            return;
+        }
+
+        updateStatusUI('connecting');
         try {
             if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
                 try {
-                    // Cố gắng đăng nhập bằng Token hệ thống cấp
                     await signInWithCustomToken(auth, __initial_auth_token);
-                } catch (tokenError) {
-                    console.warn("Token lỗi, chuyển sang đăng nhập Ẩn danh...", tokenError);
-                    // Nếu token lỗi, Force đăng nhập ẩn danh ngay lập tức
+                } catch (err) {
+                    console.warn("Token lỗi, thử Anonymous...", err);
                     await signInAnonymously(auth);
                 }
             } else {
                 await signInAnonymously(auth);
             }
         } catch (error) {
-            console.error("Lỗi khởi tạo Auth nghiêm trọng:", error);
+            console.error("Auth Error:", error);
+            updateStatusUI('error', 'Lỗi Auth');
         }
     };
 
-    // Theo dõi trạng thái để đảm bảo user luôn sẵn sàng
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            console.log("Admin System Connected: ", user.uid);
-        } else {
-            // Mất kết nối thì thử kết nối lại
-            initAuth();
-        }
-    });
+    if (isConfigValid) {
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                updateStatusUI('connected');
+                window.currentUserUID = user.uid; // Lưu để check nhanh
+            } else {
+                updateStatusUI('connecting');
+                initAuth();
+            }
+        });
+        initAuth();
+    } else {
+        // Chạy sau khi DOM load để đảm bảo element tồn tại
+        setTimeout(() => updateStatusUI('error', 'Chưa cấu hình API'), 500);
+    }
 
-    // Chạy init auth ngay khi tải trang
-    initAuth();
-
+    // --- HÀM LƯU CLOUD (Được gọi từ bên ngoài) ---
     window.saveVoucherToCloud = async (code, amount) => {
-        // Kiểm tra config
-        if (Object.keys(firebaseConfig).length === 0) {
-            alert("Lỗi: Không tìm thấy cấu hình Firebase. Vui lòng tải lại trang!");
+        if (!isConfigValid) {
+            alert("LỖI: Chưa cấu hình Firebase! Hãy mở source code và điền 'fallbackConfig' nếu chạy trên web riêng.");
             return false;
         }
 
         try {
-            // Đảm bảo đã login trước khi truy vấn
             if (!auth.currentUser) {
-                await initAuth();
-            }
-            
-            // Chờ một chút để state được cập nhật nếu vừa login xong
-            if (!auth.currentUser) {
-                // Thử đợi thêm 1s nếu mạng chậm
-                await new Promise(r => setTimeout(r, 1000));
+                // Thử đợi 2s nếu đang kết nối dở
+                await new Promise(r => setTimeout(r, 2000));
+                if (!auth.currentUser) throw new Error("Chưa kết nối được Server.");
             }
 
-            // Guard operation final check
-            if (!auth.currentUser) {
-                console.error("Mất kết nối Auth, không thể lưu.");
-                alert("Lỗi kết nối Server (Auth)! Vui lòng tải lại trang.");
-                return false;
-            }
-
-            // Tạo timeout 10 giây để tránh bị treo nút bấm
+            // Tạo timeout 10s
             const timeoutPromise = new Promise((_, reject) => 
-                setTimeout(() => reject(new Error("Quá thời gian kết nối (Timeout). Mạng yếu hoặc Server bận.")), 10000)
+                setTimeout(() => reject(new Error("Timeout: Server phản hồi quá lâu.")), 10000)
             );
 
-            // Lưu vào đường dẫn public tuân thủ RULE 1
             const voucherRef = doc(db, 'artifacts', appId, 'public', 'data', 'vouchers', code);
-            
             const savePromise = setDoc(voucherRef, {
                 code: code,
                 amount: amount,
@@ -97,13 +130,11 @@
                 usedBy: null
             });
 
-            // Đua tốc độ: Nếu lưu lâu hơn 10s sẽ báo lỗi
             await Promise.race([savePromise, timeoutPromise]);
-            
             return true;
         } catch (e) {
-            console.error("Lỗi lưu Cloud chi tiết:", e);
-            alert("Lỗi lưu dữ liệu: " + e.message);
+            console.error("Save Error:", e);
+            alert("Lỗi lưu Cloud: " + e.message);
             return false;
         }
     };
@@ -142,9 +173,19 @@
 
     <!-- DASHBOARD -->
     <div id="dashboard" class="hidden w-full max-w-4xl space-y-6">
-        <div class="flex justify-between items-center">
-            <h2 class="text-xl font-bold text-white">Quản lý Voucher (Đồng bộ Cloud)</h2>
-            <button onclick="logout()" class="text-xs bg-red-500/10 text-red-400 px-4 py-2 rounded-full border border-red-500/20 hover:bg-red-500/20 transition-all">Đăng xuất</button>
+        <div class="flex justify-between items-center bg-black/20 p-4 rounded-2xl border border-white/5">
+            <div>
+                <h2 class="text-xl font-bold text-white">Quản lý Voucher</h2>
+                <p class="text-[10px] text-gray-500 uppercase tracking-wider mt-1">Hệ thống đồng bộ Cloud</p>
+            </div>
+            <div class="flex flex-col items-end gap-2">
+                <!-- Status Indicator -->
+                <div id="connectionStatus" class="text-xs px-3 py-1 rounded-full bg-gray-500/10 text-gray-400 border border-gray-500/20 flex items-center gap-2">
+                    <span id="statusDot" class="w-2 h-2 rounded-full bg-gray-500"></span>
+                    <span id="statusText">Đang tải...</span>
+                </div>
+                <button onclick="logout()" class="text-xs text-red-400 hover:text-red-300 transition-all">Đăng xuất</button>
+            </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -176,7 +217,7 @@
                 
                 <div id="resultBox" class="hidden mt-4">
                     <input id="generatedCode" readonly class="w-full bg-black/40 border border-green-500/30 rounded-xl py-3 text-center font-mono text-green-400 font-bold cursor-pointer" onclick="copyCode()">
-                    <p class="text-[10px] text-center text-gray-500 mt-1">Mã đã được lưu lên Cloud, khách chỉ dùng được 1 lần.</p>
+                    <p id="processStatus" class="text-[10px] text-center text-gray-500 mt-1">...</p>
                 </div>
 
                 <div class="mt-4 border-t border-white/5 pt-4">
@@ -220,6 +261,12 @@ if (sessionStorage.getItem("v35_admin_logged") === "true") showDash();
 function logout() { sessionStorage.removeItem("v35_admin_logged"); location.reload(); }
 function setAmount(v) { document.getElementById('customAmount').value = v; }
 
+function updateProcess(msg, isError = false) {
+    const el = document.getElementById('processStatus');
+    el.innerText = msg;
+    el.className = isError ? "text-[10px] text-center text-red-400 mt-1" : "text-[10px] text-center text-gray-500 mt-1";
+}
+
 async function generateCode() {
     const amount = parseInt(document.getElementById('customAmount').value);
     if (!amount) return alert("Nhập số tiền!");
@@ -227,20 +274,35 @@ async function generateCode() {
     const btn = document.getElementById('btnGen');
     btn.disabled = true;
     const originalText = btn.innerText;
-    btn.innerText = "ĐANG LƯU CLOUD...";
+    btn.innerText = "ĐANG XỬ LÝ...";
+    
+    // Hiện box kết quả để user thấy trạng thái
+    document.getElementById('resultBox').classList.remove("hidden");
+    document.getElementById('generatedCode').value = "Đang kết nối Cloud...";
+    updateProcess("Đang khởi tạo mã...");
 
     const code = `V35-${amount}-PRO-${Math.random().toString(36).substr(2, 6).toUpperCase()}-${Date.now().toString().slice(-4)}`;
     
     // ĐỒNG BỘ LÊN CLOUD
+    updateProcess("Đang gửi dữ liệu lên Server...");
+    
+    // Nếu hàm saveVoucherToCloud chưa load kịp (do module)
+    if (typeof window.saveVoucherToCloud === 'undefined') {
+        alert("Hệ thống chưa tải xong Module! Vui lòng đợi 3 giây rồi thử lại.");
+        btn.disabled = false;
+        btn.innerText = originalText;
+        return;
+    }
+
     const success = await window.saveVoucherToCloud(code, amount);
 
     if (success) {
-        document.getElementById('resultBox').classList.remove("hidden");
         document.getElementById('generatedCode').value = code;
+        updateProcess("Thành công! Mã đã lưu trên Cloud.");
         saveHistory(code, amount);
     } else {
-        // Alert đã được xử lý bên trong saveVoucherToCloud để chi tiết hơn
-        console.error("Lỗi khi lưu");
+        document.getElementById('generatedCode').value = "LỖI LƯU CLOUD";
+        updateProcess("Thất bại. Kiểm tra kết nối mạng.", true);
     }
 
     btn.disabled = false;
@@ -261,23 +323,16 @@ function renderHistory() {
 
 function copyCode() {
     const el = document.getElementById('generatedCode');
-    
-    // Sử dụng execCommand thay vì navigator.clipboard
     el.select();
-    el.setSelectionRange(0, 99999); // Cho mobile
-    
+    el.setSelectionRange(0, 99999);
     try {
         const successful = document.execCommand('copy');
         if (successful) {
-            const old = el.value; 
-            el.value = "ĐÃ COPY!"; 
-            setTimeout(()=>el.value=old, 1000);
+            const old = el.value; el.value = "ĐÃ COPY!"; setTimeout(()=>el.value=old, 1000);
         } else {
-            alert("Không thể copy tự động, vui lòng copy thủ công.");
+            alert("Copy thủ công nhé!");
         }
-    } catch (err) {
-        alert("Lỗi copy: " + err);
-    }
+    } catch (err) { alert("Lỗi copy: " + err); }
 }
 
 function saveUser() {
@@ -291,21 +346,17 @@ function saveUser() {
 function exportEmbedCode() {
     const s = localStorage.getItem("v35_user_settings");
     if(!s) return alert("Hãy lưu API trước!");
-    
-    // Tạo textarea tạm thời để copy
     const tempInput = document.createElement("textarea");
     tempInput.value = s;
     document.body.appendChild(tempInput);
     tempInput.select();
     tempInput.setSelectionRange(0, 99999);
-    
     try {
         document.execCommand("copy");
         alert("Đã copy mã nhúng! Hãy dán vào index.html");
     } catch (err) {
         alert("Không thể copy: " + err);
     }
-    
     document.body.removeChild(tempInput);
 }
 
