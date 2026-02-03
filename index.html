@@ -1214,6 +1214,22 @@
                     let finalPrompt = document.getElementById('prompt-main').value;
                     if(!finalPrompt) finalPrompt = "Restore this photo, remove scratches, high quality, 8k";
                     
+                    // --- NEW LOGIC START ---
+                    // Check Anti-flip
+                    const antiFlip = document.getElementById('check-anti-flip')?.checked;
+                    if (antiFlip) {
+                        finalPrompt += ", (maintain original composition:1.5), (do not flip:1.5), (preserve composition:1.4)";
+                    }
+                    
+                    // Check Replica Mode (Identity Lock)
+                    const replicaMode = document.getElementById('mode-replica')?.checked;
+                    if (replicaMode) {
+                        finalPrompt += ", (exact facial features:1.5), (same face structure:1.5)";
+                    }
+                    // ADD STRONG CONSTRAINTS FOR STRUCTURE PRESERVATION
+                    finalPrompt += ", (maintain original composition:1.5), (do not flip:1.5), (do not crop:1.4), (preserve original aspect ratio:1.4)";
+                    // --- NEW LOGIC END ---
+                    
                     // Add extra modifiers
                     finalPrompt += ", (best quality, 8k, hyper detailed)";
 
@@ -1230,7 +1246,22 @@
                         const restoredImg = new Image();
                         restoredImg.onload = () => {
                             state.restoredObj = restoredImg;
-                            document.getElementById('img-modified').src = finalImgSrc;
+                            
+                            // === FORCE RESIZE DISPLAY FIX ===
+                            const imgOriginal = document.getElementById('img-original');
+                            const imgModified = document.getElementById('img-modified');
+                            
+                            imgModified.src = finalImgSrc;
+                            
+                            // Force modified image to exactly match original's display size
+                            if(imgOriginal) {
+                                const w = imgOriginal.clientWidth;
+                                const h = imgOriginal.clientHeight;
+                                imgModified.style.width = w + 'px';
+                                imgModified.style.height = h + 'px';
+                                imgModified.style.maxWidth = 'none'; // Ensure no constrain
+                            }
+
                             document.getElementById('comparison-view').style.display = 'flex';
                             document.getElementById('placeholder-state').style.display = 'none';
                             
