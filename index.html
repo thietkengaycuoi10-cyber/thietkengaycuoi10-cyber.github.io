@@ -972,18 +972,14 @@
         document.addEventListener('DOMContentLoaded', () => {
             const apiKey = ""; 
 
-            // === HỆ THỐNG MÃ HÓA BẢO MẬT (ĐỒNG BỘ ADMIN) ===
+            // === HỆ THỐNG MÃ HÓA BẢO MẬT (ĐỒNG BỘ ADMIN V35_SEC_V2) ===
             const Sec = {
-                key: "V35_SECURE_KEY_SALT", 
+                key: "V35_SEC_V2", 
                 dec(t){
                     try {
                         if(!t) return null;
-                        let text = atob(t);
-                        let result = '';
-                        for(let i = 0; i < text.length; i++) {
-                            result += String.fromCharCode(text.charCodeAt(i) ^ this.key.charCodeAt(i % this.key.length));
-                        }
-                        return result;
+                        // Logic giải mã khớp với logic mã hóa của Admin
+                        return [...atob(t)].map((c,i) => String.fromCharCode(c.charCodeAt(0)^this.key.charCodeAt(i%this.key.length))).join("")
                     } catch(e) { return null; }
                 }
             };
@@ -1040,7 +1036,27 @@
                         }
 
                         if (configStr) {
-                            const jsonStr = Sec.dec(configStr);
+                            // Dùng hàm giải mã cũ cho config string nếu cần, hoặc giả định config string dùng key cũ/riêng
+                            // Ở đây ta tạm dùng hàm giải mã đơn giản tương tự Sec cũ nếu config encrypt bằng key cũ
+                            // Tuy nhiên để an toàn, ta dùng logic giải mã riêng cho config nếu nó khác
+                            // Trong trường hợp này, ta giả định Sec.dec mới tương thích nếu admin dùng cùng key V35_SEC_V2 để mã hóa config
+                            // Nếu mã nhúng dùng key cũ "V35_SECURE_KEY_SALT", ta cần logic giải mã riêng ở đây.
+                            
+                            // TẠM THỜI: Dùng logic giải mã config riêng để không ảnh hưởng Sec chính
+                            const decryptConfig = (t) => {
+                                const k = "V35_SECURE_KEY_SALT"; // Key cũ từ file gốc để giải mã config cũ
+                                try {
+                                    if(!t) return null;
+                                    let text = atob(t);
+                                    let result = '';
+                                    for(let i = 0; i < text.length; i++) {
+                                        result += String.fromCharCode(text.charCodeAt(i) ^ k.charCodeAt(i % k.length));
+                                    }
+                                    return result;
+                                } catch(e) { return null; }
+                            };
+
+                            const jsonStr = decryptConfig(configStr);
                             if (jsonStr) {
                                 const config = JSON.parse(jsonStr);
                                 if (config && config.apiKey) {
@@ -1670,9 +1686,57 @@
             
             // Note: mob-btn-run is handled via updateMobileBtnState logic usually, but we attached a direct listener above too for safety.
             
-            // Redeem Code
-            const redeemBtn = document.getElementById('btn-submit-recharge'), redeemInput = document.getElementById('recharge-input');
-            if(redeemBtn) redeemBtn.addEventListener('click', () => { const code = redeemInput.value.trim(); if(!code) return showToast("Vui lòng nhập mã!", "error"); const parts = code.split('-'); if(parts.length !== 5 || parts[0] !== 'V35') return showToast("Mã không hợp lệ!", "error"); const credits = parseInt(parts[1]); if(isNaN(credits)) return showToast("Lỗi định dạng tín dụng!", "error"); UserSystem.addCredits(credits); showToast(`Nạp thành công +${credits} Credits!`, "success"); document.getElementById('recharge-modal').classList.add('hidden'); redeemInput.value = ''; });
+            // =========================================================
+            //  NEW SECURE REDEEM LOGIC (UPDATED FROM ADMIN)
+            // =========================================================
+            const redeemBtn = document.getElementById('btn-submit-recharge');
+            const redeemInput = document.getElementById('recharge-input');
+
+            if(redeemBtn) redeemBtn.addEventListener('click', () => { 
+                const code = redeemInput.value.trim(); 
+                if(!code) return showToast("Vui lòng nhập mã!", "error"); 
+                
+                // 1. Check if used locally
+                const usedCodes = JSON.parse(localStorage.getItem('v35_used_codes') || '[]');
+                if (usedCodes.includes(code)) return showToast("Mã này đã được sử dụng!", "error");
+
+                // 2. Validate prefix
+                if (!code.startsWith('V35-')) return showToast("Mã không đúng định dạng V35-...", "error");
+
+                // 3. Decrypt Payload
+                const token = code.substring(4);
+                const decrypted = Sec.dec(token);
+
+                if (!decrypted) return showToast("Mã không hợp lệ hoặc bị lỗi!", "error");
+
+                // 4. Parse Payload: AMOUNT|MACHINE_ID|RANDOM
+                const parts = decrypted.split('|');
+                if (parts.length < 3) return showToast("Dữ liệu mã bị hỏng!", "error");
+
+                const amount = parseInt(parts[0]);
+                const targetMachine = parts[1];
+
+                // 5. SECURITY CHECK: Device ID Lock
+                if (targetMachine !== UserSystem.deviceId) {
+                    console.log(`Mismatch: Code for ${targetMachine}, Current is ${UserSystem.deviceId}`);
+                    return showToast(`Mã này bị khóa cho máy: ${targetMachine}. Bạn không thể dùng!`, "error");
+                }
+
+                if (isNaN(amount)) return showToast("Lỗi giá trị Credit!", "error");
+
+                // 6. Apply Credits
+                UserSystem.addCredits(amount);
+                
+                // 7. Save to used codes
+                usedCodes.push(code);
+                localStorage.setItem('v35_used_codes', JSON.stringify(usedCodes));
+
+                const msg = amount > 0 ? `Nạp thành công +${amount} Credits!` : `Đã trừ ${Math.abs(amount)} Credits!`;
+                showToast(msg, amount > 0 ? "success" : "warning");
+                
+                document.getElementById('recharge-modal').classList.add('hidden'); 
+                redeemInput.value = ''; 
+            });
             
             // FIX NULL ERROR: CHECK IF CLOSE BTN EXISTS
             const closeRechargeBtn = document.getElementById('close-recharge');

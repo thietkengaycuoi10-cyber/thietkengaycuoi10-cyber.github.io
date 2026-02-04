@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>V35 ADMIN SYSTEM - SECURE ID</title>
+    <title>V35 ADMIN SYSTEM - SECURE ID LOCK</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -256,7 +256,6 @@
 const ADMIN_PASS = "admin123";
 const Sec={key:"V35_SEC_V2",enc(t){return btoa([...t].map((c,i)=>String.fromCharCode(c.charCodeAt(0)^this.key.charCodeAt(i%this.key.length))).join(""))},dec(t){try{return[...atob(t)].map((c,i)=>String.fromCharCode(c.charCodeAt(0)^this.key.charCodeAt(i%this.key.length))).join("")}catch(e){return null}}};
 
-// Function to get/create a unique Device ID for the machine
 function getMyDeviceId() {
     let id = localStorage.getItem('v35_my_device_id');
     if(!id) {
@@ -266,7 +265,6 @@ function getMyDeviceId() {
     return id;
 }
 
-// ===== DOM ELEMENTS =====
 const els = {
     loginBox: document.getElementById('loginBox'),
     dashboard: document.getElementById('dashboard'),
@@ -287,10 +285,8 @@ const els = {
     historyList: document.getElementById('historyList')
 };
 
-// Initialize device ID display
 els.myDeviceIdDisplay.innerText = getMyDeviceId();
 
-// ===== CORE FUNCTIONS =====
 function adminLogin() {
     if (els.adminPass.value.trim() === ADMIN_PASS) {
         sessionStorage.setItem("v35_admin_logged", "true");
@@ -311,7 +307,6 @@ if (sessionStorage.getItem("v35_admin_logged") === "true") showDash();
 
 function logout() { sessionStorage.removeItem("v35_admin_logged"); location.reload(); }
 
-// --- CONFIG API LOGIC ---
 function searchUserKey() {
     const id = els.userKey.value.trim();
     if(!id) return showError(els.searchMsg, "Vui lòng nhập ID!", true);
@@ -327,11 +322,11 @@ function searchUserKey() {
                 els.cometKey.value = data.cometKey || "";
                 els.provider.value = data.provider || "gemini";
                 els.targetMachineId.value = data.targetMachineId || "";
-                showSuccess(els.searchMsg, `Đã tải Config & Khóa máy cho: ${id}`, true);
+                showSuccess(els.searchMsg, `Đã tải Config cho: ${id}`, true);
             }
         } catch(e) { showError(els.searchMsg, "Lỗi giải mã dữ liệu", true); }
     } else {
-        els.searchMsg.innerHTML = `<span class="text-blue-400 font-medium">✨ ID mới. Hãy nhập Key, ID Máy và Lưu.</span>`;
+        els.searchMsg.innerHTML = `<span class="text-blue-400 font-medium">✨ ID mới. Hãy nhập Key và Lưu.</span>`;
     }
 }
 
@@ -345,17 +340,16 @@ function saveUser() {
     const machineId = els.targetMachineId.value.trim();
     
     if (!id) return showError(els.saveStatus, "Chưa nhập ID Khách Hàng!");
-    if (!machineId) return showError(els.saveStatus, "CẢNH BÁO: Chưa nhập ID Máy để khóa!");
+    if (!machineId) return showError(els.saveStatus, "CẢNH BÁO: Chưa có ID Máy!");
 
     let credit = 0;
     const crRaw = localStorage.getItem("v35_credits_" + id);
     if(crRaw !== null) credit = parseInt(crRaw);
 
-    // Add targetMachineId to the encrypted object
     const data = { 
         deviceId: "ADMIN", 
         userKey: id, 
-        targetMachineId: machineId, // Lock this machine
+        targetMachineId: machineId,
         geminiKey: els.geminiKey.value, 
         cometKey: els.cometKey.value, 
         provider: els.provider.value, 
@@ -367,25 +361,23 @@ function saveUser() {
     localStorage.setItem("v35_user_" + id, enc);
     localStorage.setItem("v35_active_user", enc); 
     
-    showSuccess(els.saveStatus, `Đã lưu cấu hình và khóa cho máy: ${machineId}`);
+    showSuccess(els.saveStatus, `Đã lưu và khóa máy: ${machineId}`);
 }
 
-// --- VOUCHER LOGIC ---
-function setAmount(val) { 
-    els.customAmount.value = val;
-    els.customAmount.focus();
-}
-
+// --- VOUCHER LOGIC (SECURE UPGRADE) ---
 function generateCode() {
     const amount = parseInt(els.customAmount.value);
     const targetMachine = els.targetMachineId.value.trim();
     
     if (!amount || amount === 0) return alert("Nhập số Credit hợp lệ!");
-    if (!targetMachine) return alert("Vui lòng nhập ID Máy ở Bước 2 trước khi tạo Code để bảo mật!");
+    if (!targetMachine) return alert("Bạn phải nhập ID Máy ở Bước 2 để khóa mã!");
 
-    // Code structure includes short machine ID hint for verification
-    const machineHint = targetMachine.slice(-4);
-    const code = `V35-${amount}-${machineHint}-${Math.random().toString(36).substr(2, 4).toUpperCase()}-${Date.now().toString().slice(-4)}`;
+    // Chữ ký bảo mật: Dùng Sec.enc để đóng gói [Số tiền + ID Máy + Random]
+    // Cấu trúc mã mới: V35-[Chuỗi_Mã_Hóa_Bảo_Mật]
+    const rawPayload = `${amount}|${targetMachine}|${Math.random().toString(36).substr(2, 4).toUpperCase()}`;
+    const secureToken = Sec.enc(rawPayload);
+    
+    const code = `V35-${secureToken}`;
     
     els.resultBox.classList.remove("hidden");
     els.generatedCode.value = code;
@@ -421,7 +413,7 @@ function renderHistory() {
                 <span class="text-[9px] font-bold text-orange-500">Lock: ${i.machine}</span>
             </div>
             <div class="flex justify-between items-center">
-                <span class="text-[10px] font-mono font-medium text-gray-300 select-all">${i.code}</span>
+                <span class="text-[10px] font-mono font-medium text-gray-300 select-all truncate max-w-[150px]">${i.code}</span>
                 <span class="text-[10px] font-bold ${i.amount < 0 ? 'text-red-400' : 'text-green-400'}">${i.amount > 0 ? '+' : ''}${i.amount}</span>
             </div>
         </div>
@@ -430,7 +422,6 @@ function renderHistory() {
 
 function clearHistory() { if(confirm("Xóa lịch sử?")) { localStorage.removeItem('v35_code_history'); renderHistory(); } }
 
-// Utils
 function showError(el, msg, isHtml=false) { el.classList.remove('text-green-400'); el.classList.add('text-red-400'); isHtml ? el.innerHTML = msg : el.innerText = msg; setTimeout(() => el.innerText = "", 4000); }
 function showSuccess(el, msg, isHtml=false) { el.classList.remove('text-red-400'); el.classList.add('text-green-400'); isHtml ? el.innerHTML = msg : el.innerText = msg; setTimeout(() => el.innerText = "", 4000); }
 els.adminPass.addEventListener("keypress", (e) => { if (e.key === "Enter") adminLogin(); });
