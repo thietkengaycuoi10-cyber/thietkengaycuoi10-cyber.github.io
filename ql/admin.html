@@ -1,80 +1,78 @@
 <!DOCTYPE html>
 <html lang="vi" class="antialiased">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>V35 ADMIN SYSTEM</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>V35 ADMIN SYSTEM - SECURE ID</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-<script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
 
-<script>
-    tailwind.config = {
-        theme: {
-            extend: {
-                fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] },
-                colors: {
-                    glass: {
-                        surface: 'rgba(255, 255, 255, 0.03)',
-                        border: 'rgba(255, 255, 255, 0.08)',
-                        highlight: 'rgba(255, 255, 255, 0.1)',
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] },
+                    colors: {
+                        glass: {
+                            surface: 'rgba(255, 255, 255, 0.03)',
+                            border: 'rgba(255, 255, 255, 0.08)',
+                            highlight: 'rgba(255, 255, 255, 0.1)',
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-out forwards',
+                        'slide-up': 'slideUp 0.4s ease-out forwards',
+                    },
+                    keyframes: {
+                        fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+                        slideUp: { '0%': { opacity: '0', transform: 'translateY(10px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } }
                     }
-                },
-                animation: {
-                    'fade-in': 'fadeIn 0.5s ease-out forwards',
-                    'slide-up': 'slideUp 0.4s ease-out forwards',
-                },
-                keyframes: {
-                    fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
-                    slideUp: { '0%': { opacity: '0', transform: 'translateY(10px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } }
                 }
             }
         }
-    }
-</script>
+    </script>
 
-<style>
-    body {
-        background-color: #09090b;
-        background-image: 
-            radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.1) 0px, transparent 50%),
-            radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.15) 0px, transparent 50%),
-            radial-gradient(at 100% 100%, rgba(236, 72, 153, 0.1) 0px, transparent 50%);
-        background-attachment: fixed;
-        color: #e4e4e7;
-    }
-    
-    .glass-card {
-        background: rgba(18, 18, 23, 0.7);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    }
+    <style>
+        body {
+            background-color: #09090b;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.1) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(236, 72, 153, 0.1) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: #e4e4e7;
+        }
+        
+        .glass-card {
+            background: rgba(18, 18, 23, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
 
-    .input-field {
-        background: rgba(0, 0, 0, 0.2);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        transition: all 0.2s ease;
-    }
-    .input-field:focus {
-        background: rgba(0, 0, 0, 0.4);
-        border-color: #8b5cf6;
-        box-shadow: 0 0 0 1px #8b5cf6;
-        outline: none;
-    }
+        .input-field {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.2s ease;
+        }
+        .input-field:focus {
+            background: rgba(0, 0, 0, 0.4);
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 1px #8b5cf6;
+            outline: none;
+        }
 
-    .btn-action {
-        transition: all 0.2s ease;
-    }
-    .btn-action:active { transform: scale(0.98); }
+        .btn-action {
+            transition: all 0.2s ease;
+        }
+        .btn-action:active { transform: scale(0.98); }
 
-    /* Custom Scrollbar */
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
-    ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }
-</style>
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+    </style>
 </head>
 
 <body class="min-h-screen flex items-center justify-center p-4 sm:p-6">
@@ -82,17 +80,16 @@
     <!-- LOGIN PANEL -->
     <div id="loginBox" class="w-full max-w-sm glass-card rounded-2xl p-8 animate-fade-in text-center relative overflow-hidden">
         <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"></div>
-        
         <div class="mb-8">
             <div class="w-16 h-16 bg-gradient-to-br from-white/10 to-transparent rounded-2xl border border-white/10 flex items-center justify-center mx-auto mb-4 shadow-lg">
                 <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
             </div>
             <h1 class="text-xl font-bold tracking-tight text-white">V35 ADMIN</h1>
-            <p class="text-xs text-gray-500 mt-1 uppercase tracking-widest">System Access</p>
+            <p class="text-xs text-gray-500 mt-1 uppercase tracking-widest">Secure Access Control</p>
         </div>
 
         <div class="space-y-4">
-            <input id="adminPass" type="password" placeholder="Nhập mật khẩu..." class="input-field w-full px-4 py-3 rounded-xl text-center text-sm placeholder-gray-600 tracking-wider">
+            <input id="adminPass" type="password" placeholder="Nhập mật khẩu quản trị..." class="input-field w-full px-4 py-3 rounded-xl text-center text-sm placeholder-gray-600 tracking-wider">
             <button onclick="adminLogin()" class="btn-action w-full py-3 bg-white text-black font-bold rounded-xl text-sm hover:bg-gray-200 shadow-lg shadow-white/10">
                 ĐĂNG NHẬP
             </button>
@@ -101,43 +98,50 @@
     </div>
 
     <!-- DASHBOARD -->
-    <div id="dashboard" class="hidden w-full max-w-5xl animate-slide-up">
+    <div id="dashboard" class="hidden w-full max-w-6xl animate-slide-up">
         
         <!-- Top Bar -->
-        <div class="flex items-center justify-between mb-6 px-2">
+        <div class="flex flex-col md:flex-row items-center justify-between mb-6 px-2 gap-4">
             <div class="flex items-center gap-3">
                 <div class="w-2 h-8 bg-gradient-to-b from-blue-500 to-purple-500 rounded-full"></div>
                 <div>
                     <h2 class="font-bold text-lg text-white leading-tight">Admin Dashboard</h2>
-                    <p class="text-[11px] text-gray-400 font-medium">Quản lý hệ thống V35</p>
+                    <p class="text-[11px] text-gray-400 font-medium">Device Security Management</p>
                 </div>
             </div>
-            <button onclick="logout()" class="group flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 hover:bg-red-500/10 border border-white/5 hover:border-red-500/30 transition-all">
-                <span class="text-xs font-bold text-gray-300 group-hover:text-red-400">Thoát</span>
-                <svg class="w-4 h-4 text-gray-400 group-hover:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
-            </button>
+            
+            <div class="flex items-center gap-3">
+                <div class="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-right">
+                    <p class="text-[9px] text-gray-500 uppercase font-bold tracking-tighter">ID Máy Hiện Tại</p>
+                    <p id="myDeviceId" class="text-xs font-mono text-blue-400 font-bold">Checking...</p>
+                </div>
+                <button onclick="logout()" class="group flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 hover:bg-red-500/10 border border-white/5 hover:border-red-500/30 transition-all">
+                    <span class="text-xs font-bold text-gray-300 group-hover:text-red-400">Thoát</span>
+                    <svg class="w-4 h-4 text-gray-400 group-hover:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
+                </button>
+            </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             
-            <!-- CỘT 1: API CONFIG -->
+            <!-- CỘT 1: API & DEVICE CONFIG -->
             <div class="glass-card rounded-3xl p-1 overflow-hidden flex flex-col h-full">
                 <div class="px-6 py-4 border-b border-white/5 bg-white/[0.01] flex items-center gap-3">
-                    <div class="p-2 rounded-lg bg-blue-500/10 text-blue-400"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg></div>
-                    <h3 class="text-sm font-bold text-gray-200">Cấu Hình API Key</h3>
+                    <div class="p-2 rounded-lg bg-blue-500/10 text-blue-400"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg></div>
+                    <h3 class="text-sm font-bold text-gray-200">Cấu Hình & Khóa Thiết Bị</h3>
                 </div>
 
-                <div class="p-6 space-y-6 flex-1 flex flex-col">
+                <div class="p-6 space-y-5 flex-1 flex flex-col">
                     <!-- ID Search -->
                     <div class="space-y-2">
                         <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Bước 1: Tìm ID Khách</label>
                         <div class="flex gap-2">
                             <div class="relative flex-1">
-                                <input id="userKey" class="input-field w-full pl-10 pr-4 py-3 rounded-xl text-sm font-mono text-white placeholder-gray-600 focus:bg-blue-900/10" placeholder="Nhập ID (VD: ID-ABC123)">
+                                <input id="userKey" class="input-field w-full pl-10 pr-4 py-3 rounded-xl text-sm font-mono text-white placeholder-gray-600" placeholder="ID-XXXXX">
                                 <svg class="w-4 h-4 text-gray-500 absolute left-3.5 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                             </div>
-                            <button onclick="searchUserKey()" class="btn-action bg-blue-600 hover:bg-blue-500 text-white px-5 rounded-xl font-bold text-sm shadow-lg shadow-blue-500/20 whitespace-nowrap">
-                                Tải Dữ Liệu
+                            <button onclick="searchUserKey()" class="btn-action bg-blue-600 hover:bg-blue-500 text-white px-5 rounded-xl font-bold text-sm shadow-lg shadow-blue-500/20">
+                                Tải
                             </button>
                         </div>
                         <div id="searchMsg" class="h-5 text-[11px] flex items-center pl-1"></div>
@@ -145,33 +149,42 @@
 
                     <div class="w-full h-px bg-white/5"></div>
 
+                    <!-- Lock IP/Machine Section -->
+                    <div class="space-y-3 bg-white/5 p-4 rounded-2xl border border-white/5">
+                        <div class="flex items-center justify-between">
+                            <label class="text-[10px] font-bold text-orange-400 uppercase tracking-wider">Bước 2: Khóa Mã Máy (ID-XXXXX)</label>
+                            <span class="text-[9px] bg-orange-500/20 text-orange-300 px-2 py-0.5 rounded">QUAN TRỌNG</span>
+                        </div>
+                        <div class="relative">
+                            <input id="targetMachineId" class="input-field w-full px-4 py-3 rounded-xl text-sm font-mono text-white placeholder-gray-500 border-orange-500/20" placeholder="Dán mã máy của khách vào đây...">
+                            <p class="text-[9px] text-gray-500 mt-2 italic">* Chỉ máy có ID này mới có quyền nạp/nhận Credit từ hệ thống.</p>
+                        </div>
+                    </div>
+
                     <!-- API Form -->
-                    <div class="space-y-4 flex-1">
-                        <div class="space-y-1.5">
-                            <label class="text-[10px] font-bold text-gray-400">PROVIDER</label>
-                            <div class="relative">
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="space-y-1.5">
+                                <label class="text-[10px] font-bold text-gray-400">PROVIDER</label>
                                 <select id="provider" class="input-field w-full px-4 py-3 rounded-xl text-xs font-medium text-white appearance-none cursor-pointer">
                                     <option value="gemini">Google Gemini AI</option>
                                     <option value="comet">Comet Service</option>
                                 </select>
-                                <svg class="w-4 h-4 text-gray-500 absolute right-3 top-3 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </div>
+                            <div class="space-y-1.5">
+                                <label class="text-[10px] font-bold text-blue-400">GEMINI KEY</label>
+                                <input id="geminiKey" class="input-field w-full px-4 py-3 rounded-xl text-xs font-mono text-gray-300" placeholder="AIzaSy...">
                             </div>
                         </div>
-
-                        <div class="space-y-1.5">
-                            <label class="text-[10px] font-bold text-blue-400">GEMINI API KEY</label>
-                            <input id="geminiKey" class="input-field w-full px-4 py-3 rounded-xl text-xs font-mono text-gray-300" placeholder="AIzaSy...">
-                        </div>
-
                         <div class="space-y-1.5">
                             <label class="text-[10px] font-bold text-emerald-400">COMET API KEY</label>
                             <input id="cometKey" class="input-field w-full px-4 py-3 rounded-xl text-xs font-mono text-gray-300" placeholder="sk-...">
                         </div>
                     </div>
 
-                    <div class="pt-4">
+                    <div class="pt-2">
                         <button onclick="saveUser()" class="btn-action w-full py-4 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 shadow-lg shadow-blue-500/25 border border-white/10">
-                            LƯU CẤU HÌNH API
+                            LƯU CẤU HÌNH & KHÓA MÁY
                         </button>
                         <p id="saveStatus" class="text-center text-[11px] mt-2 h-4"></p>
                     </div>
@@ -186,44 +199,39 @@
                 </div>
 
                 <div class="p-6 space-y-6 flex-1 flex flex-col">
-                    <!-- Quick Select -->
                     <div class="space-y-2">
                         <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Chọn Mệnh Giá Nạp</label>
                         <div class="grid grid-cols-3 gap-3">
-                            <!-- UPDATED TO 100 CR -->
-                            <button onclick="setAmount(100)" class="btn-action py-3 rounded-xl bg-white/5 border border-white/5 hover:border-purple-500/50 hover:bg-purple-500/10 text-xs font-bold text-gray-300 transition-colors group">
-                                <span class="block text-white group-hover:text-purple-300">100 CR</span>
+                            <button onclick="setAmount(100)" class="btn-action py-3 rounded-xl bg-white/5 border border-white/5 hover:border-purple-500/50 hover:bg-purple-500/10 text-xs font-bold text-gray-300">
+                                <span class="block text-white">100 CR</span>
                                 <span class="text-[9px] opacity-50">100K</span>
                             </button>
-                            <button onclick="setAmount(200)" class="btn-action py-3 rounded-xl bg-purple-500/10 border border-purple-500/20 hover:bg-purple-500/20 text-xs font-bold text-purple-200 transition-colors">
+                            <button onclick="setAmount(200)" class="btn-action py-3 rounded-xl bg-purple-500/10 border border-purple-500/20 hover:bg-purple-500/20 text-xs font-bold text-purple-200">
                                 <span class="block text-white">200 CR</span>
                                 <span class="text-[9px] opacity-70">200K</span>
                             </button>
-                            <button onclick="setAmount(500)" class="btn-action py-3 rounded-xl bg-blue-500/10 border border-blue-500/20 hover:bg-blue-500/20 text-xs font-bold text-blue-200 transition-colors">
+                            <button onclick="setAmount(500)" class="btn-action py-3 rounded-xl bg-blue-500/10 border border-blue-500/20 hover:bg-blue-500/20 text-xs font-bold text-blue-200">
                                 <span class="block text-white">500 CR</span>
                                 <span class="text-[9px] opacity-70">VIP</span>
                             </button>
                         </div>
                     </div>
 
-                    <!-- Custom Input -->
                     <div class="relative">
-                        <input id="customAmount" type="number" placeholder="Nhập số tùy ý (vd: -100 để trừ)" class="input-field w-full px-4 py-3 rounded-xl text-sm font-mono text-white placeholder-gray-600 focus:bg-purple-900/10">
+                        <input id="customAmount" type="number" placeholder="Nhập số tùy ý" class="input-field w-full px-4 py-3 rounded-xl text-sm font-mono text-white placeholder-gray-600">
                         <span class="absolute right-4 top-3.5 text-xs font-bold text-gray-500">CREDITS</span>
                     </div>
 
-                    <!-- Generate Button -->
-                    <button onclick="generateCode()" class="btn-action w-full py-4 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 shadow-lg shadow-purple-500/25 border border-white/10 flex items-center justify-center gap-2">
+                    <button onclick="generateCode()" class="btn-action w-full py-4 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-purple-600 to-pink-600 shadow-lg shadow-purple-500/25 border border-white/10 flex items-center justify-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                         TẠO MÃ CODE NGAY
                     </button>
 
-                    <!-- Result Area -->
                     <div id="resultBox" class="hidden animate-fade-in pt-2">
                         <div class="relative group">
                             <input id="generatedCode" readonly class="w-full bg-black/40 border border-green-500/30 rounded-xl py-4 px-4 text-center font-mono text-sm font-bold text-green-400 tracking-widest cursor-pointer hover:bg-green-500/5 transition-colors" onclick="copyCode()">
                             <div class="absolute right-4 top-1/2 -translate-y-1/2">
-                                <span class="text-[9px] font-bold bg-green-500/20 text-green-400 px-2 py-1 rounded opacity-50 group-hover:opacity-100 transition-opacity">COPY</span>
+                                <span class="text-[9px] font-bold bg-green-500/20 text-green-400 px-2 py-1 rounded">COPY</span>
                             </div>
                         </div>
                         <p id="codeValueConfirm" class="text-center text-[10px] mt-2 font-medium"></p>
@@ -232,10 +240,10 @@
                     <!-- History -->
                     <div class="flex-1 min-h-[100px] border-t border-white/5 pt-4 mt-2">
                         <div class="flex justify-between items-center mb-2">
-                            <span class="text-[10px] font-bold text-gray-500 uppercase">Lịch sử tạo gần đây</span>
+                            <span class="text-[10px] font-bold text-gray-500 uppercase">Lịch sử tạo</span>
                             <button onclick="clearHistory()" class="text-[10px] text-red-400/70 hover:text-red-400">Xóa</button>
                         </div>
-                        <div id="historyList" class="space-y-1.5 overflow-y-auto max-h-[120px] custom-scrollbar pr-1"></div>
+                        <div id="historyList" class="space-y-1.5 overflow-y-auto max-h-[120px] pr-1"></div>
                     </div>
                 </div>
             </div>
@@ -244,9 +252,19 @@
     </div>
 
 <script>
-// ===== CONFIG =====
+// ===== CONFIG & SECURITY =====
 const ADMIN_PASS = "admin123";
-const Sec={key:"V35_SEC",enc(t){return btoa([...t].map((c,i)=>String.fromCharCode(c.charCodeAt(0)^this.key.charCodeAt(i%this.key.length))).join(""))},dec(t){try{return[...atob(t)].map((c,i)=>String.fromCharCode(c.charCodeAt(0)^this.key.charCodeAt(i%this.key.length))).join("")}catch(e){return null}}};
+const Sec={key:"V35_SEC_V2",enc(t){return btoa([...t].map((c,i)=>String.fromCharCode(c.charCodeAt(0)^this.key.charCodeAt(i%this.key.length))).join(""))},dec(t){try{return[...atob(t)].map((c,i)=>String.fromCharCode(c.charCodeAt(0)^this.key.charCodeAt(i%this.key.length))).join("")}catch(e){return null}}};
+
+// Function to get/create a unique Device ID for the machine
+function getMyDeviceId() {
+    let id = localStorage.getItem('v35_my_device_id');
+    if(!id) {
+        id = 'ID-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+        localStorage.setItem('v35_my_device_id', id);
+    }
+    return id;
+}
 
 // ===== DOM ELEMENTS =====
 const els = {
@@ -255,6 +273,8 @@ const els = {
     adminPass: document.getElementById('adminPass'),
     loginStatus: document.getElementById('loginStatus'),
     userKey: document.getElementById('userKey'),
+    targetMachineId: document.getElementById('targetMachineId'),
+    myDeviceIdDisplay: document.getElementById('myDeviceId'),
     searchMsg: document.getElementById('searchMsg'), 
     provider: document.getElementById('provider'),
     geminiKey: document.getElementById('geminiKey'),
@@ -266,6 +286,9 @@ const els = {
     codeValueConfirm: document.getElementById('codeValueConfirm'),
     historyList: document.getElementById('historyList')
 };
+
+// Initialize device ID display
+els.myDeviceIdDisplay.innerText = getMyDeviceId();
 
 // ===== CORE FUNCTIONS =====
 function adminLogin() {
@@ -293,7 +316,7 @@ function searchUserKey() {
     const id = els.userKey.value.trim();
     if(!id) return showError(els.searchMsg, "Vui lòng nhập ID!", true);
 
-    els.geminiKey.value = ""; els.cometKey.value = ""; els.saveStatus.innerText = "";
+    els.geminiKey.value = ""; els.cometKey.value = ""; els.targetMachineId.value = "";
     
     const savedData = localStorage.getItem("v35_user_" + id);
     if (savedData) {
@@ -303,11 +326,12 @@ function searchUserKey() {
                 els.geminiKey.value = data.geminiKey || "";
                 els.cometKey.value = data.cometKey || "";
                 els.provider.value = data.provider || "gemini";
-                showSuccess(els.searchMsg, `Đã tải Config: ${id}`, true);
+                els.targetMachineId.value = data.targetMachineId || "";
+                showSuccess(els.searchMsg, `Đã tải Config & Khóa máy cho: ${id}`, true);
             }
-        } catch(e) { showError(els.searchMsg, "Lỗi dữ liệu", true); }
+        } catch(e) { showError(els.searchMsg, "Lỗi giải mã dữ liệu", true); }
     } else {
-        els.searchMsg.innerHTML = `<span class="text-blue-400 font-medium">✨ ID mới. Hãy nhập Key và Lưu.</span>`;
+        els.searchMsg.innerHTML = `<span class="text-blue-400 font-medium">✨ ID mới. Hãy nhập Key, ID Máy và Lưu.</span>`;
     }
 }
 
@@ -318,24 +342,32 @@ function loadActiveUser() {
 
 function saveUser() {
     const id = els.userKey.value.trim();
+    const machineId = els.targetMachineId.value.trim();
+    
     if (!id) return showError(els.saveStatus, "Chưa nhập ID Khách Hàng!");
+    if (!machineId) return showError(els.saveStatus, "CẢNH BÁO: Chưa nhập ID Máy để khóa!");
 
-    // Preserve existing credit
     let credit = 0;
     const crRaw = localStorage.getItem("v35_credits_" + id);
     if(crRaw !== null) credit = parseInt(crRaw);
-    else {
-        const old = localStorage.getItem("v35_user_" + id);
-        if(old) { try { credit = JSON.parse(Sec.dec(old)).credit || 0; } catch(e){} }
-    }
 
-    const data = { deviceId: "ADMIN", userKey: id, geminiKey: els.geminiKey.value, cometKey: els.cometKey.value, provider: els.provider.value, credit: credit, updatedAt: new Date().toISOString() };
+    // Add targetMachineId to the encrypted object
+    const data = { 
+        deviceId: "ADMIN", 
+        userKey: id, 
+        targetMachineId: machineId, // Lock this machine
+        geminiKey: els.geminiKey.value, 
+        cometKey: els.cometKey.value, 
+        provider: els.provider.value, 
+        credit: credit, 
+        updatedAt: new Date().toISOString() 
+    };
+    
     const enc = Sec.enc(JSON.stringify(data));
-    
     localStorage.setItem("v35_user_" + id, enc);
-    localStorage.setItem("v35_active_user", enc); // Auto save active
+    localStorage.setItem("v35_active_user", enc); 
     
-    showSuccess(els.saveStatus, "Đã lưu cấu hình API thành công!");
+    showSuccess(els.saveStatus, `Đã lưu cấu hình và khóa cho máy: ${machineId}`);
 }
 
 // --- VOUCHER LOGIC ---
@@ -346,18 +378,23 @@ function setAmount(val) {
 
 function generateCode() {
     const amount = parseInt(els.customAmount.value);
+    const targetMachine = els.targetMachineId.value.trim();
+    
     if (!amount || amount === 0) return alert("Nhập số Credit hợp lệ!");
+    if (!targetMachine) return alert("Vui lòng nhập ID Máy ở Bước 2 trước khi tạo Code để bảo mật!");
 
-    const code = `V35-${amount}-${Math.random().toString(36).substr(2, 6).toUpperCase()}-${Date.now().toString().slice(-4)}`;
+    // Code structure includes short machine ID hint for verification
+    const machineHint = targetMachine.slice(-4);
+    const code = `V35-${amount}-${machineHint}-${Math.random().toString(36).substr(2, 4).toUpperCase()}-${Date.now().toString().slice(-4)}`;
     
     els.resultBox.classList.remove("hidden");
     els.generatedCode.value = code;
     
     const isNeg = amount < 0;
     els.codeValueConfirm.className = `text-center text-[10px] mt-2 font-bold py-1.5 rounded border ${isNeg ? 'text-red-400 bg-red-500/10 border-red-500/20' : 'text-green-400 bg-green-500/10 border-green-500/20'}`;
-    els.codeValueConfirm.innerText = isNeg ? `⚠ CODE TRỪ: ${amount} CR` : `✅ CODE NẠP: +${amount} CR`;
+    els.codeValueConfirm.innerText = isNeg ? `⚠ CODE TRỪ: ${amount} CR (Khóa máy: ${targetMachine})` : `✅ CODE NẠP: +${amount} CR (Khóa máy: ${targetMachine})`;
 
-    saveHistory(code, amount);
+    saveHistory(code, amount, targetMachine);
 }
 
 function copyCode() {
@@ -367,9 +404,9 @@ function copyCode() {
     setTimeout(() => els.generatedCode.value = oldVal, 1000);
 }
 
-function saveHistory(code, amount) {
+function saveHistory(code, amount, machine) {
     let h = JSON.parse(localStorage.getItem('v35_code_history') || '[]');
-    h.unshift({ code, amount, time: new Date().toLocaleTimeString('vi-VN', {hour:'2-digit', minute:'2-digit'}) });
+    h.unshift({ code, amount, machine, time: new Date().toLocaleTimeString('vi-VN', {hour:'2-digit', minute:'2-digit'}) });
     if(h.length > 20) h.pop();
     localStorage.setItem('v35_code_history', JSON.stringify(h));
     renderHistory();
@@ -378,10 +415,15 @@ function saveHistory(code, amount) {
 function renderHistory() {
     let h = JSON.parse(localStorage.getItem('v35_code_history') || '[]');
     els.historyList.innerHTML = h.length ? h.map(i => `
-        <div class="flex items-center justify-between p-2 rounded bg-white/5 border border-white/5 hover:bg-white/10 transition-colors">
-            <span class="text-[10px] text-gray-500">${i.time}</span>
-            <span class="text-[10px] font-mono font-medium text-gray-300 select-all">${i.code}</span>
-            <span class="text-[10px] font-bold ${i.amount < 0 ? 'text-red-400' : 'text-green-400'}">${i.amount > 0 ? '+' : ''}${i.amount}</span>
+        <div class="p-2 rounded bg-white/5 border border-white/5 hover:bg-white/10 transition-colors">
+            <div class="flex justify-between items-center mb-1">
+                <span class="text-[9px] text-gray-500">${i.time}</span>
+                <span class="text-[9px] font-bold text-orange-500">Lock: ${i.machine}</span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="text-[10px] font-mono font-medium text-gray-300 select-all">${i.code}</span>
+                <span class="text-[10px] font-bold ${i.amount < 0 ? 'text-red-400' : 'text-green-400'}">${i.amount > 0 ? '+' : ''}${i.amount}</span>
+            </div>
         </div>
     `).join('') : '<div class="text-center text-gray-600 text-[10px] py-4">Chưa có lịch sử</div>';
 }
@@ -389,8 +431,8 @@ function renderHistory() {
 function clearHistory() { if(confirm("Xóa lịch sử?")) { localStorage.removeItem('v35_code_history'); renderHistory(); } }
 
 // Utils
-function showError(el, msg, isHtml=false) { el.classList.remove('text-green-400'); el.classList.add('text-red-400'); isHtml ? el.innerHTML = msg : el.innerText = msg; setTimeout(() => el.innerText = "", 3000); }
-function showSuccess(el, msg, isHtml=false) { el.classList.remove('text-red-400'); el.classList.add('text-green-400'); isHtml ? el.innerHTML = msg : el.innerText = msg; setTimeout(() => el.innerText = "", 3000); }
+function showError(el, msg, isHtml=false) { el.classList.remove('text-green-400'); el.classList.add('text-red-400'); isHtml ? el.innerHTML = msg : el.innerText = msg; setTimeout(() => el.innerText = "", 4000); }
+function showSuccess(el, msg, isHtml=false) { el.classList.remove('text-red-400'); el.classList.add('text-green-400'); isHtml ? el.innerHTML = msg : el.innerText = msg; setTimeout(() => el.innerText = "", 4000); }
 els.adminPass.addEventListener("keypress", (e) => { if (e.key === "Enter") adminLogin(); });
 
 </script>
