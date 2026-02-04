@@ -1688,4 +1688,82 @@
         });
     </script>
 </body>
+<!-- V35 CLOUD SYNC SCRIPT -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    const firebaseConfig = 
+{
+  "apiKey": "AIzaSyCqyCcs2R2e7AegGjvFAwG98wlamtbHvZY",
+  "authDomain": "bard-frontend.firebaseapp.com",
+  "projectId": "bard-frontend",
+  "storageBucket": "bard-frontend.firebasestorage.app",
+  "messagingSenderId": "175205271074",
+  "appId": "1:175205271074:web:2b7bd4d34d33bf38e6ec7b"
+}
+;
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+    const appId = "c_d1446c984cc8d399_v35_admin.html-984";
+
+    // Ghi đè hàm nạp tiền cũ
+    window.addEventListener('load', () => {
+        const redeemBtn = document.getElementById('btn-submit-recharge');
+        const redeemInput = document.getElementById('recharge-input');
+
+        if(redeemBtn) {
+            // Xóa sự kiện cũ bằng cách clone button
+            const newBtn = redeemBtn.cloneNode(true);
+            redeemBtn.parentNode.replaceChild(newBtn, redeemBtn);
+
+            newBtn.addEventListener('click', async () => {
+                const code = redeemInput.value.trim();
+                if(!code) return window.showToast("Vui lòng nhập mã!", "error");
+
+                newBtn.disabled = true;
+                newBtn.innerText = "ĐANG KIỂM TRA...";
+
+                try {
+                    await signInAnonymously(auth);
+                    const vRef = doc(db, 'artifacts', appId, 'public', 'data', 'vouchers', code);
+                    const vSnap = await getDoc(vRef);
+
+                    if (vSnap.exists()) {
+                        const data = vSnap.data();
+                        const myId = localStorage.getItem('v35_unique_device_id');
+
+                        // Kiểm tra khóa ID máy
+                        if(data.targetId && data.targetId !== myId) {
+                            throw new Error("Mã này được cấp riêng cho máy khác!");
+                        }
+
+                        // Cộng tiền local nếu UserSystem tồn tại
+                        if(window.UserSystem) {
+                            window.UserSystem.addCredits(data.amount);
+                            // Xóa mã trên cloud để không ai nạp lại được (Mã 1 lần)
+                            await deleteDoc(vRef);
+                            
+                            window.showToast("Nạp thành công +" + data.amount + " Credits!", "success");
+                            document.getElementById('recharge-modal').classList.add('hidden');
+                            redeemInput.value = '';
+                        } else {
+                            throw new Error("Lỗi hệ thống UserSystem!");
+                        }
+                    } else {
+                        throw new Error("Mã không tồn tại hoặc đã bị sử dụng!");
+                    }
+                } catch (e) {
+                    if(window.showToast) window.showToast(e.message, "error");
+                    else alert(e.message);
+                } finally {
+                    newBtn.disabled = false;
+                    newBtn.innerText = "KÍCH HOẠT";
+                }
+            });
+        }
+    });
+</script>
 </html>
