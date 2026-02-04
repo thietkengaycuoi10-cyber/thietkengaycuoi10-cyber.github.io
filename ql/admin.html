@@ -3,82 +3,97 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>V35 ADMIN MASTER - WEB TỈNH</title>
+<title>V35 ADMIN - SYSTEM (COMPAT FIX)</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
 
-<!-- KẾT NỐI FIREBASE (CDNJS ỔN ĐỊNH CHO WEB TỈNH) -->
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+<!-- 1. LOAD THƯ VIỆN FIREBASE TOÀN CỤC (COMPAT VERSION) -->
+<!-- Đây là cách ổn định nhất cho Web Tĩnh, không bị lỗi Module -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
-    let app, auth, db, appId = "default-app-id";
+<script>
+    // ==================================================================================
+    // ✅ CẤU HÌNH V35-CREDIT (GẮN CỨNG)
+    // ==================================================================================
+    const firebaseConfig = {
+        apiKey: "AIzaSyDcP99VUnNLOk8KB63W_tMNQZD116Y88jc",
+        authDomain: "v35-credit.firebaseapp.com",
+        projectId: "v35-credit",
+        storageBucket: "v35-credit.firebasestorage.app",
+        messagingSenderId: "172593145019",
+        appId: "1:172593145019:web:23c4001b0a56e31b15f59e"
+    };
+    // ==================================================================================
+
+    const appStorageId = "default-app-id";
+    let db, auth;
     window.isFirebaseReady = false;
 
-    // Hàm khởi tạo Firebase (Gọi khi load trang hoặc khi bấm lưu cấu hình)
-    window.initFirebaseSystem = async () => {
+    // Tự động chạy khi trang load xong
+    document.addEventListener('DOMContentLoaded', async () => {
         try {
-            // 1. Tìm cấu hình từ LocalStorage (Ưu tiên) hoặc Biến môi trường
-            const localConfig = localStorage.getItem('v35_firebase_config_manual');
-            const envConfig = typeof __firebase_config !== 'undefined' ? __firebase_config : null;
-            
-            let configObj = null;
+            console.log("Đang kết nối Firebase Compat...");
+            document.getElementById('cloudStatus').innerHTML = '<span class="text-yellow-400 font-bold animate-pulse">● ĐANG KẾT NỐI...</span>';
 
-            if (localConfig) {
-                configObj = JSON.parse(localConfig);
-                console.log("Dùng cấu hình từ LocalStorage");
-            } else if (envConfig) {
-                configObj = JSON.parse(envConfig);
-                console.log("Dùng cấu hình từ Environment");
+            // 1. Khởi tạo App (Kiểm tra nếu chưa có thì tạo mới)
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            } else {
+                firebase.app(); // Dùng app đã có
             }
 
-            if (!configObj) {
-                document.getElementById('cloudStatus').innerHTML = '<span class="text-yellow-500 font-bold">● CHƯA CÓ CONFIG</span>';
-                console.warn("Chưa có Firebase Config");
-                return;
-            }
+            // 2. Lấy dịch vụ
+            auth = firebase.auth();
+            db = firebase.firestore();
 
-            // 2. Khởi tạo App
-            app = initializeApp(configObj);
-            auth = getAuth(app);
-            db = getFirestore(app);
-            
             // 3. Đăng nhập ẩn danh
-            document.getElementById('cloudStatus').innerHTML = '<span class="text-blue-400">● ĐANG KẾT NỐI...</span>';
-            await signInAnonymously(auth);
-            
+            await auth.signInAnonymously();
+
+            // 4. Thành công
             window.isFirebaseReady = true;
-            document.getElementById('cloudStatus').innerHTML = '<span class="text-green-400 font-bold">● ĐÃ KẾT NỐI CLOUD</span>';
-            console.log("Firebase Connected OK");
+            document.getElementById('cloudStatus').innerHTML = '<span class="text-green-400 font-bold">● CLOUD ONLINE (V35)</span>';
+            console.log("Firebase Connected OK (Compat Mode)");
+
+            // Mở khóa nút bấm
+            const btn = document.getElementById('btnCreateCode');
+            if(btn) {
+                btn.disabled = false;
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                btn.innerHTML = `
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                    TẠO MÃ NGAY
+                `;
+            }
 
         } catch (e) {
-            console.error("Firebase Init Failed:", e);
+            console.error("Lỗi khởi tạo:", e);
             document.getElementById('cloudStatus').innerHTML = '<span class="text-red-500 font-bold">● LỖI KẾT NỐI</span>';
-            alert("Lỗi kết nối Firebase: " + e.message + "\nVui lòng kiểm tra lại cấu hình JSON.");
+            alert("Lỗi kết nối Firebase: " + e.message);
         }
-    };
+    });
 
-    // Chạy ngay khi load
-    window.initFirebaseSystem();
-
-    // 4. Hàm tạo mã (Export ra window)
+    // Hàm tạo mã (Đẩy lên Cloud)
     window.pushVoucherToCloud = async (code, amount) => {
         if (!window.isFirebaseReady) {
-            alert("CHƯA KẾT NỐI CLOUD!\nVui lòng vào Tab 'Cấu hình' -> Dán Firebase Config JSON vào.");
+            alert("Hệ thống chưa kết nối Cloud. Vui lòng đợi...");
             return false;
         }
         
         try {
-            const voucherRef = doc(db, 'artifacts', appId, 'public', 'data', 'vouchers', code);
-            await setDoc(voucherRef, {
-                amount: parseInt(amount),
-                isUsed: false, 
-                createdAt: serverTimestamp(),
-                createdBy: "Admin Web Tinh",
-                valid: true
-            });
+            // Ghi dữ liệu (Cú pháp Compat)
+            await db.collection('artifacts').doc(appStorageId)
+                    .collection('public').doc('data')
+                    .collection('vouchers').doc(code)
+                    .set({
+                        amount: parseInt(amount),
+                        isUsed: false, 
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        createdBy: "Admin V35 Compat",
+                        valid: true
+                    });
             return true;
         } catch (error) {
             console.error(error);
@@ -105,7 +120,7 @@
     <!-- LOGIN SCREEN -->
     <div id="loginScreen" class="w-full max-w-md glass-panel rounded-2xl p-8 shadow-2xl animate-fade-in">
         <h2 class="text-2xl font-bold text-white text-center mb-1">V35 ADMIN</h2>
-        <p class="text-xs text-slate-400 text-center mb-6 uppercase tracking-widest">Web Tỉnh Edition</p>
+        <p class="text-xs text-slate-400 text-center mb-6 uppercase tracking-widest">Web Tỉnh (Compat Mode)</p>
         <div class="space-y-4">
             <input type="password" id="adminPassword" placeholder="Nhập mật khẩu..." class="input-dark w-full p-3 rounded-lg text-center tracking-widest">
             <button onclick="login()" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-lg transition-colors shadow-lg">ĐĂNG NHẬP</button>
@@ -125,7 +140,7 @@
                 <div>
                     <h1 class="text-xl font-bold text-white">QUẢN TRỊ HỆ THỐNG V35</h1>
                     <div class="flex gap-3 text-[10px] font-mono mt-1 items-center">
-                        <span id="cloudStatus" class="text-slate-500">● KHỞI ĐỘNG...</span>
+                        <span id="cloudStatus" class="text-slate-500">● ĐANG KẾT NỐI...</span>
                     </div>
                 </div>
             </div>
@@ -140,7 +155,7 @@
             </button>
             <button onclick="switchTab('config')" id="tab-config" class="tab-btn px-6 py-2.5 rounded-t-lg text-sm font-bold border-b-2 border-transparent text-slate-400 hover:text-white transition-all flex items-center gap-2">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                CẤU HÌNH (SỬA LỖI CLOUD)
+                CẤU HÌNH API
             </button>
         </div>
 
@@ -154,7 +169,7 @@
                     <div class="flex flex-col space-y-6">
                         <div class="p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl">
                             <h3 class="text-sm font-bold text-blue-400 mb-1 uppercase">Tạo mã nạp tiền</h3>
-                            <p class="text-[10px] text-slate-400">Nếu nút tạo không hoạt động, hãy sang tab "Cấu hình" nhập Firebase Config.</p>
+                            <p class="text-[10px] text-slate-400">Mã sẽ được lưu trực tiếp vào Project v35-credit trên Cloud.</p>
                         </div>
 
                         <div class="grid grid-cols-3 gap-3">
@@ -168,9 +183,9 @@
                             <span class="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-bold bg-slate-700 px-2 py-1 rounded">CREDITS</span>
                         </div>
 
-                        <button id="btnCreateCode" onclick="createCloudCode()" class="w-full py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold rounded-xl shadow-xl transition-all flex items-center justify-center gap-2">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
-                            TẠO MÃ NGAY
+                        <button id="btnCreateCode" onclick="createCloudCode()" class="w-full py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold rounded-xl shadow-xl transition-all flex items-center justify-center gap-2 opacity-50 cursor-not-allowed" disabled>
+                            <svg class="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                            ĐANG KẾT NỐI...
                         </button>
 
                         <div id="voucherResult" class="hidden pt-4 border-t border-slate-700">
@@ -190,36 +205,36 @@
                 </div>
             </div>
 
-            <!-- TAB 2: CẤU HÌNH API + FIREBASE (QUAN TRỌNG) -->
+            <!-- TAB 2: CẤU HÌNH API KEY (ĐỂ TẠO FILE KHÁCH) -->
             <div id="view-config" class="hidden p-6">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 h-full">
                     
-                    <!-- CỘT TRÁI: FIREBASE CONFIG (SỬA LỖI CLOUD) -->
+                    <!-- CỘT TRÁI: THÔNG TIN SERVER -->
                     <div class="space-y-4">
-                        <div class="p-4 bg-red-500/10 border border-red-500/20 rounded-xl">
-                            <h3 class="text-sm font-bold text-red-400 mb-1 flex items-center gap-2">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                                1. CẤU HÌNH DATABASE (BẮT BUỘC)
+                        <div class="p-4 bg-green-500/10 border border-green-500/20 rounded-xl">
+                            <h3 class="text-sm font-bold text-green-400 mb-1 flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                ĐÃ KẾT NỐI: V35-CREDIT
                             </h3>
-                            <p class="text-[10px] text-slate-400">Vì chạy web tỉnh nên bạn phải dán cấu hình Firebase vào đây để tạo mã được.</p>
+                            <p class="text-[10px] text-slate-400">Hệ thống đang chạy ổn định (Mode: Compat/Global).</p>
                         </div>
                         
                         <div>
-                            <label class="text-[11px] font-bold text-slate-400 uppercase block mb-1">Dán Firebase Config JSON vào đây:</label>
-                            <textarea id="fbConfigInput" class="input-dark w-full p-3 rounded-lg font-mono text-[10px] text-yellow-300 h-32 resize-none" placeholder='{"apiKey": "AIza...", "authDomain": "...", "projectId": "..."}'></textarea>
+                            <label class="text-[11px] font-bold text-slate-400 uppercase block mb-1">Project ID</label>
+                            <input class="input-dark w-full p-3 rounded-lg font-mono text-sm text-yellow-300" value="v35-credit" readonly>
                         </div>
                         
-                        <button onclick="saveFirebaseConfig()" class="w-full py-3 bg-red-600 hover:bg-red-500 text-white font-bold rounded-lg shadow-lg transition-all text-xs">
-                            LƯU & KẾT NỐI DATABASE
-                        </button>
-                        <p class="text-[9px] text-slate-500 italic text-center">*Cấu hình sẽ được lưu vào trình duyệt của bạn.</p>
+                        <div>
+                            <label class="text-[11px] font-bold text-slate-400 uppercase block mb-1">Auth Domain</label>
+                            <input class="input-dark w-full p-3 rounded-lg font-mono text-sm text-slate-400" value="v35-credit.firebaseapp.com" readonly>
+                        </div>
                     </div>
 
                     <!-- CỘT PHẢI: API KEY (ĐỂ TẠO FILE KHÁCH) -->
                     <div class="space-y-4 border-l border-slate-700/50 pl-8">
                         <div class="p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-xl">
-                            <h3 class="text-sm font-bold text-yellow-400 mb-1">2. API KEY (CHO FILE KHÁCH)</h3>
-                            <p class="text-[10px] text-slate-400">Tạo mã nhúng để dán vào file index.html của khách.</p>
+                            <h3 class="text-sm font-bold text-yellow-400 mb-1">TẠO API KEY CHO KHÁCH</h3>
+                            <p class="text-[10px] text-slate-400">Dùng để tạo chuỗi mã hóa gắn vào file index.html của khách.</p>
                         </div>
 
                         <div>
@@ -231,7 +246,7 @@
                         </div>
 
                         <div>
-                            <label class="text-[11px] font-bold text-slate-400 uppercase block mb-1">API Key</label>
+                            <label class="text-[11px] font-bold text-slate-400 uppercase block mb-1">API Key (Gemini/Comet)</label>
                             <input id="cfgApiKey" type="text" placeholder="sk-..." class="input-dark w-full p-2 rounded-lg font-mono text-xs text-blue-300">
                         </div>
 
@@ -269,7 +284,7 @@ function login() {
     }
 }
 function logout() { sessionStorage.removeItem('v35_master_logged'); location.reload(); }
-function showDash() { el('loginScreen').style.display = 'none'; el('dashboard').classList.remove('hidden'); renderVoucherHistory(); loadSavedConfig(); }
+function showDash() { el('loginScreen').style.display = 'none'; el('dashboard').classList.remove('hidden'); renderVoucherHistory(); }
 
 if(sessionStorage.getItem('v35_master_logged') === 'true') showDash();
 
@@ -282,24 +297,6 @@ function switchTab(tab) {
     el('view-' + tab).classList.remove('hidden');
 }
 
-// === FIREBASE MANUAL CONFIG LOGIC ===
-function loadSavedConfig() {
-    const saved = localStorage.getItem('v35_firebase_config_manual');
-    if (saved) el('fbConfigInput').value = JSON.stringify(JSON.parse(saved), null, 2);
-}
-
-function saveFirebaseConfig() {
-    const raw = el('fbConfigInput').value.trim();
-    try {
-        const parsed = JSON.parse(raw); // Validate JSON
-        localStorage.setItem('v35_firebase_config_manual', JSON.stringify(parsed));
-        alert("Đã lưu cấu hình! Hệ thống sẽ kết nối lại...");
-        window.initFirebaseSystem(); // Kết nối lại ngay
-    } catch(e) {
-        alert("Lỗi: Chuỗi JSON không hợp lệ! Hãy copy đúng từ Firebase Console.");
-    }
-}
-
 // === VOUCHER LOGIC ===
 function setVoucher(val) { el('customCredit').value = val; }
 
@@ -308,9 +305,9 @@ async function createCloudCode() {
     if(!amount) return alert("Vui lòng nhập số Credit!");
 
     const btn = el('btnCreateCode');
-    const oldText = btn.innerHTML;
+    const oldHtml = btn.innerHTML;
+    btn.innerHTML = `<svg class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> ĐANG GỬI...`;
     btn.disabled = true;
-    btn.innerHTML = "ĐANG GỬI...";
 
     const code = `V35-${amount}-${Math.random().toString(36).substr(2,5).toUpperCase()}-${Date.now().toString().slice(-4)}`;
 
@@ -322,11 +319,11 @@ async function createCloudCode() {
             saveVoucherHistory(code, amount);
         }
     } else {
-        alert("Lỗi hệ thống Cloud.");
+        alert("Hệ thống chưa sẵn sàng. Vui lòng đợi kết nối Cloud.");
     }
 
     btn.disabled = false;
-    btn.innerHTML = oldText;
+    btn.innerHTML = oldHtml;
 }
 
 function copyVoucher() {
