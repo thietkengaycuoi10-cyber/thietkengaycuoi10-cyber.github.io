@@ -172,10 +172,10 @@
                     <div class="space-y-4">
                          <!-- Tools Header -->
                          <div class="flex items-center justify-between">
-                            <label class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Cấu Hình API</label>
+                            <label class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Cấu Hình API (Auto Sync to Index)</label>
                             <div class="flex gap-2">
                                 <button onclick="loadDefaultKeys()" class="text-[9px] bg-white/5 hover:bg-white/10 text-blue-300 px-2 py-1 rounded border border-white/5 transition-colors">Tải Mặc Định</button>
-                                <button onclick="saveDefaultKeys()" class="text-[9px] bg-white/5 hover:bg-white/10 text-emerald-300 px-2 py-1 rounded border border-white/5 transition-colors">Lưu Làm Mặc Định</button>
+                                <button onclick="saveDefaultKeys()" class="text-[9px] bg-white/5 hover:bg-white/10 text-emerald-300 px-2 py-1 rounded border border-white/5 transition-colors">Lưu & Kích Hoạt</button>
                             </div>
                         </div>
 
@@ -322,21 +322,45 @@ function showDash() {
     els.dashboard.classList.remove("hidden");
     loadActiveUser();
     renderHistory();
+    // Tự động load mặc định khi vào Dashboard để tiện
+    const raw = localStorage.getItem('v35_admin_default_keys');
+    if(raw) {
+        const d = JSON.parse(raw);
+        if(d.gemini) els.geminiKey.value = d.gemini;
+        if(d.comet) els.cometKey.value = d.comet;
+        if(d.provider) els.provider.value = d.provider;
+    }
 }
 
 if (sessionStorage.getItem("v35_admin_logged") === "true") showDash();
 
 function logout() { sessionStorage.removeItem("v35_admin_logged"); location.reload(); }
 
-// --- API DEFAULT LOGIC (NEW) ---
+// --- API DEFAULT LOGIC (AUTO SYNC TO GLOBAL INDEX) ---
 function saveDefaultKeys() {
     const defaultData = {
         gemini: els.geminiKey.value.trim(),
         comet: els.cometKey.value.trim(),
         provider: els.provider.value
     };
+    
+    // 1. Lưu cấu hình mặc định cho Admin (để lần sau vào vẫn còn)
     localStorage.setItem('v35_admin_default_keys', JSON.stringify(defaultData));
-    showSuccess(els.apiMsg, "Đã lưu làm mặc định!", true);
+
+    // 2. KÍCH HOẠT CHO INDEX (QUAN TRỌNG: Đồng bộ sang v35_global_config)
+    // index.html sẽ đọc key 'v35_global_config' này.
+    const activeKey = defaultData.provider === 'comet' ? defaultData.comet : defaultData.gemini;
+    const globalPayload = {
+        apiKey: activeKey,
+        provider: defaultData.provider,
+        baseUrl: "https://generativelanguage.googleapis.com" // Mặc định base
+    };
+    
+    // Mã hóa và lưu vào kho chung mà Index đọc được
+    const encryptedGlobal = Sec.enc(JSON.stringify(globalPayload));
+    localStorage.setItem('v35_global_config', encryptedGlobal);
+
+    showSuccess(els.apiMsg, "Đã lưu & Kích hoạt trên Index!", true);
 }
 
 function loadDefaultKeys() {
@@ -392,6 +416,16 @@ function saveUser() {
     if (!id) return showError(els.saveStatus, "Chưa nhập ID Khách Hàng!");
     if (!machineId) return showError(els.saveStatus, "CẢNH BÁO: Chưa có ID Máy!");
 
+    // Khi Lưu User cụ thể, cũng đồng bộ API Key đó ra Global Config để Index chạy ngay lập tức
+    const activeKey = els.provider.value === 'comet' ? els.cometKey.value : els.geminiKey.value;
+    const globalPayload = {
+        apiKey: activeKey,
+        provider: els.provider.value,
+        baseUrl: "https://generativelanguage.googleapis.com"
+    };
+    const encryptedGlobal = Sec.enc(JSON.stringify(globalPayload));
+    localStorage.setItem('v35_global_config', encryptedGlobal);
+
     let credit = 0;
     const crRaw = localStorage.getItem("v35_credits_" + id);
     if(crRaw !== null) credit = parseInt(crRaw);
@@ -411,7 +445,7 @@ function saveUser() {
     localStorage.setItem("v35_user_" + id, enc);
     localStorage.setItem("v35_active_user", enc); 
     
-    showSuccess(els.saveStatus, `Đã lưu và khóa máy: ${machineId}`);
+    showSuccess(els.saveStatus, `Đã lưu User & Kích hoạt API: ${machineId}`);
 }
 
 function setAmount(n) { els.customAmount.value = n; }
