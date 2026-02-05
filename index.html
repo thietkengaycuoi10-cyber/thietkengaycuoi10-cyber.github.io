@@ -257,13 +257,14 @@
                     <div class="pl-11 pr-1 border-t border-violet-500/20 pt-2" id="workflow-container">
                         <label class="block text-[9px] font-bold text-violet-300 mb-1">CHỌN QUY TRÌNH (WORKFLOW PRESETS)</label>
                         <select id="kontext-workflow" class="pro-input w-full py-1.5 cursor-pointer bg-violet-900/20 border-violet-500/30 text-violet-200 transition-all duration-500">
-                            <option value="qwen_edit_pro" class="text-cyan-300 font-bold">⚡ Qwen Edit Pro (Qwen-VL + Instruction) - MỚI</option>
+                            <option value="qwen_edit_pro" class="text-cyan-300 font-bold" selected>⚡ Qwen Edit Pro (Qwen-VL + Instruction) - KHUYÊN DÙNG</option>
                             <option value="replica_pro" class="text-yellow-400 font-bold">🧬 SIÊU THỰC (REPLICA PRO) - KHÓA CẤU TRÚC SÂU</option>
-                            <option value="default">✨ Mặc định (Kontext Base + OldPhoto-2)</option>
+                            <option value="invsr_deblur" class="text-green-400 font-bold">🔪 InvSR Deblur (Chuyên trị Ảnh Mờ/Rung)</option>
                             <option value="ancient_restore" class="text-purple-400 font-bold">🏯 Phục chế Tranh/Tượng Cổ (ReActor + ControlNet)</option>
+                            <option value="wedding_kontext_v2" class="text-pink-400 font-bold">👰 Wedding Kontext V2 (Full JSON)</option>
+                            <option value="default">✨ Mặc định (Kontext Base + OldPhoto-2)</option>
                             <option value="realvis_v5" class="text-orange-400 font-bold">🦁 RealVisXL V5 (Phục hồi cấu trúc sâu)</option>
                             <option value="qwen_restore_full" class="text-blue-400 font-bold">⚡ Qwen V2.5 Full Restore (Prompt Gốc JSON)</option>
-                            <option value="wedding_kontext_v2" class="text-pink-400 font-bold">👰 Wedding Kontext V2 (Full JSON)</option>
                             <option value="wedding_pro">💍 Wedding Pro + Upscale (Ảnh Cưới - Cơ bản)</option>
                             <option value="outdoor_mode">🏞️ Phục hồi Ngoại Cảnh (IC-Light + PowerPaint)</option>
                             <option value="product_mode">🛍️ Ảnh Sản Phẩm / Thương Mại (Ecommerce)</option>
@@ -951,21 +952,15 @@
                 },
 
                 async fetchIP() {
-                    try {
-                        const response = await fetch(`https://api.ipify.org?format=json&t=${Date.now()}`);
-                        const data = await response.json();
-                        this.ipAddress = data.ip;
-                        
-                        const gateIpDisplay = document.getElementById('gate-ip-display');
-                        const gateLoader = document.getElementById('gate-loading-spinner');
-                        const gateBtn = document.getElementById('gate-submit');
-                        const gateStatus = document.getElementById('gate-status');
-                        
-                        const topBarIp = document.getElementById('top-bar-ip');
-                        if (topBarIp) topBarIp.textContent = `IP: ${data.ip}`;
+                    const gateIpDisplay = document.getElementById('gate-ip-display');
+                    const gateLoader = document.getElementById('gate-loading-spinner');
+                    const gateBtn = document.getElementById('gate-submit');
+                    const gateStatus = document.getElementById('gate-status');
+                    const topBarIp = document.getElementById('top-bar-ip');
 
+                    const enableGate = (ip) => {
                         if (gateIpDisplay) {
-                            gateIpDisplay.innerHTML = `<span class="text-slate-400 text-xs">${data.ip}</span> <span class="text-white mx-1">|</span> <span class="text-yellow-400 font-bold">${this.deviceId}</span>`; 
+                            gateIpDisplay.innerHTML = `<span class="text-slate-400 text-xs">${ip}</span> <span class="text-white mx-1">|</span> <span class="text-yellow-400 font-bold">${this.deviceId}</span>`; 
                             gateIpDisplay.classList.remove('shimmer-text');
                             if(gateLoader) gateLoader.style.display = 'none';
                             if(gateBtn) {
@@ -975,11 +970,20 @@
                                 gateStatus.classList.add('text-green-500');
                             }
                         }
+                    };
+
+                    try {
+                        const response = await fetch(`https://api.ipify.org?format=json&t=${Date.now()}`);
+                        const data = await response.json();
+                        this.ipAddress = data.ip;
+                        if (topBarIp) topBarIp.textContent = `IP: ${data.ip}`;
+                        enableGate(data.ip);
                         return data.ip;
                     } catch (e) {
-                        this.ipAddress = "Offline";
-                        const topBarIp = document.getElementById('top-bar-ip');
+                        console.warn("IP Fetch Failed, using offline mode");
+                        this.ipAddress = "Offline Mode"; // Fallback to allow access
                         if (topBarIp) topBarIp.textContent = `IP: Offline`;
+                        enableGate("Offline Mode");
                         return null;
                     }
                 },
@@ -1168,7 +1172,10 @@
 
             const gateScreen = document.getElementById('security-gate'), gateSubmit = document.getElementById('gate-submit'), gateStatus = document.getElementById('gate-status');
             gateSubmit.addEventListener('click', async () => {
-                if(!UserSystem.ipAddress) return showToast("Chưa tìm thấy IP, vui lòng đợi...", "error");
+                // Modified: Allow fallback access even if IP is offline
+                if(!UserSystem.ipAddress) {
+                    UserSystem.ipAddress = "Offline Mode"; // Fallback
+                }
                 gateStatus.textContent = `Đang xác thực IP: ${UserSystem.ipAddress}...`; gateStatus.className = "mt-6 text-[10px] text-blue-400 font-bold animate-pulse"; gateSubmit.disabled = true; gateSubmit.classList.add('opacity-70');
                 setTimeout(() => { gateStatus.textContent = "Đăng nhập thành công!"; gateStatus.className = "mt-6 text-[10px] text-green-400 font-bold"; setTimeout(() => { gateScreen.classList.add('animate-fade-out'); setTimeout(() => { gateScreen.style.display = 'none'; }, 500); showToast(`IP Đã Xác Thực: ${UserSystem.ipAddress}`, "smart"); }, 500); }, 1500);
             });
@@ -1234,8 +1241,8 @@
                     processBtn.innerHTML = "TẠO ẢNH (FLUX/QWEN ENGINE)"; 
                 }
                 
-                document.getElementById('ai-terminal-overlay').classList.add('hidden'); 
-                document.getElementById('scan-beam').classList.remove('active'); 
+                document.getElementById('ai-terminal-overlay').classList.remove('hidden'); 
+                document.getElementById('scan-beam').classList.add('active');
                 
                 closeSidebar();
 
@@ -1285,6 +1292,12 @@
                     const parts = [{ text: finalPrompt }, { inlineData: { mimeType: "image/jpeg", data: resizedBase64.split(',')[1] } }];
                     const headers = { 'Content-Type': 'application/json' }; if (isComet) headers['Authorization'] = `Bearer ${keyToUse}`;
                     const response = await fetch(`${apiBase}/v1beta/models/gemini-2.5-flash-image-preview:generateContent?key=${keyToUse}`, { method: 'POST', headers: headers, body: JSON.stringify({ contents: [{ parts: parts }], generationConfig: { responseModalities: ["TEXT", "IMAGE"] } }) });
+                    
+                    if (!response.ok) {
+                        const err = await response.json();
+                        throw new Error(err.error?.message || "Lỗi kết nối API (" + response.status + ")");
+                    }
+
                     const data = await response.json();
                     let base64Img = null;
                     if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts) {
@@ -1327,7 +1340,7 @@
                             showToast("Phục chế thành công!", "flux");
                         };
                         restoredImg.src = finalImgSrc;
-                    } else { throw new Error("Không tạo được ảnh."); }
+                    } else { throw new Error("Không tạo được ảnh (Không có dữ liệu trả về)."); }
                 } catch(e) { console.error(e); showToast("Lỗi: " + e.message, "error"); updateMobileBtnState('run'); }
                 finally { 
                     if(processBtn) {
@@ -1357,6 +1370,12 @@
                     const headers = { 'Content-Type': 'application/json' }; if (isComet) headers['Authorization'] = `Bearer ${keyToUse}`;
                     const response = await fetch(`${apiBase}/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${keyToUse}`, { method: 'POST', headers: headers, signal: controller.signal, body: JSON.stringify({ contents: [{ parts: [{ text: promptText }, { inlineData: { mimeType: "image/jpeg", data: resizedBase64.split(',')[1] } }] }] }) });
                     clearTimeout(timeoutId);
+                    
+                    if (!response.ok) {
+                        const err = await response.json();
+                        throw new Error(err.error?.message || "Lỗi Scan (" + response.status + ")");
+                    }
+
                     const data = await response.json();
                     let text = data.candidates?.[0]?.content?.parts?.[0]?.text;
                     if(text) {
