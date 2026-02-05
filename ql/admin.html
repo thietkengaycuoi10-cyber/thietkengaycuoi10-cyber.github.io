@@ -217,21 +217,30 @@
 
                 <div class="p-6 space-y-6 flex-1 flex flex-col">
                     <div class="space-y-2">
-                        <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Chọn Mệnh Giá Nạp</label>
-                        <div class="grid grid-cols-3 gap-3">
-                            <button onclick="setAmount(100)" class="btn-action py-3 rounded-xl bg-white/5 border border-white/5 hover:border-purple-500/50 hover:bg-purple-500/10 text-xs font-bold text-gray-300">
-                                <span class="block text-white">100 CR</span>
-                                <span class="text-[9px] opacity-50">100K</span>
+                        <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Chọn Mệnh Giá Nạp (New)</label>
+                        <div class="grid grid-cols-2 gap-3">
+                            <button onclick="setAmount(4)" class="btn-action py-3 rounded-xl bg-white/5 border border-white/5 hover:border-blue-500/50 hover:bg-blue-500/10 text-xs font-bold text-gray-300">
+                                <span class="block text-white">4 ẢNH</span>
+                                <span class="text-[9px] opacity-50">50K</span>
                             </button>
-                            <button onclick="setAmount(200)" class="btn-action py-3 rounded-xl bg-purple-500/10 border border-purple-500/20 hover:bg-purple-500/20 text-xs font-bold text-purple-200">
-                                <span class="block text-white">200 CR</span>
+                            <button onclick="setAmount(7)" class="btn-action py-3 rounded-xl bg-white/5 border border-white/5 hover:border-blue-500/50 hover:bg-blue-500/10 text-xs font-bold text-gray-300">
+                                <span class="block text-white">7 ẢNH</span>
+                                <span class="text-[9px] opacity-50">80K</span>
+                            </button>
+                             <button onclick="setAmount(9)" class="btn-action py-3 rounded-xl bg-blue-500/10 border border-blue-500/20 hover:bg-blue-500/20 text-xs font-bold text-blue-200">
+                                <span class="block text-white">9 ẢNH</span>
+                                <span class="text-[9px] opacity-70">100K</span>
+                            </button>
+                            <button onclick="setAmount(19)" class="btn-action py-3 rounded-xl bg-purple-500/10 border border-purple-500/20 hover:bg-purple-500/20 text-xs font-bold text-purple-200">
+                                <span class="block text-white">19 ẢNH</span>
                                 <span class="text-[9px] opacity-70">200K</span>
                             </button>
-                            <button onclick="setAmount(500)" class="btn-action py-3 rounded-xl bg-blue-500/10 border border-blue-500/20 hover:bg-blue-500/20 text-xs font-bold text-blue-200">
-                                <span class="block text-white">500 CR</span>
-                                <span class="text-[9px] opacity-70">VIP</span>
-                            </button>
                         </div>
+                        <!-- VIP BUTTON -->
+                        <button onclick="setAmount(45)" class="btn-action w-full py-3 rounded-xl bg-yellow-500/10 border border-yellow-500/20 hover:bg-yellow-500/20 text-xs font-bold text-yellow-200">
+                            <span class="block text-white">45 ẢNH (VIP)</span>
+                            <span class="text-[9px] opacity-70">500K</span>
+                        </button>
                     </div>
 
                     <div class="relative">
