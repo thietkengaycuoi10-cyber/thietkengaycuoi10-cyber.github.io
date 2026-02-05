@@ -52,24 +52,22 @@
                     animation: {
                         'float': 'float 6s ease-in-out infinite',
                         'scan': 'scan 2s linear infinite', 
-                        'toast-in': 'toastIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)', 
                         'pulse-glow': 'pulseGlow 2s infinite',
                         'fade-out': 'fadeOut 0.5s ease-out forwards', 
                         'enter-up': 'enterUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards',
                         'ios-press': 'iosPress 0.2s ease-out',
-                        'highlight-pulse': 'highlightPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
                         'blob': 'blob 10s infinite',
+                        'slide-in-right': 'slideInRight 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards',
                     },
                     keyframes: {
                         enterUp: { '0%': { opacity: '0', transform: 'translateY(30px) scale(0.95)' }, '100%': { opacity: '1', transform: 'translateY(0) scale(1)' } },
                         float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } },
                         scan: { '0%': { top: '0%', opacity: '0' }, '10%': { opacity: '1' }, '90%': { opacity: '1' }, '100%': { top: '100%', opacity: '0' } },
-                        toastIn: { '0%': { transform: 'translateX(20px)', opacity: '0' }, '100%': { transform: 'translateX(0)', opacity: '1' } },
                         pulseGlow: { '0%, 100%': { opacity: '1', boxShadow: '0 0 10px #0A84FF' }, '50%': { opacity: '0.8', boxShadow: '0 0 20px #0A84FF' } },
                         fadeOut: { '0%': { opacity: '1', visibility: 'visible' }, '100%': { opacity: '0', visibility: 'hidden' } },
                         iosPress: { '0%': { transform: 'scale(1)' }, '50%': { transform: 'scale(0.97)' }, '100%': { transform: 'scale(1)' } },
-                        highlightPulse: { '0%, 100%': { borderColor: 'rgba(255, 214, 10, 0.5)', backgroundColor: 'rgba(255, 214, 10, 0.1)' }, '50%': { borderColor: 'rgba(255, 214, 10, 1)', backgroundColor: 'rgba(255, 214, 10, 0.2)' } },
-                        blob: { '0%': { transform: 'translate(0px, 0px) scale(1)' }, '33%': { transform: 'translate(30px, -50px) scale(1.1)' }, '66%': { transform: 'translate(-20px, 20px) scale(0.9)' }, '100%': { transform: 'translate(0px, 0px) scale(1)' } }
+                        blob: { '0%': { transform: 'translate(0px, 0px) scale(1)' }, '33%': { transform: 'translate(30px, -50px) scale(1.1)' }, '66%': { transform: 'translate(-20px, 20px) scale(0.9)' }, '100%': { transform: 'translate(0px, 0px) scale(1)' } },
+                        slideInRight: { '0%': { opacity: '0', transform: 'translateX(20px)' }, '100%': { opacity: '1', transform: 'translateX(0)' } }
                     }
                 }
             }
@@ -297,7 +295,16 @@
         </div>
     </div>
     
-    <div id="toast-container" class="fixed top-6 right-6 z-[100] flex flex-col gap-2 pointer-events-none w-auto max-w-sm items-end"></div>
+    <!-- NOTIFICATION HUD (Dynamic Island Style - Top Right) -->
+    <div id="notification-hud" class="fixed top-6 right-6 z-[100] flex items-center gap-3 bg-[#1c1c1e]/90 backdrop-blur-xl border border-white/10 pl-2 pr-4 py-2 rounded-full shadow-2xl transition-all duration-300 translate-x-full opacity-0 pointer-events-none w-auto max-w-xs">
+        <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-[#0A84FF] to-[#007AFF] flex items-center justify-center shrink-0 shadow-lg">
+            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        </div>
+        <div class="flex flex-col">
+            <span class="text-[9px] font-bold text-gray-400 uppercase tracking-wider" id="hud-title">SYSTEM</span>
+            <span class="text-[12px] font-medium text-white truncate" id="hud-message">Ready...</span>
+        </div>
+    </div>
     
     <div class="flex w-full h-full relative z-10" id="fullscreen-target">
         
@@ -990,6 +997,17 @@
         </div>
     </div>
 
+    <!-- NOTIFICATION HUD (Dynamic Island Style - Top Right) -->
+    <div id="notification-hud" class="fixed top-6 right-6 z-[100] flex items-center gap-3 bg-[#1c1c1e]/90 backdrop-blur-xl border border-white/10 pl-2 pr-4 py-2 rounded-full shadow-2xl transition-all duration-300 translate-x-full opacity-0 pointer-events-none w-auto max-w-xs">
+        <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-[#0A84FF] to-[#007AFF] flex items-center justify-center shrink-0 shadow-lg">
+            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        </div>
+        <div class="flex flex-col">
+            <span class="text-[9px] font-bold text-gray-400 uppercase tracking-wider" id="hud-title">SYSTEM</span>
+            <span class="text-[12px] font-medium text-white truncate" id="hud-message">Ready...</span>
+        </div>
+    </div>
+
     <!-- MAIN SCRIPT: PRESERVED ORIGINAL LOGIC -->
     <script>
         const DEFAULT_ENCRYPTED_CONFIG = "LRFALDY3LTQ/IH1xZxg7PigidAVWQX1/ZyIlOw46MmdjfSAqYSUjW3QnGQd0ZAU1DngybTckJQEfP1hSNgspJzAbIgofNW4bMRIfBBoCbxkrNBtkF2dzaTUrMCUoKDEkEQ99MCouMCZnc2knOCw2FD44dAkXNycxMyZoanAqNTBxMC4hMSJSRTZ9Jiw4cDg="; 
@@ -1028,53 +1046,6 @@
                     
                     await this.fetchIP();
                     this.loadCredits();
-
-                    try {
-                        const currentHost = window.location.hostname;
-                        if (ALLOWED_DOMAINS.length > 0) {
-                            const isLocal = currentHost === "" || currentHost === "localhost" || currentHost === "127.0.0.1";
-                            if (!isLocal && !ALLOWED_DOMAINS.includes(currentHost)) {
-                                console.error("DOMAIN NOT ALLOWED: " + currentHost);
-                                showToast("⛔ TÊN MIỀN KHÔNG HỢP LỆ! Vui lòng liên hệ Admin.", "error");
-                                document.body.innerHTML = `<div style="display:flex;justify-content:center;align-items:center;height:100vh;background:#000;color:red;font-family:monospace;text-align:center;"><h1>⛔ ACCESS DENIED<br>DOMAIN: ${currentHost}</h1></div>`;
-                                return;
-                            }
-                        }
-
-                        let configStr = localStorage.getItem("v35_user_settings");
-                        if (!configStr && DEFAULT_ENCRYPTED_CONFIG) {
-                            configStr = DEFAULT_ENCRYPTED_CONFIG;
-                            console.log("Using Embedded Config");
-                        }
-
-                        if (configStr) {
-                            const decryptConfig = (t) => {
-                                const k = "V35_SECURE_KEY_SALT";
-                                try {
-                                    if(!t) return null;
-                                    let text = atob(t);
-                                    let result = '';
-                                    for(let i = 0; i < text.length; i++) {
-                                        result += String.fromCharCode(text.charCodeAt(i) ^ k.charCodeAt(i % k.length));
-                                    }
-                                    return result;
-                                } catch(e) { return null; }
-                            };
-
-                            const jsonStr = decryptConfig(configStr);
-                            if (jsonStr) {
-                                const config = JSON.parse(jsonStr);
-                                if (config && config.apiKey) {
-                                    window.GEMINI_API_KEY = config.apiKey || "";
-                                    window.API_PROVIDER = config.provider || "google";
-                                    window.API_BASE_URL = config.baseUrl || "https://generativelanguage.googleapis.com";
-                                    
-                                    console.log("API Config Loaded:", window.API_PROVIDER);
-                                    showToast("✅ Đã tải cấu hình API", "success");
-                                }
-                            }
-                        }
-                    } catch(e) { console.error("Config Load Error", e); }
 
                     this.updateUI();
                     initRechargeSystem(this.deviceId);
@@ -1188,6 +1159,7 @@
                 const template = 'compact'; 
 
                 const updateQR = (amount) => {
+                    // CẬP NHẬT: MÃ QR CHỨA ID KHÁCH HÀNG VÀ SỐ TIỀN
                     const content = `V35 ${deviceId}`; 
                     const url = `https://img.vietqr.io/image/${bankId}-${accNo}-${template}.png?amount=${amount}&addInfo=${encodeURIComponent(content)}&accountName=${encodeURIComponent(accName)}`;
                     qrImage.src = url;
@@ -1285,14 +1257,49 @@
             }
 
             let state = { base64: null, refBase64: null, restoredObj: null, originalImg: null, zoom: 1, rotation: 0, defaultPrompt: "Restore this photo, remove scratches, high quality, 8k", isLoupeActive: false, isReplicaMode: false, isFluxMode: true, currentSliderVal: 50, isComparing: false, aspectRatioType: null, userSettings: { username: '', apiKey: '', provider: 'google', baseUrl: 'https://generativelanguage.googleapis.com' } };
+            
+            // --- NEW: SINGLE FRAME NOTIFICATION SYSTEM (HUD) ---
+            let toastQueue = [];
+            let isToasting = false;
+            const hud = document.getElementById('notification-hud');
+            const hudTitle = document.getElementById('hud-title');
+            const hudMsg = document.getElementById('hud-message');
+
             const showToast = (message, type = 'info') => {
-                const container = document.getElementById('toast-container'); if(!container) return;
-                const toast = document.createElement('div');
-                const colors = type === 'error' ? 'bg-red-500 text-white shadow-red-500/20' : type === 'success' ? 'bg-green-500 text-white shadow-green-500/20' : 'bg-[#1c1c1e] text-white border border-white/10';
-                toast.className = `flex items-center gap-3 px-4 py-3 rounded-xl backdrop-blur-md shadow-xl animate-toast-in ${colors} text-xs font-semibold`;
-                toast.innerHTML = `<span>${message}</span>`;
-                container.appendChild(toast);
-                setTimeout(() => { toast.classList.add('animate-fade-out'); setTimeout(() => toast.remove(), 500); }, 3000);
+                toastQueue.push({message, type});
+                processToastQueue();
+            };
+
+            const processToastQueue = async () => {
+                if(isToasting || toastQueue.length === 0 || !hud) return;
+                isToasting = true;
+                
+                const { message, type } = toastQueue.shift();
+                
+                // Set content
+                hudTitle.textContent = type === 'error' ? 'ERROR' : (type === 'success' ? 'SUCCESS' : 'AUTO SCAN');
+                hudTitle.className = "text-[9px] font-bold uppercase tracking-wider " + (type === 'error' ? 'text-red-400' : (type === 'success' ? 'text-green-400' : 'text-[#0A84FF]'));
+                hudMsg.textContent = message;
+                
+                // Show
+                hud.classList.remove('translate-x-full', 'opacity-0');
+                hud.classList.add('animate-slide-in-right'); // Trigger animation
+
+                // Wait
+                await new Promise(r => setTimeout(r, 2000)); // Show for 2s
+
+                // Hide slightly before next one to create "switch" effect
+                if (toastQueue.length > 0) {
+                     hud.classList.add('opacity-50'); 
+                     await new Promise(r => setTimeout(r, 200));
+                     hud.classList.remove('opacity-50');
+                } else {
+                     hud.classList.add('translate-x-full', 'opacity-0');
+                     await new Promise(r => setTimeout(r, 300));
+                }
+
+                isToasting = false;
+                processToastQueue();
             };
 
             const gateScreen = document.getElementById('security-gate'), gateSubmit = document.getElementById('gate-submit'), gateStatus = document.getElementById('gate-status');
@@ -1496,7 +1503,7 @@
                 try {
                     const resizedBase64 = await resizeImage(state.base64);
                     const controller = new AbortController(); const timeoutId = setTimeout(() => controller.abort(), 40000);
-                    const promptText = "Analyze this image for photo restoration. Return ONLY JSON: { \"sceneContext\": \"wedding\"|\"funeral\"|\"casual\"|\"studio\"|\"outdoor\"|\"product\"|\"painting\"|\"ancient_portrait\"|\"nature\", \"lightingCondition\": \"rembrandt\"|\"golden_hour\"|\"neon\"|\"soft_diffused\"|\"flat\"|\"overexposed\"|\"harsh_sun\"|\"moonlight\"|\"streetlight\", \"backgroundType\": \"plain\"|\"complex_outdoor\"|\"complex_indoor\", \"isNature\": boolean, \"isMilitary\": boolean, \"gender\": \"male\"|\"female\", \"age\": number, \"damageType\": \"scratches\"|\"faded\"|\"sepia\"|\"severe_damage\"|\"none\"|\"blur\", \"isOldPhoto\": boolean, \"isIDPhoto\": boolean, \"isHazy\": boolean, \"hasStrabismus\": boolean, \"hasDroopyEyelids\": boolean, \"hasClosedEyes\": boolean, \"hasMonolids\": boolean, \"hasBuckTeeth\": boolean, \"hasBlackenedTeeth\": boolean, \"isGroupPhoto\": boolean }";
+                    const promptText = "Analyze this image for photo restoration. Return ONLY JSON: { \"sceneContext\": \"wedding\"|\"funeral\"|\"casual\"|\"studio\"|\"outdoor\"|\"product\"|\"painting\"|\"ancient_portrait\"|\"nature\", \"lightingCondition\": \"rembrandt\"|\"golden_hour\"|\"neon\"|\"soft_diffused\"|\"flat\"|\"overexposed\"|\"harsh_sun\"|\"moonlight\"|\"streetlight\", \"backgroundType\": \"plain\"|\"complex_outdoor\"|\"complex_indoor\", \"isNature\": boolean, \"isMilitary\": boolean, \"gender\": \"male\"|\"female\", \"age\": number, \"damageType\": \"scratches\"|\"faded\"|\"sepia\"|\"severe_damage\"|\"none\"|\"blur\", \"isOldPhoto\": boolean, \"isIDPhoto\": boolean, \"isHazy\": boolean, \"hasStrabismus\": boolean, \"hasDroopyEyelids\": boolean, \"hasClosedEyes\": boolean, \"hasMonolids\": boolean, \"hasBuckTeeth\": boolean, \"hasBlackenedTeeth\": boolean, \"isGroupPhoto\": boolean, \"hasRankInsignia\": boolean, \"hasMedal\": boolean }";
                     const headers = { 'Content-Type': 'application/json' }; if (isComet) headers['Authorization'] = `Bearer ${keyToUse}`;
                     const response = await fetch(`${apiBase}/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${keyToUse}`, { method: 'POST', headers: headers, signal: controller.signal, body: JSON.stringify({ contents: [{ parts: [{ text: promptText }, { inlineData: { mimeType: "image/jpeg", data: resizedBase64.split(',')[1] } }] }] }) });
                     clearTimeout(timeoutId);
@@ -1518,47 +1525,41 @@
                         if(document.getElementById('gender-select')) {
                             const genderVal = result.gender === 'male' ? 'male' : (result.gender === 'female' ? 'female' : '');
                             document.getElementById('gender-select').value = genderVal;
-                            if(genderVal) autoReport.push(`Giới tính: ${genderVal === 'male' ? 'Nam' : 'Nữ'}`);
+                            if(genderVal) showToast(`Giới tính: ${genderVal === 'male' ? 'Nam' : 'Nữ'}`);
                         }
                         if(document.getElementById('age-input')) {
                             document.getElementById('age-input').value = result.age || 30;
-                            autoReport.push(`Tuổi: ${result.age || 30}`);
+                            showToast(`Tuổi dự đoán: ${result.age || 30}`);
                         }
                         if(result.isIDPhoto) { 
                             setChecked('check-id-photo', true); 
                             const moduleSubject = document.getElementById('module-subject');
                             if(moduleSubject) moduleSubject.classList.add('open'); 
-                            autoReport.push("Chế độ Ảnh thẻ");
+                            showToast("Phát hiện: Ảnh thẻ (ID Mode)");
                         }
                         
                         if(result.isMilitary) { 
                             const contentMilitary = document.getElementById('content-military');
                             if(contentMilitary) contentMilitary.classList.add('open'); 
-                            autoReport.push("Phát hiện Quân phục");
+                            showToast("Phát hiện: Quân phục");
                         }
 
                         if(result.isGroupPhoto) {
                             setChecked('check-group-mode', true);
-                            autoReport.push("Chế độ Phục hồi Đám đông");
+                            showToast("Phát hiện: Ảnh tập thể (Group Mode)");
                         }
 
-                        let identityFeaturesFound = false;
-                        if(result.hasStrabismus) { setChecked('check-cross-eyed', true); identityFeaturesFound = true; autoReport.push("Mắt Lé"); }
-                        if(result.hasDroopyEyelids) { setChecked('check-ptosis', true); identityFeaturesFound = true; autoReport.push("Mắt Sụp Mí"); }
-                        if(result.hasClosedEyes) { setChecked('check-closed-eyes', true); identityFeaturesFound = true; autoReport.push("Mắt Nhắm"); }
-                        if(result.hasMonolids) { setChecked('check-monolid', true); identityFeaturesFound = true; autoReport.push("Mắt Một Mí"); }
-                        if(result.hasBuckTeeth) { setChecked('check-buck-teeth', true); identityFeaturesFound = true; autoReport.push("Răng Hô"); }
-                        if(result.hasBlackenedTeeth) { setChecked('check-black-teeth', true); identityFeaturesFound = true; autoReport.push("Răng Đen"); }
+                        if(result.hasStrabismus) { setChecked('check-cross-eyed', true); showToast("Phát hiện: Mắt Lé"); }
+                        if(result.hasDroopyEyelids) { setChecked('check-ptosis', true); showToast("Phát hiện: Mắt Sụp Mí"); }
+                        if(result.hasClosedEyes) { setChecked('check-closed-eyes', true); showToast("Phát hiện: Mắt Nhắm"); }
+                        if(result.hasMonolids) { setChecked('check-monolid', true); showToast("Phát hiện: Mắt Một Mí"); }
+                        if(result.hasBuckTeeth) { setChecked('check-buck-teeth', true); showToast("Phát hiện: Răng Hô"); }
+                        if(result.hasBlackenedTeeth) { setChecked('check-black-teeth', true); showToast("Phát hiện: Răng Đen"); }
 
-                        if(identityFeaturesFound) {
-                            const contentIdentity = document.getElementById('content-identity');
-                            if(contentIdentity) contentIdentity.classList.add('open');
-                        }
-                        
                         if (!state.isReplicaMode) { 
                             const modeReplica = document.getElementById('mode-replica');
                             if(modeReplica) modeReplica.click(); 
-                            autoReport.push("Chế độ Siêu thực");
+                            showToast("Tự động bật: Siêu Thực (Replica)");
                         }
                         
                         let smartPrompt = `Restore this ${result.sceneContext} photo. (high resolution:1.5), (masterpiece:1.4), (detailed background:1.3). `;
@@ -1581,19 +1582,19 @@
                             let toastMsg = "Qwen Edit Pro"; 
 
                             if (lightingSelect) {
-                                if (result.lightingCondition === 'golden_hour') { lightingSelect.value = 'golden_hour_blinds'; autoReport.push("Ánh sáng: Golden Hour"); } 
-                                else if (result.lightingCondition === 'moonlight') { lightingSelect.value = 'moonlight_window'; autoReport.push("Ánh sáng: Moonlight"); } 
-                                else if (result.lightingCondition === 'neon') { lightingSelect.value = 'neon_cyberpunk'; autoReport.push("Ánh sáng: Neon"); }
+                                if (result.lightingCondition === 'golden_hour') { lightingSelect.value = 'golden_hour_blinds'; showToast("Ánh sáng: Golden Hour"); } 
+                                else if (result.lightingCondition === 'moonlight') { lightingSelect.value = 'moonlight_window'; showToast("Ánh sáng: Moonlight"); } 
+                                else if (result.lightingCondition === 'neon') { lightingSelect.value = 'neon_cyberpunk'; showToast("Ánh sáng: Neon"); }
                             }
 
                             if ((result.damageType === 'blur' || result.isHazy) && upscaleSelect) {
                                 upscaleSelect.value = 'invsr_sharp'; 
-                                autoReport.push("Kích hoạt InvSR Chống Rung");
+                                showToast("Tự động bật: InvSR Chống Rung");
                             }
 
-                            if(result.sceneContext === 'wedding') { newWorkflow = 'wedding_kontext_v2'; toastMsg = "Ảnh Cưới"; }
+                            if(result.sceneContext === 'wedding') { newWorkflow = 'wedding_kontext_v2'; toastMsg = "Ảnh Cưới (Wedding Mode)"; }
                             else if(result.sceneContext === 'ancient_portrait') { newWorkflow = 'ancient_restore'; toastMsg = "Phục chế Tranh/Tượng"; }
-                            else if(result.sceneContext === 'outdoor') { newWorkflow = 'outdoor_mode'; toastMsg = "Ngoại cảnh"; }
+                            else if(result.sceneContext === 'outdoor') { newWorkflow = 'outdoor_mode'; toastMsg = "Ngoại cảnh (Outdoor)"; }
                             else if (result.isIDPhoto) {
                                 if (!result.isOldPhoto && result.damageType === 'none') { newWorkflow = 'white_bg'; toastMsg = "Ảnh Thẻ (Tách nền)"; } 
                                 else { newWorkflow = 'qwen_edit_pro'; toastMsg = "Phục hồi Ảnh Thẻ"; }
@@ -1602,7 +1603,7 @@
 
                             if(newWorkflow !== 'default') {
                                 workflowSelect.value = newWorkflow;
-                                autoReport.push("Workflow: " + toastMsg);
+                                showToast(`Workflow: ${toastMsg}`);
                                 moduleContainer.classList.add('ring-1', 'ring-[#0A84FF]');
                                 setTimeout(() => { moduleContainer.classList.remove('ring-1', 'ring-[#0A84FF]'); }, 3000);
                             }
@@ -1610,10 +1611,6 @@
 
                         if (window.innerWidth >= 1024) { openSidebar(); } 
                         else { showToast("✅ Auto Scan hoàn tất", "success"); }
-                        
-                        autoReport.forEach((msg, index) => {
-                            setTimeout(() => { showToast("🤖 " + msg, "info"); }, index * 800); 
-                        });
 
                         updateMobileBtnState('run');
                     }
