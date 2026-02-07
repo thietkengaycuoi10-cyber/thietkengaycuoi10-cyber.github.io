@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>PHỤC HỒI ẢNH - AI RESTORATION PRO (V36.11 MILITARY AUTO-TACTIC)</title>
+    <title>PHỤC HỒI ẢNH - AI RESTORATION PRO (V36.12 UI REMASTER)</title>
     
     <!-- FONTS: Apple Style Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -62,6 +62,7 @@
                         'blob': 'blob 10s infinite',
                         'typewriter': 'typewriter 0.5s steps(40, end)',
                         'shimmer-fast': 'shimmer 1.5s linear infinite',
+                        'pop-in': 'popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards',
                     },
                     keyframes: {
                         enterUp: { '0%': { opacity: '0', transform: 'translateY(30px) scale(0.95)' }, '100%': { opacity: '1', transform: 'translateY(0) scale(1)' } },
@@ -73,7 +74,8 @@
                         iosPress: { '0%': { transform: 'scale(1)' }, '50%': { transform: 'scale(0.97)' }, '100%': { transform: 'scale(1)' } },
                         highlightPulse: { '0%, 100%': { borderColor: 'rgba(255, 214, 10, 0.5)', backgroundColor: 'rgba(255, 214, 10, 0.1)' }, '50%': { borderColor: 'rgba(255, 214, 10, 1)', backgroundColor: 'rgba(255, 214, 10, 0.2)' } },
                         blob: { '0%': { transform: 'translate(0px, 0px) scale(1)' }, '33%': { transform: 'translate(30px, -50px) scale(1.1)' }, '66%': { transform: 'translate(-20px, 20px) scale(0.9)' }, '100%': { transform: 'translate(0px, 0px) scale(1)' } },
-                        shimmer: { '0%': { backgroundPosition: '200% center' }, '100%': { backgroundPosition: '-200% center' } }
+                        shimmer: { '0%': { backgroundPosition: '200% center' }, '100%': { backgroundPosition: '-200% center' } },
+                        popIn: { '0%': { opacity: '0', transform: 'scale(0.5)' }, '100%': { opacity: '1', transform: 'scale(1)' } }
                     }
                 }
             }
@@ -232,6 +234,24 @@
         /* Security Gate iOS Style */
         .passcode-dot { width: 12px; height: 12px; border-radius: 50%; border: 1px solid #fff; margin: 0 8px; }
         .passcode-dot.filled { background: #fff; }
+
+        /* Mac Window Style Dots */
+        .mac-dot { width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; }
+        .mac-dot.red { background-color: #FF5F56; }
+        .mac-dot.yellow { background-color: #FFBD2E; }
+        .mac-dot.green { background-color: #27C93F; }
+
+        /* Auto Scan Tag */
+        .scan-tag { 
+            display: inline-flex; align-items: center; 
+            padding: 4px 10px; margin: 2px;
+            border-radius: 12px; 
+            background: rgba(255,255,255,0.1); 
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #fff; font-size: 10px; font-weight: 600; font-family: monospace;
+            opacity: 0; animation: pop-in 0.3s forwards;
+        }
+        .scan-tag.highlight { border-color: #FFD60A; color: #FFD60A; background: rgba(255, 214, 10, 0.1); }
     </style>
 </head>
 
@@ -296,12 +316,29 @@
     <!-- SYSTEM NOTIFICATION AREA -->
     <div id="toast-container" class="fixed top-6 right-6 z-[100] flex flex-col gap-2 pointer-events-none w-auto max-w-sm items-end"></div>
     
-    <!-- AI AUTO SCAN STATUS BAR (MOVED HIGHER to bottom-48) -->
-    <div id="ai-status-overlay" class="fixed bottom-48 left-1/2 -translate-x-1/2 z-[100] hidden flex-col items-center justify-center w-[90%] max-w-md pointer-events-none transition-all duration-300">
-        <div class="bg-black/80 backdrop-blur-xl border border-[#0A84FF]/30 rounded-full px-6 py-3 shadow-[0_0_20px_rgba(10,132,255,0.3)] flex items-center gap-3">
-            <div class="w-2 h-2 rounded-full bg-[#0A84FF] animate-pulse"></div>
-            <span class="text-[#0A84FF] text-[10px] font-bold tracking-widest uppercase">AI SYSTEM:</span>
-            <span id="ai-status-text" class="text-[11px] font-mono font-bold text-white tracking-wider animate-typewriter whitespace-nowrap overflow-hidden">WAITING...</span>
+    <!-- NEW: MODERN SCAN WINDOW (Replaces the old radar overlay status) -->
+    <div id="scan-window-overlay" class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black/60 backdrop-blur-sm hidden">
+        <div class="w-[90%] max-w-[340px] bg-[#1c1c1e]/90 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl overflow-hidden animate-enter-up">
+            <!-- Mac Window Header -->
+            <div class="h-8 bg-white/5 border-b border-white/5 flex items-center px-3 gap-0">
+                <div class="mac-dot red"></div>
+                <div class="mac-dot yellow"></div>
+                <div class="mac-dot green"></div>
+                <span class="ml-auto text-[10px] font-mono font-bold text-gray-500 tracking-wider">AI DIAGNOSTIC</span>
+            </div>
+            <!-- Content -->
+            <div class="p-5 flex flex-col items-center min-h-[140px] justify-center">
+                <div id="scan-radar-icon" class="w-12 h-12 rounded-full border-2 border-[#0A84FF] flex items-center justify-center mb-3 relative">
+                    <div class="absolute inset-0 bg-[#0A84FF]/20 rounded-full animate-ping"></div>
+                    <svg class="w-6 h-6 text-[#0A84FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                </div>
+                <h3 id="scan-title" class="text-sm font-bold text-white mb-3 animate-pulse">ĐANG PHÂN TÍCH...</h3>
+                
+                <!-- Tag Container (Populated by JS) -->
+                <div id="scan-tags-container" class="flex flex-wrap justify-center w-full gap-1">
+                    <!-- Tags will appear here: <span class="scan-tag">MŨ CỐI</span> -->
+                </div>
+            </div>
         </div>
     </div>
 
@@ -310,20 +347,16 @@
         <!-- SIDEBAR (iOS Settings Style) -->
         <aside id="sidebar" class="fixed inset-y-0 left-0 z-[60] w-full sm:w-[380px] flex-shrink-0 glass-panel flex flex-col transition-transform duration-300 ease-out lg:static lg:translate-x-0 -translate-x-full shadow-2xl lg:shadow-none bg-[#000]/90 lg:bg-transparent">
             
-            <!-- Sidebar Header -->
+            <!-- Sidebar Header (Cleaned up for Desktop) -->
             <div class="h-14 px-5 flex items-center justify-between border-b border-white/10 bg-white/[0.02]">
                 <div class="flex flex-col">
-                    <h1 class="text-[15px] font-bold tracking-tight text-white">PHỤC HỒI ẢNH</h1>
-                    <div class="flex items-center gap-2">
-                        <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
-                        <span id="top-bar-ip" class="text-[10px] text-gray-400 font-mono">IP: Loading...</span>
-                        <span class="text-[10px] text-[#0A84FF] font-bold ml-1">V36.11 (MILITARY AUTO-TACTIC)</span>
-                    </div>
+                    <h1 class="text-[15px] font-bold tracking-tight text-white">AI RESTORATION</h1>
+                    <span class="text-[10px] text-[#0A84FF] font-bold">V36.12 (PRO)</span>
                 </div>
                 
                 <div class="flex items-center gap-3">
                     <div class="flex flex-col items-end mr-1 px-3 py-1 rounded-lg bg-white/5 border border-white/5 cursor-pointer hover:bg-white/10 transition" id="credit-display">
-                        <span class="text-[9px] text-gray-400 font-semibold uppercase">CREDITS (ẢNH)</span>
+                        <span class="text-[9px] text-gray-400 font-semibold uppercase">CREDITS</span>
                         <span class="text-[13px] font-mono font-bold text-[#FFD60A]" id="credit-count">---</span>
                     </div>
                     <button id="close-sidebar-mobile" class="lg:hidden p-2 rounded-full bg-[#2c2c2e] text-white">
@@ -349,7 +382,7 @@
                 <!-- 2. AUTO-PILOT BUTTON -->
                 <button id="btn-auto-pilot" class="w-full py-3.5 bg-gradient-to-r from-[#0A84FF] to-[#0062cc] text-white rounded-xl flex items-center justify-center gap-2 transition-transform active:scale-[0.98] shadow-lg shadow-blue-900/20 group">
                     <svg class="w-4 h-4 animate-pulse group-hover:rotate-180 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                    <span class="text-xs font-bold tracking-wide">AUTO SCAN V36.11 (MILITARY AUTO-TACTIC)</span>
+                    <span class="text-xs font-bold tracking-wide">AUTO SCAN V36.12 (MILITARY TACTIC)</span>
                 </button>
 
                 <!-- MODULES -->
@@ -826,12 +859,16 @@
             <div class="lg:hidden h-14 glass-panel border-b border-white/5 flex items-center px-4 justify-between z-30 relative w-full">
                 <button id="toggle-sidebar-btn" class="text-gray-400 p-2 rounded-lg active:bg-white/10"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg></button>
                 <div class="flex flex-col items-center">
-                     <span class="font-semibold text-white text-[13px]">PHỤC HỒI ẢNH</span>
-                     <span class="text-[9px] text-gray-500 font-mono tracking-widest" id="mobile-status-text">WAITING FOR IMAGE</span>
+                     <span class="font-bold text-white text-[14px] tracking-tight">AI RESTORATION</span>
+                     <div class="flex items-center gap-2 opacity-60">
+                        <span class="text-[9px] font-mono">V36.12</span>
+                        <span class="text-[9px]">•</span>
+                        <span id="mobile-status-text" class="text-[9px] font-mono tracking-widest">WAITING</span>
+                     </div>
                 </div>
-                <button id="download-mobile" class="text-[#0A84FF] p-2 rounded-full active:bg-white/10 transition-all disabled:opacity-30" disabled>
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                </button>
+                <div class="flex items-center justify-center h-8 px-3 rounded-full bg-white/10 border border-white/10 text-[#FFD60A] font-bold font-mono text-xs cursor-pointer active:scale-95 transition-transform" id="mobile-credit-display">
+                    <span id="mobile-credit-count">--</span>
+                </div>
             </div>
             
             <!-- DESKTOP TOOLBAR (Floating Island) -->
@@ -883,14 +920,6 @@
                     </div>
 
                     <canvas id="canvas-process" class="hidden"></canvas>
-
-                    <div id="ai-terminal-overlay" class="absolute inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex flex-col items-center justify-center font-mono">
-                        <div class="w-full max-w-md p-6 rounded-3xl border border-white/10 bg-[#1c1c1e] shadow-2xl relative overflow-hidden">
-                            <div class="flex items-center gap-3 mb-6 border-b border-white/5 pb-4"><div class="w-3 h-3 rounded-full bg-red-500"></div><div class="w-3 h-3 rounded-full bg-yellow-500"></div><div class="w-3 h-3 rounded-full bg-green-500"></div></div>
-                            <div id="terminal-content" class="text-xs text-gray-300 space-y-2 h-32 overflow-hidden scroll-smooth"></div>
-                            <div class="mt-4"><div class="w-full bg-white/5 h-1 rounded-full overflow-hidden"><div id="term-progress-bar" class="h-full bg-[#0A84FF] w-0 transition-all duration-300"></div></div></div>
-                        </div>
-                    </div>
                     
                     <div id="placeholder-state" class="text-center p-12 md:p-24 border border-dashed border-gray-700 rounded-3xl bg-white/[0.02] hover:bg-white/[0.04] transition-all duration-500 backdrop-blur-sm cursor-pointer">
                         <div class="w-24 h-24 bg-gradient-to-tr from-gray-800 to-gray-700 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner border border-white/5"><svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l-1.586-1.586a2 2 0 00-2.828 0L6 18H4a2 2 0 01-2-2V6a2 2 0 01-2-2V6a2 2 0 012-2h16a2 2 0 012 2v8a2 2 0 01-2 2h-2m-4-4l-3 3m0 0l-3-3m3 3V4"></path></svg></div>
@@ -1214,7 +1243,9 @@
 
                 updateUI() {
                     const el = document.getElementById('credit-count');
+                    const mobEl = document.getElementById('mobile-credit-count');
                     if (el) el.textContent = this.credits;
+                    if (mobEl) mobEl.textContent = this.credits + " CR";
                 }
             };
 
@@ -1229,6 +1260,12 @@
             function closeSidebar() {
                 if(sidebar) sidebar.classList.add('-translate-x-full');
                 if(mobileBar) mobileBar.classList.remove('translate-y-32', 'opacity-0'); 
+            }
+            
+            // Mobile Credit Click to Open Recharge
+            const mobCredit = document.getElementById('mobile-credit-display');
+            if(mobCredit) {
+                mobCredit.onclick = () => document.getElementById('recharge-modal').classList.remove('hidden');
             }
 
             function initRechargeSystem(deviceId) {
@@ -1285,7 +1322,7 @@
                 
                 if (state === 'upload') {
                     if(upload) upload.classList.remove('hidden');
-                    if(status) { status.textContent = "WAITING FOR IMAGE"; status.className = "text-[9px] text-gray-500 font-mono tracking-widest"; }
+                    if(status) { status.textContent = "WAITING"; status.className = "text-[9px] text-gray-500 font-mono tracking-widest"; }
                 } else if (state === 'scan') {
                     if(scan) {
                         scan.classList.remove('hidden');
@@ -1293,7 +1330,7 @@
                         scan.innerHTML = `<svg class="w-6 h-6 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg><span>SCAN</span>`;
                     }
                     if(status) {
-                        status.textContent = "IMAGE LOADED";
+                        status.textContent = "LOADED";
                         status.className = "text-[9px] font-mono tracking-widest text-blue-400 font-bold";
                     }
                 } else if (state === 'scanning') {
@@ -1302,7 +1339,7 @@
                         scan.disabled = true;
                         scan.innerHTML = `<svg class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> SCANNING...`;
                     }
-                    if(status) status.textContent = "AI ANALYZING...";
+                    if(status) status.textContent = "ANALYZING...";
                 } else if (state === 'run') {
                     if(run) {
                         run.classList.remove('hidden');
@@ -1354,31 +1391,38 @@
                 setTimeout(() => { toast.classList.add('animate-fade-out'); setTimeout(() => toast.remove(), 500); }, 3000);
             };
             
-            // NEW FUNCTION: RUN AI STATUS SEQUENCE (Replace stacked toasts)
-            async function playAiSequence(messages) {
-                const overlay = document.getElementById('ai-status-overlay');
-                const textEl = document.getElementById('ai-status-text');
-                if(!overlay || !textEl) return;
-
-                overlay.classList.remove('hidden');
-                overlay.classList.add('flex');
-
-                for (const msg of messages) {
-                    textEl.innerText = msg.toUpperCase();
-                    // Reset animation trick
-                    textEl.classList.remove('animate-typewriter');
-                    void textEl.offsetWidth; // trigger reflow
-                    textEl.classList.add('animate-typewriter');
-                    
-                    await new Promise(r => setTimeout(r, 1200)); // Show each msg for 1.2s
-                }
-
-                textEl.innerText = "SCAN COMPLETE";
-                await new Promise(r => setTimeout(r, 1000));
+            // --- NEW: SCAN WINDOW LOGIC ---
+            function showScanWindow() {
+                const win = document.getElementById('scan-window-overlay');
+                if(win) win.classList.remove('hidden');
+            }
+            
+            function hideScanWindow() {
+                const win = document.getElementById('scan-window-overlay');
+                if(win) win.classList.add('hidden');
+            }
+            
+            function updateScanTags(messages) {
+                const container = document.getElementById('scan-tags-container');
+                if(!container) return;
                 
-                // Hide after done
-                overlay.classList.add('hidden');
-                overlay.classList.remove('flex');
+                // Clear existing
+                container.innerHTML = '';
+                
+                // Add tags with delay effect
+                messages.forEach((msg, index) => {
+                    setTimeout(() => {
+                        const tag = document.createElement('span');
+                        tag.className = 'scan-tag';
+                        if (msg.includes('AUTO:') || msg.includes('PHÁT HIỆN:')) {
+                            tag.classList.add('highlight');
+                        }
+                        // Clean up message for badge
+                        let cleanMsg = msg.replace('AUTO: ', '').replace('PHÁT HIỆN: ', '').replace('FIX: ', '').replace('WORKFLOW: ', '');
+                        tag.innerText = cleanMsg;
+                        container.appendChild(tag);
+                    }, index * 300);
+                });
             }
 
 
@@ -1450,7 +1494,6 @@
             const runImageProcessing = async () => {
                 if(!state.base64) return showToast("Vui lòng tải ảnh!", "error");
                 
-                // --- SỬA LOGIC CREDIT: 1 CREDIT / 1 LẦN ---
                 if (!UserSystem.deductCredits(1)) { 
                     showToast("Tài khoản không đủ Credit! Vui lòng nạp.", "error"); 
                     document.getElementById('recharge-modal').classList.remove('hidden'); 
@@ -1463,10 +1506,13 @@
                     processBtn.innerHTML = "TẠO ẢNH (FLUX/QWEN ENGINE)"; 
                 }
                 
-                document.getElementById('ai-terminal-overlay').classList.remove('hidden'); 
+                // Hide Scan Window if open
+                hideScanWindow();
+                
+                // Show traditional terminal if needed, or rely on status
+                // document.getElementById('ai-terminal-overlay').classList.remove('hidden'); 
                 document.getElementById('scan-beam').classList.add('active');
                 
-                // ACTIVATE MAGIC DUST EFFECT (V36 UPGRADE)
                 const magicDust = document.getElementById('magic-dust');
                 if(magicDust) magicDust.classList.remove('hidden');
 
@@ -1489,13 +1535,11 @@
                     }
                     finalPrompt += ", (maintain original composition:1.5), (do not flip:1.5), (do not crop:1.4), (preserve original aspect ratio:1.4)";
                     
-                    // V36 UPGRADE: Check for Altar Mode
                     const isAltarMode = document.getElementById('check-altar-mode')?.checked;
                     if (isAltarMode) {
                         finalPrompt += ", (formal portrait:1.4), (symmetrical face:1.3), (solemn expression), (perfectly centered), (white background:0.5)";
                     }
 
-                    // V36.9 UPGRADE: ID PHOTO LOGIC
                     const isIDPhoto = document.getElementById('check-id-photo')?.checked;
                     if (isIDPhoto) {
                         finalPrompt += ", (passport photo:1.5), (studio lighting:1.3), (neutral background:1.4), (look at camera), (high quality headshot)";
@@ -1581,7 +1625,7 @@
                         processBtn.disabled = false; 
                         processBtn.innerHTML = "TẠO ẢNH (FLUX/QWEN ENGINE)"; 
                     }
-                    document.getElementById('ai-terminal-overlay').classList.add('hidden'); 
+                    // document.getElementById('ai-terminal-overlay').classList.add('hidden'); 
                     document.getElementById('scan-beam').classList.remove('active'); 
                     if(magicDust) magicDust.classList.add('hidden');
                 }
@@ -1594,17 +1638,26 @@
                 const originalText = btnAutoPilot.innerHTML;
                 btnAutoPilot.disabled = true;
                 btnAutoPilot.innerHTML = `<span class="animate-pulse">AUTO-SCANNING...</span>`;
+                
+                // Show new Scan Window
+                showScanWindow();
+                document.getElementById('scan-title').innerText = "AI ĐANG QUÉT...";
+                document.getElementById('scan-tags-container').innerHTML = ''; // Reset tags
+                
                 updateMobileBtnState('scanning');
                 const { key: keyToUse, base: apiBase, isComet } = getApiConfig();
-                if (!keyToUse) { showToast("Chưa có API Key! Vui lòng liên hệ Admin.", "error"); btnAutoPilot.disabled = false; btnAutoPilot.innerHTML = originalText; updateMobileBtnState('scan'); return; }
+                if (!keyToUse) { 
+                    showToast("Chưa có API Key!", "error"); 
+                    btnAutoPilot.disabled = false; btnAutoPilot.innerHTML = originalText; updateMobileBtnState('scan'); 
+                    hideScanWindow();
+                    return; 
+                }
 
                 try {
                     const resizedBase64 = await resizeImage(state.base64);
                     const controller = new AbortController(); const timeoutId = setTimeout(() => controller.abort(), 40000);
                     
-                    // --- V36.11 UPGRADE START: ADVANCED JSON SCHEMA (Military Specifics) ---
                     const promptText = "Analyze this image for photo restoration. Return ONLY JSON: { \"sceneContext\": \"wedding\"|\"funeral\"|\"casual\"|\"studio\"|\"outdoor\"|\"product\"|\"painting\"|\"ancient_portrait\"|\"nature\", \"materialType\": \"paper_photo\"|\"canvas\"|\"newspaper\"|\"silk\"|\"digital\", \"specificDamage\": \"scratches\"|\"mold_spots\"|\"water_stain\"|\"tear\"|\"severe_decay\"|\"none\", \"colorCast\": \"sepia\"|\"cyan\"|\"red\"|\"yellow\"|\"none\", \"estimatedEra\": \"french_colonial\"|\"vietnam_war\"|\"subsidy_period\"|\"modern\"|\"unknown\", \"faceSize\": \"portrait_closeup\"|\"medium_shot\"|\"group_small_faces\", \"lightingCondition\": \"rembrandt\"|\"golden_hour\"|\"neon\"|\"soft_diffused\"|\"flat\"|\"overexposed\"|\"harsh_sun\"|\"moonlight\"|\"streetlight\", \"backgroundType\": \"plain\"|\"complex_outdoor\"|\"complex_indoor\", \"hairCondition\": \"blurry_mess\"|\"sharp\"|\"normal\", \"skinTexture\": \"waxy\"|\"detailed\"|\"grainy\", \"fabricDetail\": \"lost\"|\"visible\", \"hasJewelry\": boolean, \"isNature\": boolean, \"isMilitary\": boolean, \"militaryUniformType\": \"army_ground\"|\"air_force\"|\"navy\"|\"border_guard\"|\"public_security\"|\"youth_volunteer\"|\"unknown\", \"militaryHatType\": \"pith_helmet\"|\"soft_cap\"|\"kepi_officer\"|\"kepi_police\"|\"bamboo_helmet\"|\"none\", \"hasGoldStarMedal\": boolean, \"hasResistanceMedal\": boolean, \"hasYouthBadge\": boolean, \"isBlackAndWhite\": boolean, \"isAltarPortrait\": boolean, \"gender\": \"male\"|\"female\", \"age\": number, \"damageType\": \"scratches\"|\"faded\"|\"sepia\"|\"severe_damage\"|\"none\"|\"blur\", \"isOldPhoto\": boolean, \"isIDPhoto\": boolean, \"isHazy\": boolean, \"hasStrabismus\": boolean, \"hasDroopyEyelids\": boolean, \"hasClosedEyes\": boolean, \"hasMonolids\": boolean, \"hasBuckTeeth\": boolean, \"hasBlackenedTeeth\": boolean, \"isGroupPhoto\": boolean }";
-                    // --- V36.11 UPGRADE END ---
                     
                     const headers = { 'Content-Type': 'application/json' }; if (isComet) headers['Authorization'] = `Bearer ${keyToUse}`;
                     const response = await fetch(`${apiBase}/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${keyToUse}`, { method: 'POST', headers: headers, signal: controller.signal, body: JSON.stringify({ contents: [{ parts: [{ text: promptText }, { inlineData: { mimeType: "image/jpeg", data: resizedBase64.split(',')[1] } }] }] }) });
@@ -1640,7 +1693,6 @@
                             autoReport.push("CHẾ ĐỘ: ẢNH THẺ");
                         }
                         
-                        // V36 UPGRADE: AUTO ALTAR DETECTION
                         if(result.isAltarPortrait) {
                             setChecked('check-altar-mode', true);
                             const moduleSubject = document.getElementById('module-subject');
@@ -1648,13 +1700,11 @@
                             autoReport.push("PHÁT HIỆN: ẢNH THỜ");
                         }
                         
-                        // V36.11 UPGRADE: MILITARY LOGIC
                         if(result.isMilitary) { 
                             const contentMilitary = document.getElementById('content-military');
                             if(contentMilitary) contentMilitary.classList.add('open'); 
                             autoReport.push("PHÁT HIỆN: QUÂN PHỤC");
 
-                            // 1. Uniform Mapping
                             if(result.militaryUniformType === 'public_security') {
                                 document.getElementById('mil-branch').value = "vietnamese public security, green uniform, red collar tabs";
                                 autoReport.push("AUTO: CÔNG AN");
@@ -1666,7 +1716,6 @@
                                 autoReport.push("AUTO: LỤC QUÂN");
                             }
 
-                            // 2. Hat Mapping
                             if(result.militaryHatType === 'pith_helmet') {
                                 document.getElementById('hat-select').value = "wear vietnamese pith helmet, hard pith helmet, dark green color, rounded shape, red badge with yellow star";
                                 autoReport.push("AUTO: MŨ CỐI");
@@ -1681,7 +1730,6 @@
                                 autoReport.push("AUTO: MŨ KEPI SQ");
                             }
 
-                            // 3. Medals & Badges
                             if(result.hasGoldStarMedal) { setChecked('check-sao-vang', true); autoReport.push("AUTO: SAO VÀNG"); }
                             if(result.hasResistanceMedal) { setChecked('check-khang-chien', true); autoReport.push("AUTO: HC KHÁNG CHIẾN"); }
                             if(result.hasYouthBadge) { setChecked('check-doan', true); autoReport.push("AUTO: HUY HIỆU ĐOÀN"); }
@@ -1715,9 +1763,6 @@
                         smartPrompt += "(hyper-realistic skin texture:1.6), (detailed skin pores:1.5), (rosy undertone:1.3), (natural beauty:1.2). ";
                         if(result.isMilitary) smartPrompt += ", (Vietnamese military uniform:1.5), (historic details:1.4)";
                         
-                        // --- V36.6 UPGRADE START: ADVANCED LOGIC INJECTION ---
-                        
-                        // 1. MATERIAL HANDLING
                         if(result.materialType === 'canvas') {
                              smartPrompt += ", (remove canvas texture:1.4), (smooth surface:1.2)";
                              autoReport.push("FIX: VÂN VẢI CANVAS");
@@ -1726,7 +1771,6 @@
                              autoReport.push("FIX: ẢNH BÁO CŨ");
                         }
 
-                        // 2. SPECIFIC DAMAGE HANDLING
                         if(result.specificDamage === 'mold_spots') {
                             smartPrompt += ", (remove mold spots:1.5), (clean fungal growth:1.4)";
                             autoReport.push("AUTO CLEAN: NẤM MỐC");
@@ -1738,48 +1782,40 @@
                             autoReport.push("AUTO FILL: VẾT RÁCH");
                         }
 
-                        // 3. COLOR CAST HANDLING
                         if(!result.isBlackAndWhite && result.colorCast !== 'none') {
                             smartPrompt += `, (remove ${result.colorCast} color cast:1.4), (white balance:1.3), (natural colors)`;
                             autoReport.push(`FIX: ÁM MÀU (${result.colorCast.toUpperCase()})`);
                         }
 
-                        // 4. FACE SIZE LOGIC
                         if(result.faceSize === 'portrait_closeup') {
                             smartPrompt += ", (extremely detailed eyes:1.4), (individual eyelashes:1.3)";
                         } else if (result.faceSize === 'group_small_faces') {
                             smartPrompt += ", (clear facial features:1.5), (avoid distorted faces:1.4)";
                         }
 
-                        // 5. ERA SENSING
                         if(result.estimatedEra === 'french_colonial' && !result.isMilitary) {
                             smartPrompt += ", (1940s vietnamese clothing style:1.2)";
                         } else if (result.estimatedEra === 'subsidy_period' && !result.isMilitary) {
                              smartPrompt += ", (1980s vietnamese fashion:1.2)";
                         }
 
-                        // 6. LZP HAIR ENGINE (Vẽ lại tóc)
                         if (result.hairCondition === 'blurry_mess' || result.faceSize === 'portrait_closeup') {
                             smartPrompt += ", (LZP Hair:1.4), (detailed hair strands:1.5), (remove hair blur)";
-                            setChecked('check-hair', true); // Activate UI toggle
+                            setChecked('check-hair', true);
                             autoReport.push("AUTO: VẼ LẠI TÓC (LZP)");
                         }
 
-                        // 7. TEXTURE BOOST (Da & Vải)
                         if (result.skinTexture === 'waxy' || result.fabricDetail === 'lost') {
                             smartPrompt += ", (detailed skin pores:1.4), (realistic fabric texture:1.3), (micro details:1.3)";
-                            setChecked('check-texture-boost', true); // Activate UI toggle
-                            autoReport.push("AUTO: TĂNG CHI TIẾT (DA/VẢI)");
+                            setChecked('check-texture-boost', true);
+                            autoReport.push("AUTO: TĂNG CHI TIẾT");
                         }
 
-                        // 8. JEWELRY ENHANCEMENT (Trang sức)
                         if (result.hasJewelry) {
                             smartPrompt += ", (detailed jewelry:1.4), (sparkling gold/silver:1.2)";
                             autoReport.push("AUTO: LÀM NÉT TRANG SỨC");
                         }
                         
-                        // --- V36.6 UPGRADE END ---
-
                         const promptMain = document.getElementById('prompt-main');
                         if(promptMain) promptMain.value = smartPrompt;
                         
@@ -1796,7 +1832,6 @@
                             let toastMsg = "QWEN EDIT PRO"; 
 
                             if (lightingSelect) {
-                                // V36 UPGRADE: AUTO COLORIZE BW
                                 if (result.isBlackAndWhite && result.isOldPhoto) {
                                     lightingSelect.value = 'colorize_bw_old_photo';
                                     autoReport.push("AUTO: TÔ MÀU ẢNH CŨ");
@@ -1813,7 +1848,6 @@
 
                             if(result.sceneContext === 'wedding') { newWorkflow = 'wedding_kontext_v2'; toastMsg = "WORKFLOW: ẢNH CƯỚI"; }
                             else if(result.sceneContext === 'ancient_portrait') { newWorkflow = 'ancient_restore'; toastMsg = "WORKFLOW: TRANH/TƯỢNG"; }
-                            
                             else if(result.sceneContext === 'outdoor' || result.sceneContext === 'nature' || result.isNature === true || result.backgroundType === 'complex_outdoor') { 
                                 newWorkflow = 'outdoor_mode'; 
                                 toastMsg = "WORKFLOW: NGOẠI CẢNH"; 
@@ -1834,12 +1868,23 @@
 
                         if (window.innerWidth >= 1024) { openSidebar(); } 
                         
-                        // NEW LOGIC: SHOW SINGLE LINE SEQUENCE INSTEAD OF TOASTS
-                        playAiSequence(autoReport);
+                        // NEW LOGIC: SHOW MODERN SCAN WINDOW
+                        document.getElementById('scan-title').innerText = "PHÂN TÍCH HOÀN TẤT";
+                        updateScanTags(autoReport);
+                        
+                        // Hide after a few seconds
+                        setTimeout(() => {
+                            hideScanWindow();
+                        }, 4000);
 
                         updateMobileBtnState('run');
                     }
-                } catch(e) { console.error(e); showToast("Lỗi Smart Scan: " + e.message, "error"); updateMobileBtnState('scan'); } 
+                } catch(e) { 
+                    console.error(e); 
+                    showToast("Lỗi Smart Scan: " + e.message, "error"); 
+                    updateMobileBtnState('scan'); 
+                    hideScanWindow();
+                } 
                 finally { btnAutoPilot.disabled = false; btnAutoPilot.innerHTML = originalText; }
             });
 
