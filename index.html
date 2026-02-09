@@ -410,6 +410,26 @@
                              <div id="veteran-preset-desc" class="text-[10px] text-gray-400 italic px-2 py-1 border-l-2 border-white/10">
                                  Chưa chọn chế độ chuyên sâu.
                              </div>
+
+                             <!-- CHI TIẾT TỰ ĐỘNG (GRANULAR DETAILS) -->
+                             <div class="grid grid-cols-2 gap-2 mt-2 pt-2 border-t border-white/5" id="veteran-details-container">
+                                <label class="flex items-center gap-2 p-2 rounded bg-white/5 border border-white/5 cursor-pointer hover:bg-white/10 transition">
+                                    <input type="checkbox" id="det-hat" class="chk-pro chk-gold save-input">
+                                    <span class="text-[10px] text-gray-300 select-none">Mũ/Nón</span>
+                                </label>
+                                <label class="flex items-center gap-2 p-2 rounded bg-white/5 border border-white/5 cursor-pointer hover:bg-white/10 transition">
+                                    <input type="checkbox" id="det-rank" class="chk-pro chk-red save-input">
+                                    <span class="text-[10px] text-gray-300 select-none">Quân Hàm</span>
+                                </label>
+                                <label class="flex items-center gap-2 p-2 rounded bg-white/5 border border-white/5 cursor-pointer hover:bg-white/10 transition">
+                                    <input type="checkbox" id="det-star" class="chk-pro chk-gold save-input">
+                                    <span class="text-[10px] text-yellow-500 font-bold select-none">Sao Vàng</span>
+                                </label>
+                                <label class="flex items-center gap-2 p-2 rounded bg-white/5 border border-white/5 cursor-pointer hover:bg-white/10 transition">
+                                    <input type="checkbox" id="det-medal" class="chk-pro chk-blue save-input">
+                                    <span class="text-[10px] text-blue-400 select-none">Huân Chương</span>
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1437,6 +1457,12 @@
                     settings.push(`TAG: ${VETERAN_PRESETS[vetPreset.value].name.split('(')[0].trim()}`);
                 }
 
+                // --- VETERAN DETAILS TAGS ---
+                if(document.getElementById('det-hat')?.checked) settings.push("TAG: MŨ/NÓN");
+                if(document.getElementById('det-rank')?.checked) settings.push("TAG: QUÂN HÀM");
+                if(document.getElementById('det-star')?.checked) settings.push("TAG: SAO VÀNG");
+                if(document.getElementById('det-medal')?.checked) settings.push("TAG: HUÂN CHƯƠNG");
+
                 // --- IDENTITY TAGS ---
                 if(document.getElementById('check-monolid')?.checked) settings.push("TAG: MONOLID");
                 if(document.getElementById('check-cross-eyed')?.checked) settings.push("TAG: CROSS-EYED");
@@ -1576,6 +1602,12 @@
                         // Prepend preset negative to ensure it takes precedence
                         if(negInput) negInput.value = VETERAN_PRESETS[veteranPreset].negative + ", " + currentNeg;
                     }
+
+                    // --- VETERAN DETAILS INJECTION ---
+                    if(document.getElementById('det-hat')?.checked) finalPrompt += ", (wearing military hat:1.3), (restore hat emblem)";
+                    if(document.getElementById('det-rank')?.checked) finalPrompt += ", (clear rank insignia:1.4), (shoulder epaulettes)";
+                    if(document.getElementById('det-star')?.checked) finalPrompt += ", (golden star emblem:1.4), (shiny metal texture)";
+                    if(document.getElementById('det-medal')?.checked) finalPrompt += ", (military medals:1.3), (chest decorations)";
 
                     // --- INJECT MISSING FEATURES (IDENTITY & WORKFLOW) ---
                     
@@ -1731,6 +1763,23 @@
                                 vetSelect.value = "preset_3"; // Mặc định màu hóa
                                 autoReport.push("AUTO: MÀU HÓA QUÂN PHỤC");
                             }
+
+                            // --- AUTO-TICK DETECTED DETAILS ---
+                            if (result.hatType !== 'none') {
+                                setChecked('det-hat', true);
+                                autoReport.push("PHÁT HIỆN: MŨ/NÓN");
+                                if (result.hatType === 'pith_helmet' || result.hatType === 'kepi') {
+                                    setChecked('det-star', true); // Often implies star
+                                }
+                            }
+                            if (result.rankLevel !== 'none') {
+                                setChecked('det-rank', true);
+                                autoReport.push("PHÁT HIỆN: QUÂN HÀM");
+                            }
+                            if (result.hasMedals) {
+                                setChecked('det-medal', true);
+                                autoReport.push("PHÁT HIỆN: HUÂN CHƯƠNG");
+                            }
                         }
 
                         // Trigger change event to update description
@@ -1760,94 +1809,6 @@
             const mobRunBtn = document.getElementById('mob-btn-run');
             if(mobRunBtn) {
                 mobRunBtn.onclick = runImageProcessing;
-            }
-
-            const loadImg = (file) => { if (!file || !file.type.startsWith('image/')) return showToast("Chỉ hỗ trợ file ảnh!", "error"); const reader = new FileReader(); reader.onload = (e) => { const img = new Image(); img.onload = () => { state.base64 = e.target.result; state.originalImg = img; state.restoredObj = null; const ar = img.width / img.height; if(ar > 1.1) state.aspectRatioType = 'landscape'; else if(ar < 0.9) state.aspectRatioType = 'portrait'; else state.aspectRatioType = 'square'; document.getElementById('img-original').src = state.base64; document.getElementById('comparison-view').style.display = 'flex'; document.getElementById('placeholder-state').style.display = 'none'; 
-            
-            if(btnDownloadDesktop) btnDownloadDesktop.disabled = true;
-            document.getElementById('img-modified-wrapper').style.width = '0%'; 
-            document.getElementById('slider-handle').style.left = '0%'; 
-            document.getElementById('slider-handle').style.display = 'none'; 
-            document.querySelector('.comp-label.after').style.display = 'none'; 
-            document.getElementById('scan-log-overlay').innerHTML = ''; 
-
-            showToast(`Đã tải ảnh: ${img.width}x${img.height}`, "success"); updateMobileBtnState('scan'); }; img.src = e.target.result; }; reader.readAsDataURL(file); };
-            const fileInput = document.getElementById('image-upload'); if(fileInput) fileInput.addEventListener('change', (e) => { if (e.target.files.length > 0) { loadImg(e.target.files[0]); e.target.value = ''; } });
-            
-            const mobBtnUpload = document.getElementById('mob-btn-upload'), mobBtnScan = document.getElementById('mob-btn-scan'), mobBar = document.getElementById('mobile-action-bar');
-            if(mobBar) setTimeout(() => mobBar.classList.remove('translate-y-32', 'opacity-0'), 1000);
-            if(mobBtnUpload) mobBtnUpload.onclick = () => document.getElementById('image-upload').click();
-            if(mobBtnScan) mobBtnScan.onclick = () => document.getElementById('btn-auto-pilot').click();
-            
-            const placeholderEl = document.getElementById('placeholder-state');
-            if(placeholderEl) {
-                placeholderEl.addEventListener('click', () => {
-                    document.getElementById('image-upload').click();
-                });
-            }
-            
-            const redeemBtn = document.getElementById('btn-submit-recharge');
-            const redeemInput = document.getElementById('recharge-input');
-
-            if(redeemBtn) redeemBtn.addEventListener('click', () => { 
-                const code = redeemInput.value.trim(); 
-                if(!code) return showToast("Vui lòng nhập mã!", "error"); 
-                
-                const usedCodes = JSON.parse(localStorage.getItem('v35_used_codes') || '[]');
-                if (usedCodes.includes(code)) return showToast("Mã này đã được sử dụng!", "error");
-
-                if (!code.startsWith('V36-')) return showToast("Mã không đúng định dạng V36-...", "error");
-
-                const token = code.substring(4);
-                const decrypted = Sec.dec(token);
-
-                if (!decrypted) return showToast("Mã không hợp lệ hoặc bị lỗi!", "error");
-
-                const parts = decrypted.split('|');
-                if (parts.length < 3) return showToast("Dữ liệu mã bị hỏng!", "error");
-
-                const amount = parseInt(parts[0]);
-                const targetMachine = parts[1];
-
-                if (targetMachine !== UserSystem.deviceId) {
-                    console.log(`Mismatch: Code for ${targetMachine}, Current is ${UserSystem.deviceId}`);
-                    return showToast(`Mã này bị khóa cho máy: ${targetMachine}. Bạn không thể dùng!`, "error");
-                }
-
-                if (isNaN(amount)) return showToast("Lỗi giá trị Credit!", "error");
-
-                UserSystem.addCredits(amount);
-                
-                usedCodes.push(code);
-                localStorage.setItem('v35_used_codes', JSON.stringify(usedCodes));
-
-                const msg = amount > 0 ? `Nạp thành công +${amount} Ảnh!` : `Đã trừ ${Math.abs(amount)} Ảnh!`;
-                showToast(msg, amount > 0 ? "success" : "warning");
-                
-                document.getElementById('recharge-modal').classList.add('hidden'); 
-                redeemInput.value = ''; 
-            });
-            
-            const closeRechargeBtn = document.getElementById('close-recharge');
-            if (closeRechargeBtn) closeRechargeBtn.onclick = () => document.getElementById('recharge-modal').classList.add('hidden');
-            
-            const sliders = document.querySelectorAll('input[type="range"]');
-            sliders.forEach(s => s.addEventListener('input', (e) => { const label = document.getElementById(e.target.id.replace('slider', 'val') || e.target.id.replace('weight-slider', 'weight-val')); if(label) label.textContent = e.target.value + (e.target.max > 10 ? '%' : ''); }));
-            
-            // --- DESCRIPTION UPDATE FOR VETERAN PRESET ---
-            const vetPresetSel = document.getElementById('veteran-preset');
-            const vetDesc = document.getElementById('veteran-preset-desc');
-            if(vetPresetSel && vetDesc) {
-                vetPresetSel.addEventListener('change', () => {
-                    const val = vetPresetSel.value;
-                    if(val && VETERAN_PRESETS[val]) {
-                        vetDesc.textContent = VETERAN_PRESETS[val].desc;
-                        vetDesc.className = "text-[10px] text-[#FFD60A] italic px-2 py-1 border-l-2 border-[#FFD60A]";
-                    } else {
-                        vetDesc.textContent = "Chưa chọn chế độ chuyên sâu.";
-                        vetDesc.className = "text-[10px] text-gray-400 italic px-2 py-1 border-l-2 border-white/10";
-                    }
-                });
             }
 
             const compContainer = document.getElementById('comp-inner'), imgModWrapper = document.getElementById('img-modified-wrapper'), sliderHandle = document.getElementById('slider-handle');
