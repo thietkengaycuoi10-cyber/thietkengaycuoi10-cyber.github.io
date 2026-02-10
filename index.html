@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>PHỤC HỒI ẢNH - AI RESTORATION PRO (V36.12 UI REMASTER)</title>
+    <title>PHỤC HỒI ẢNH - AI RESTORATION PRO (V36.50 MILITARY SPECIAL)</title>
     
     <!-- FONTS: Apple Style Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -334,7 +334,7 @@
         </div>
         
         <div class="absolute bottom-8 text-[10px] text-gray-600 font-mono tracking-widest opacity-50">
-            SECURE CONNECTION • V36.0 (UPDATED)
+            SECURE CONNECTION • V36.50 (MILITARY PRO)
         </div>
     </div>
     
@@ -411,7 +411,7 @@
                 <!-- 2. AUTO-PILOT BUTTON -->
                 <button id="btn-auto-pilot" class="w-full py-3.5 bg-gradient-to-r from-[#0A84FF] to-[#0062cc] text-white rounded-xl flex items-center justify-center gap-2 transition-transform active:scale-[0.98] shadow-lg shadow-blue-900/20 group">
                     <svg class="w-4 h-4 animate-pulse group-hover:rotate-180 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                    <span class="text-xs font-bold tracking-wide">AUTO SCAN V36.12 (MILITARY TACTIC)</span>
+                    <span class="text-xs font-bold tracking-wide">AUTO SCAN V36.50 (MILITARY TACTIC)</span>
                 </button>
 
                 <!-- MODULES -->
@@ -465,11 +465,11 @@
                     </div>
                 </div>
 
-                <!-- MODULE: QUÂN SỬ VIỆT NAM -->
+                <!-- MODULE: QUÂN SỬ VIỆT NAM (UPGRADED) -->
                 <div class="module-group" id="module-military">
                     <button id="toggle-military" class="module-header w-full">
                         <div class="flex items-center gap-2">
-                            <span class="text-[12px] font-bold text-[#FFD60A] tracking-wide uppercase">🇻🇳 QUÂN SỬ & KỶ VẬT (FULL UPGRADE)</span>
+                            <span class="text-[12px] font-bold text-[#FFD60A] tracking-wide uppercase">🇻🇳 QUÂN SỬ & KỶ VẬT (PRO EDITION)</span>
                         </div>
                         <svg class="w-4 h-4 text-gray-500 transition-transform" id="icon-military" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
@@ -491,6 +491,16 @@
                                 <label class="text-[10px] uppercase text-gray-500 font-bold ml-1">Cấp bậc / Quân hàm</label>
                                 <select id="rank-select" class="pro-input w-full py-2" data-key="rankSelect"><option value="">-- Tự động / Không chọn --</option><option value="no_rank_insignia">🚫 KHÔNG ĐEO HÀM (ÁO TRƠN)</option><optgroup label="Hạ sĩ quan / Chiến sĩ"><option value="plain red collar tabs, soldier rank">Chiến sĩ (Hàm trơn/Binh nhì-nhất)</option><option value="red collar tabs with one yellow stripe">Hạ sĩ (1 gạch)</option><option value="red collar tabs with two yellow stripes">Trung sĩ (2 gạch)</option><option value="red collar tabs with three yellow stripes">Thượng sĩ (3 gạch)</option></optgroup><optgroup label="Sĩ quan (Sao + Gạch)"><option value="red collar tabs with one star, officer rank">Thiếu úy (1 sao)</option><option value="red collar tabs with two stars, officer rank">Trung úy (2 sao)</option><option value="red collar tabs with three stars, officer rank">Thượng úy (3 sao)</option><option value="red collar tabs with four stars, officer rank">Đại úy (4 sao)</option></optgroup></select>
                              </div>
+                             
+                             <!-- PRO UPGRADE: SUPER DETAIL -->
+                             <div class="space-y-2 mt-2 pt-2 border-t border-white/10">
+                                 <label class="text-[10px] font-bold text-yellow-500 uppercase tracking-widest block">⭐ CHUYÊN SÂU (PRO UPGRADE)</label>
+                                 <div class="grid grid-cols-2 gap-2">
+                                     <div class="flex items-center gap-2"><input id="check-metal-shader" type="checkbox" class="chk-pro chk-gold save-input"><label for="check-metal-shader" class="text-[11px] text-gray-300">Kim loại (Sao/Huy hiệu)</label></div>
+                                     <div class="flex items-center gap-2"><input id="check-fabric-detail" type="checkbox" class="chk-pro save-input"><label for="check-fabric-detail" class="text-[11px] text-gray-300">Chất vải (Tô Châu/Kaki)</label></div>
+                                 </div>
+                             </div>
+
                              <div class="grid grid-cols-2 gap-2 mt-2">
                                 <div class="flex items-center gap-2"><input id="check-sao-vang" type="checkbox" class="chk-pro chk-gold save-input"><label for="check-sao-vang" class="text-[11px] text-gray-300">Huân chương Sao Vàng</label></div>
                                 <div class="flex items-center gap-2"><input id="check-khang-chien" type="checkbox" class="chk-pro save-input"><label for="check-khang-chien" class="text-[11px] text-gray-300">HC Kháng Chiến</label></div>
@@ -924,7 +934,7 @@
                 <div class="flex flex-col items-center">
                      <span class="font-bold text-white text-[14px] tracking-tight">PHỤC HỒI ẢNH</span>
                      <div class="flex items-center gap-2 opacity-60">
-                        <span class="text-[9px] font-mono">V36.12</span>
+                        <span class="text-[9px] font-mono">V36.50 PRO</span>
                         <span class="text-[9px]">•</span>
                         <span id="mobile-status-text" class="text-[9px] font-mono tracking-widest">WAITING</span>
                      </div>
@@ -1143,7 +1153,7 @@
         </div>
     </div>
 
-    <!-- MAIN SCRIPT: PRESERVED ORIGINAL LOGIC -->
+    <!-- MAIN SCRIPT -->
     <script>
         const DEFAULT_ENCRYPTED_CONFIG = "LRFALDY3LTQ/IH1xZxg7PigidAVWQX1/ZyIlOw46MmdjfSAqYSUjW3QnGQd0ZAU1DngybTckJQEfP1hSNgspJzAbIgofNW4bMRIfBBoCbxkrNBtkF2dzaTUrMCUoKDEkEQ99MCouMCZnc2knOCw2FD44dAkXNycxMyZoanAqNTBxMC4hMSJSRTZ9Jiw4cDg="; 
         const ALLOWED_DOMAINS = []; 
@@ -1692,6 +1702,11 @@
                     if (isIDPhoto) {
                         finalPrompt += ", (passport photo:1.5), (studio lighting:1.3), (neutral background:1.4), (look at camera), (high quality headshot)";
                     }
+                    
+                    const isAsianIdentity = document.getElementById('check-asian-identity')?.checked;
+                    if(isAsianIdentity) {
+                        finalPrompt += ", (vietnamese facial structure:1.6), (southeast asian features), (warm skin tone), (slight high cheekbones:1.2), (authentic vietnamese eyes shape)";
+                    }
 
                     const workflowSelect = document.getElementById('kontext-workflow');
                     // ADDED LOGIC FOR NEW WORKFLOWS FROM INDEX1
@@ -1726,8 +1741,38 @@
                     // ADDED LOGIC FOR MILITARY EXTRAS FROM INDEX1
                     const isInsigniaBoost = document.getElementById('check-insignia-boost')?.checked || false;
                     const isBlockRank = document.getElementById('block-rank')?.checked || false;
-                    if (isInsigniaBoost) finalPrompt += `, (detailed military insignia:1.6), (shiny gold star badge:1.6), (collar rank details:1.5)`;
-                    if (isBlockRank) finalPrompt += `, (plain collar:1.5), (no rank insignia:1.5)`;
+                    const isMetalShader = document.getElementById('check-metal-shader')?.checked || false;
+                    const isFabricDetail = document.getElementById('check-fabric-detail')?.checked || false;
+
+                    // *** V36.50 PROMPT INJECTION LOGIC FOR MILITARY ***
+                    // 1. Hat Specifics
+                    const hatVal = document.getElementById('hat-select')?.value || "";
+                    if(hatVal.includes("pith helmet")) {
+                        finalPrompt += ", (green vietnamese pith helmet:1.6), (hard shell texture:1.3), (round shape), (red circular badge with raised yellow star:1.5), (worn leather chin strap:1.2)";
+                    } else if (hatVal.includes("kepi hat")) {
+                         finalPrompt += ", (structured officer kepi hat:1.5), (stiff visor), (gold band details), (raised metal star insignia)";
+                    }
+
+                    // 2. Uniform Specifics
+                    const uniformVal = document.getElementById('mil-uniform')?.value || "";
+                    if(uniformVal.includes("to chau")) {
+                        finalPrompt += ", (to chau military uniform:1.5), (faded green fabric), (buttoned chest pockets), (loose fitting trousers), (simple collar)";
+                    } else if (uniformVal.includes("tran thu")) {
+                         finalPrompt += ", (padded cotton jacket:1.5), (diamond quilted texture:1.4), (thick warm fabric), (collarless or simple collar)";
+                    }
+
+                    // 3. Pro Boosters
+                    if (isInsigniaBoost) finalPrompt += `, (hyper detailed military insignia:1.7), (macro photography of medals), (sharp defined star shape), (distinct collar tabs)`;
+                    
+                    if (isMetalShader) {
+                         finalPrompt += ", (metallic texture rendering:1.4), (shiny gold surface:1.3), (reflective metal:1.2), (embossed 3d details), (oxidized vintage metal)";
+                    }
+                    
+                    if (isFabricDetail) {
+                         finalPrompt += ", (high thread count fabric:1.3), (visible weave texture), (natural fabric folds), (canvas material texture:1.2), (clothing seam details)";
+                    }
+
+                    if (isBlockRank) finalPrompt += `, (plain collar:1.5), (no rank insignia:1.5), (smooth collar fabric)`;
 
                     // ADDED LOGIC FOR EXPOSURE STRENGTH FROM INDEX1
                     const isQwenExposure = document.getElementById('check-qwen-exposure')?.checked || false;
@@ -1880,7 +1925,12 @@
                             autoReport.push("PHÁT HIỆN: QUÂN PHỤC");
                             // Auto boost insignia logic
                             setChecked('check-insignia-boost', true);
-                            autoReport.push("AUTO: TĂNG NÉT QUÂN HÀM");
+                            
+                            // *** V36.50 AUTO ENABLE PRO FEATURES ***
+                            setChecked('check-metal-shader', true);
+                            setChecked('check-fabric-detail', true);
+                            autoReport.push("AUTO: PRO METAL/FABRIC");
+                            // *************************************
 
                             if(result.militaryUniformType === 'public_security') {
                                 document.getElementById('mil-branch').value = "vietnamese public security, green uniform, red collar tabs";
