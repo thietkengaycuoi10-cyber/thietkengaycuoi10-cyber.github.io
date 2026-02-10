@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>PHỤC HỒI ẢNH - AI RESTORATION PRO (V36.50 MILITARY SPECIAL)</title>
+    <title>PHỤC HỒI ẢNH - AI RESTORATION PRO (V36.60 MOBILE OPTIMIZED)</title>
     
     <!-- FONTS: Apple Style Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -275,6 +275,12 @@
             text-shadow: 0 0 10px rgba(255, 214, 10, 0.6); 
         }
         .sequential-log-text::before { content: ">> "; opacity: 0.7; }
+
+        /* Text Mask for HUD */
+        .mask-linear-fade {
+            mask-image: linear-gradient(to right, black 80%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to right, black 80%, transparent 100%);
+        }
     </style>
 </head>
 
@@ -332,7 +338,7 @@
         </div>
         
         <div class="absolute bottom-8 text-[10px] text-gray-600 font-mono tracking-widest opacity-50">
-            SECURE CONNECTION • V36.50 (MILITARY PRO)
+            SECURE CONNECTION • V36.60 (MOBILE PRO)
         </div>
     </div>
     
@@ -341,7 +347,7 @@
     
     <!-- NEW: MODERN DYNAMIC ISLAND HUD (Replaces Old Window) -->
     <!-- This is the "New Interface" to replace the ugly box. It's a sleek bar at the bottom. -->
-    <div id="scan-window-overlay" class="fixed bottom-24 lg:bottom-10 left-1/2 transform -translate-x-1/2 z-[100] flex flex-col items-center justify-center hidden transition-all duration-500">
+    <div id="scan-window-overlay" class="fixed top-24 lg:top-auto lg:bottom-10 left-1/2 transform -translate-x-1/2 z-[100] flex flex-col items-center justify-center hidden transition-all duration-500 w-max max-w-[90vw]">
         <div class="pro-hud-container flex items-center gap-4 px-6 py-3 bg-[#1c1c1e]/90 backdrop-blur-2xl border border-white/10 rounded-full shadow-2xl shadow-blue-900/20 ring-1 ring-white/5">
             <!-- Loader -->
             <div class="relative w-5 h-5 flex-shrink-0">
@@ -353,7 +359,7 @@
             <div class="flex items-center gap-3">
                 <span id="scan-title" class="text-[10px] font-bold text-[#0A84FF] tracking-widest uppercase animate-pulse flex-shrink-0">ĐANG XỬ LÝ...</span>
                 <div class="h-4 w-[1px] bg-white/10"></div>
-                <div id="scan-tags-container" class="flex items-center overflow-hidden max-w-[200px] gap-1 mask-linear-fade">
+                <div id="scan-tags-container" class="flex items-center overflow-hidden max-w-[150px] sm:max-w-[200px] gap-1 mask-linear-fade scroll-smooth">
                     <!-- Tags will be injected here as text spans -->
                 </div>
             </div>
@@ -927,7 +933,7 @@
                 <div class="flex flex-col items-center">
                      <span class="font-bold text-white text-[14px] tracking-tight">PHỤC HỒI ẢNH</span>
                      <div class="flex items-center gap-2 opacity-60">
-                        <span class="text-[9px] font-mono">V36.50 PRO</span>
+                        <span class="text-[9px] font-mono">V36.60 PRO</span>
                         <span class="text-[9px]">•</span>
                         <span id="mobile-status-text" class="text-[9px] font-mono tracking-widest">WAITING</span>
                      </div>
